@@ -1,12 +1,12 @@
 @php
-    $title = 'User';
+    $title = 'customer';
     $user = Auth::user();
 @endphp
 @include('template.header')
 
     <div class="container mt-5">
         <h1 class="display-4">
-            User
+            Customer
         </h1>
         
     </div>
@@ -30,38 +30,34 @@
 
                 <div class="card border-0 shadow rounded">
                     <div class="card-body">
-                        <a href="{{ route('user.create') }}" class="btn btn-md btn-success mb-3 float-right">Tambah User</a>
+                        <a href="{{ route('customer.create') }}" class="btn btn-md btn-success mb-3 float-right">Tambah customer</a>
                         <table class="table table-bordered mt-1">
                             <thead>
                                 <tr>
                                     <th scope="col">ID</th>
                                     <th scope="col">Nama</th>
-                                    <th scope="col">Email / Username</th>
-                                    <th scope="col">Role</th>
+                                    <th scope="col">Email</th>
                                     <th scope="col">No HP</th>
                                     <th scope="col">Jenis Kelamin</th>
                                     <th scope="col">Alamat</th>
-                                    <th scope="col">Toko</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($users as $user)
+                                @forelse ($customers as $customer)
                                 <tr>
-                                    <td>{{ $user->user_id }}</td>
-                                    <td>{{ $user->name }}</td>
-                                    <td>{{ $user->email }}</td>
-                                    <td>{{ $user->role_name }}</td>
-                                    <td>{{ $user->phone_number }}</td>
-                                    <td>{{ $user->gender }}</td>
-                                    <td>{{ $user->address }}</td>
-                                    <td>{{ $user->store_name }}</td>
-                                    <td><span class="badge {{ $user->status == "1" ? "bg-success" : "bg-danger" }}">{{ $user->status == "1" ? "Aktif" : "Tidak Aktif" }}</span></td>
+                                    <td>{{ $customer->customer_id }}</td>
+                                    <td>{{ $customer->name }}</td>
+                                    <td>{{ $customer->email }}</td>
+                                    <td>{{ $customer->phone_number }}</td>
+                                    <td>{{ $customer->gender }}</td>
+                                    <td>{{ $customer->address }}</td>
+                                    <td><span class="badge {{ $customer->status == "1" ? "bg-success" : "bg-danger" }}">{{ $customer->status == "1" ? "Aktif" : "Tidak Aktif" }}</span></td>
                                     <td class="text-center">
                                         <form onsubmit="return confirm('Apakah Anda Yakin ?');"
-                                            action="{{ route('user.destroy', $user->user_id) }}" method="POST">
-                                            <a href="{{ route('user.edit', $user->user_id) }}"
+                                            action="{{ route('customer.destroy', $customer->customer_id) }}" method="POST">
+                                            <a href="{{ route('customer.edit', $customer->customer_id) }}"
                                                 class="btn btn-sm btn-primary">EDIT</a>
                                             @csrf
                                             @method('DELETE')

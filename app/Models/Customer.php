@@ -2,23 +2,20 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-
-class User extends Authenticatable
+class Customer extends Authenticatable
 {
     use HasFactory, Notifiable;
-    protected $primaryKey='user_id';
-
+    protected $primaryKey = 'customer_id';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'role_id', 'phone_number', 'gender', 'birthday', 'address', 'photo', 'store_id', 'status'
+        'name', 'email', 'password', 'phone_number', 'gender', 'birthday', 'address', 'photo', 'status'
     ];
 
     /**
@@ -38,4 +35,6 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
 }

@@ -18,15 +18,22 @@ use Illuminate\Support\Facades\Route;
 // });
 
 $ctrl = '\App\Http\Controllers';
+
+Route::get('login-admin',$ctrl.'\LoginController@view_admin')->name('login-admin');
 Route::get('login',$ctrl.'\LoginController@view')->name('login');
+// Route::get('register-admin',$ctrl.'\RegisterController@view_admin')->name('register');
 Route::get('register',$ctrl.'\RegisterController@view')->name('register');
 Route::post('login',$ctrl.'\LoginController@authenticate')->name('login.auth');
+Route::post('login-admin',$ctrl.'\LoginController@authenticate_admin')->name('login.admin');
 Route::post('register',$ctrl.'\RegisterController@register')->name('register.register');
-Route::get('/', function() {
-    return redirect()->intended('dashboard');
-})->name('dashboard');
+Route::post('register-admin',$ctrl.'\RegisterController@register_admin')->name('register.admin');
+
+// Route::get('/', function() {
+//     return redirect()->intended('dashboard');
+// })->name('dashboard');
 
 
+Route::get('/',$ctrl.'\DashboardController@view')->name('dashboard');
 Route::post('logout',$ctrl.'\LoginController@logout')->name('logout');
 Route::get('dashboard',$ctrl.'\DashboardController@view')->name('dashboard');
 Route::middleware('auth')->get('store',$ctrl.'\StoreController@index')->name('store.index');
@@ -115,16 +122,23 @@ Route::middleware('auth')->get('download/{file}',$ctrl.'\TransactionController@d
 Route::middleware('auth')->get('profile',$ctrl.'\ProfileController@index')->name('profile.index');
 Route::middleware('auth')->put('profile/{id}',$ctrl.'\ProfileController@update')->name('profile.update');
 
-Route::middleware('auth')->get('product-list',$ctrl.'\ProductController@indexProductList')->name('product-list.index');
-Route::middleware('auth')->get('add-to-cart/{id}',$ctrl.'\CartController@addToCart')->name('add.to.cart');
-Route::middleware('auth')->get('cart-list',$ctrl.'\TransactionController@createTransacationPelanggan')->name('cart.list');
-Route::middleware('auth')->post('transaction',$ctrl.'\TransactionController@store')->name('transaction.store');
-Route::middleware('auth')->put('update-cart/{id}',$ctrl.'\CartController@updatePelanggan')->name('cart.list.update');
-Route::middleware('auth')->get('transaction-list', $ctrl . '\TransactionController@index')->name('transaction-list');
-Route::middleware('auth')->post('transaction.pelanggan.store',$ctrl.'\TransactionController@storePelanggan')->name('transaction.pelanggan.store');
+Route::middleware('auth:customer')->get('product-list',$ctrl.'\ProductController@indexProductList')->name('product-list.index');
+Route::middleware('auth:customer')->get('add-to-cart/{id}',$ctrl.'\CartController@addToCart')->name('add.to.cart');
+Route::middleware('auth:customer')->get('cart-list',$ctrl.'\TransactionController@createTransacationPelanggan')->name('cart.list');
+Route::middleware('auth:customer')->post('transaction',$ctrl.'\TransactionController@store')->name('transaction.store');
+Route::middleware('auth:customer')->put('update-cart/{id}',$ctrl.'\CartController@updatePelanggan')->name('cart.list.update');
+Route::middleware('auth:customer')->get('transaction-list', $ctrl . '\TransactionController@index')->name('transaction-list');
+Route::middleware('auth:customer')->post('transaction.pelanggan.store',$ctrl.'\TransactionController@storePelanggan')->name('transaction.pelanggan.store');
 
 Route::middleware('auth')->get('report',$ctrl.'\ReportController@index')->name('report.index');
 
 Route::middleware('auth')->get('image/{file}',$ctrl.'\DashboardController@image')->name('image');
 
 Route::middleware('auth')->get('print-struk',$ctrl.'\PrintController@printStruk')->name('print.struk');
+
+Route::middleware('auth')->get('customer',$ctrl.'\CustomerController@index')->name('customer.index');
+Route::middleware('auth')->post('customer',$ctrl.'\CustomerController@store')->name('customer.store');
+Route::middleware('auth')->get('customer/create',$ctrl.'\CustomerController@create')->name('customer.create');
+Route::middleware('auth')->put('customer/{id}',$ctrl.'\CustomerController@update')->name('customer.update');
+Route::middleware('auth')->delete('customer/{id}',$ctrl.'\CustomerController@destroy')->name('customer.destroy');
+Route::middleware('auth')->get('customer/{id}',$ctrl.'\CustomerController@edit')->name('customer.edit');

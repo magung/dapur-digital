@@ -1,6 +1,6 @@
 @php
     $title = 'Dashboard';
-    $user = Auth::user();
+    $user = Auth::guard('customer')->user();
 @endphp
 @include('template.header-pelanggan')
 <br>
@@ -56,7 +56,7 @@
 <div class="conteiner mt-5 mb-5 container-fluid">
     <div class="row text-center row-cols-md-8 row-cols-sm-8 g-2">
         @foreach ($categories as $category)
-            <a href="/list-product-category/{{$category->id}}" class="col-md-2 deco-none">
+            <a href="/list-product-category/{{$category->category_id}}" class="col-md-2 deco-none">
                 <img src="logo.png" width="150">
                 <p>{{$category->category_name}}</p>
             </a>
@@ -74,7 +74,7 @@
                         <p class="card-text">Deskripsi Produk</p>
                         <p class="card-text">Harga Rp. {{number_format($product->price)}}</p>
                         @if ($user != null)
-                            <a href="{{route('add.to.cart', $product->id)}}" class="btn btn-primary">Tambah ke Keranjang</a>
+                            <a href="{{route('add.to.cart', $product->product_id)}}" class="btn btn-primary">Tambah ke Keranjang</a>
                         @endif
                     </div>
                 </div>

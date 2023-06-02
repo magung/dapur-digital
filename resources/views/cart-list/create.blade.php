@@ -77,8 +77,8 @@
                                                 <td>Rp. {{number_format($cart->price)}}</td>
                                                 <td>Rp. {{number_format($cart->total_price)}}</td>
                                                 <td class="text-center">
-                                                    <a href="{{ route('cart.edit', $cart->id) }}" class="btn btn-sm btn-primary">EDIT</a>
-                                                    <a href="{{route('cart.destroy', $cart->id) }}" class="btn btn-sm btn-danger">HAPUS</a>
+                                                    <a href="{{ route('cart.edit', $cart->cart_id) }}" class="btn btn-sm btn-primary">EDIT</a>
+                                                    <a href="{{route('cart.destroy', $cart->cart_id) }}" class="btn btn-sm btn-danger">HAPUS</a>
                                                 </td>
                                             </tr>
                                             @php
@@ -98,7 +98,7 @@
                                 <select name="store_id" class="form-control" required>
                                     <option value="" >-- Toko --</option>
                                     @foreach ($stores as $store)
-                                        <option value="{{$store->id}}" {{$store_id == $store->id ? 'selected' : ''}} >{{$store->branch_name}}</option>
+                                        <option value="{{$store->store_id}}"  >{{$store->store_name}}</option>
                                     @endforeach
                                 </select>
                                 <!-- error message untuk role -->
@@ -113,7 +113,7 @@
                                 <label for="transaction_type_id">Tipe Transaksi</label>
                                 <select name="transaction_type_id" class="form-control" required>
                                     @foreach ($types as $type)
-                                        <option value="{{$type->id}}" >{{$type->type}}</option>
+                                        <option value="{{$type->transaction_type_id}}" >{{$type->transaction_type}}</option>
                                     @endforeach
                                 </select>
                                 <!-- error message untuk role -->
@@ -128,7 +128,7 @@
                                 <label for="payment_method_id">Pembayaran</label>
                                 <select name="payment_method_id" class="form-control" required>
                                     @foreach ($payments as $payment)
-                                        <option value="{{$payment->id}}" >{{$payment->payment_method}}</option>
+                                        <option value="{{$payment->payment_id}}" >{{$payment->payment_method}}</option>
                                     @endforeach
                                 </select>
                                 <!-- error message untuk role -->

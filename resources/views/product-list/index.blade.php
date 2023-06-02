@@ -49,7 +49,7 @@
                             <img src="uploads/{{$product->photo}}" alt="{{$product->product_name}}" class="product-image img-fluid">
                             <h3 class="product-name">{{$product->product_name}}</h3>
                             <p class="product-price">Rp. {{number_format($product->price)}}</p>
-                            <a href="{{route('add.to.cart', $product->id)}}" class="btn btn-primary">Tambah ke Keranjang</a>
+                            <a href="{{route('add.to.cart', $product->product_id)}}" class="btn btn-primary">Tambah ke Keranjang</a>
                         </div>
                     </div>
                 </div>

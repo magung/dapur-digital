@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Tambah User</title>
+    <title>Tambah Customer</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.css">
@@ -16,7 +16,7 @@
 
     <div class="container mt-5 mb-5">
         <h1 class="display-4">
-            Tambah User
+            Tambah Customer
         </h1>
         <div class="row">
             <div class="col-md-12">
@@ -37,7 +37,7 @@
                 <div class="card border-0 shadow rounded">
                     <div class="card-body">
 
-                        <form action="{{ route('user.store') }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('customer.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
 
                             <div class="form-group">
@@ -54,7 +54,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="email">Email / Username</label>
+                                <label for="email">Email</label>
                                 <input type="text" class="form-control @error('email') is-invalid @enderror"
                                     name="email" value="{{ old('email') }}" required>
 
@@ -95,23 +95,6 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="role_id">Role</label>
-                                <select name="role_id" class="form-control" required>
-                                    <option value="" >-- role --</option>
-                                    @foreach ($roles as $role)
-                                        <option value="{{$role->id}}" >{{$role->role_name}}</option>
-                                    @endforeach
-                                </select>
-
-                                <!-- error message untuk role -->
-                                @error('role_id')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
                                 <label for="address">Alamat</label>
                                 <textarea
                                     name="address" id="address"
@@ -121,23 +104,6 @@
 
                                 <!-- error message untuk address -->
                                 @error('address')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <label for="store_id">Toko</label>
-                                <select name="store_id" class="form-control" required>
-                                    <option value="" >-- Toko --</option>
-                                    @foreach ($stores as $store)
-                                        <option value="{{$store->store_id}}" >{{$store->store_name}}</option>
-                                    @endforeach
-                                </select>
-
-                                <!-- error message untuk role -->
-                                @error('store_id')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
@@ -170,7 +136,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="photo">Foto User</label>
+                                <label for="photo">Foto customer</label>
                                 <input type="file" class="form-control @error('photo') is-invalid @enderror"
                                     name="photo" value="{{ old('photo') }}" required>
 
@@ -196,9 +162,11 @@
                                 </div>
                                 @enderror
                             </div>
+
+                            <br>
                             
                             <button type="submit" class="btn btn-md btn-primary">Save</button>
-                            <a href="{{ route('user.index') }}" class="btn btn-md btn-secondary">back</a>
+                            <a href="{{ route('customer.index') }}" class="btn btn-md btn-secondary">back</a>
 
                         </form>
                     </div>

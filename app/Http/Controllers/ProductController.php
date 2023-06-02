@@ -14,9 +14,9 @@ class ProductController extends Controller
     {
         // $products = Product::latest()->get();
         $products = DB::table('products')
-            ->select(['products.*', 'categories.category_name','categories.satuan', 'stores.branch_name'])
-            ->join('categories', 'categories.id', '=', 'products.category_id')
-            ->join('stores', 'stores.id', '=', 'products.store_id')
+            ->select(['products.*', 'categories.category_name','categories.satuan', 'stores.store_name'])
+            ->join('categories', 'categories.category_id', '=', 'products.category_id')
+            ->join('stores', 'stores.store_id', '=', 'products.store_id')
             ->get();
 
         return view('product.index', compact('products'));
@@ -151,9 +151,9 @@ class ProductController extends Controller
     public function indexProductList()
     {
         $products = DB::table('products')
-        ->select(['products.*', 'categories.category_name','categories.satuan', 'stores.branch_name'])
-        ->join('categories', 'categories.id', '=', 'products.category_id')
-        ->join('stores', 'stores.id', '=', 'products.store_id')
+        ->select(['products.*', 'categories.category_name','categories.satuan', 'stores.store_name'])
+        ->join('categories', 'categories.category_id', '=', 'products.category_id')
+        ->join('stores', 'stores.store_id', '=', 'products.store_id')
         ->get();
 
         return view('product-list.index', compact('products'));

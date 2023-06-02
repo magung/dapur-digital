@@ -49,8 +49,8 @@
                                     <td>{{ $category->satuan }}</td>
                                     <td class="text-center">
                                         <form onsubmit="return confirm('Apakah Anda Yakin ?');"
-                                            action="{{ route('category.destroy', $category->id) }}" method="POST">
-                                            <a href="{{ route('category.edit', $category->id) }}"
+                                            action="{{ route('category.destroy', $category->category_id) }}" method="POST">
+                                            <a href="{{ route('category.edit', $category->category_id) }}"
                                                 class="btn btn-sm btn-primary">EDIT</a>
                                             @csrf
                                             @method('DELETE')

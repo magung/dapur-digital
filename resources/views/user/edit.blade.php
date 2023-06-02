@@ -39,7 +39,7 @@
 
                 <div class="card border-0 shadow rounded">
                     <div class="card-body">
-                        <form action="{{ route('user.update', $user->id) }}" method="POST"
+                        <form action="{{ route('user.update', $user->user_id) }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
@@ -101,12 +101,12 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="role_id">Role Level</label>
+                                <label for="role_id">Role</label>
                                 <select name="role_id" class="form-control" required>
                                     <option value="">-- role level --</option>
                                     @foreach ($roles as $role)
-                                        <option value="{{ $role->id }}"
-                                            {{ $user->role_id == $role->id ? 'selected' : '' }}>
+                                        <option value="{{ $role->role_id }}"
+                                            {{ $user->role_id == $role->role_id ? 'selected' : '' }}>
                                             {{ $role->role_name }}</option>
                                     @endforeach
                                 </select>
@@ -137,9 +137,9 @@
                                 <select name="store_id" class="form-control" >
                                     <option value="">-- Toko --</option>
                                     @foreach ($stores as $store)
-                                        <option value="{{ $store->id }}"
-                                            {{ $user->store_id == $store->id ? 'selected' : '' }}>
-                                            {{ $store->branch_name }}</option>
+                                        <option value="{{ $store->store_id }}"
+                                            {{ $user->store_id == $store->store_id ? 'selected' : '' }}>
+                                            {{ $store->store_name }}</option>
                                     @endforeach
                                 </select>
 

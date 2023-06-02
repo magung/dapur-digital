@@ -98,7 +98,7 @@
                                 <select name="store_id" class="form-control" required readonly>
                                     <option value="" >-- Toko --</option>
                                     @foreach ($stores as $store)
-                                        <option value="{{$store->id}}" {{$transaction->store_id == $store->id ? 'selected' : ''}} >{{$store->branch_name}}</option>
+                                        <option value="{{$store->store_id}}" {{$transaction->store_id == $store->store_id ? 'selected' : ''}} >{{$store->store_name}}</option>
                                     @endforeach
                                 </select>
                                 <!-- error message untuk role -->
@@ -114,7 +114,7 @@
                                 <select name="user_id" class="form-control" required readonly>
                                     <option value="0" >Umum</option>
                                     @foreach ($users as $user)
-                                        <option value="{{$user->id}}" {{$transaction->user_id == $user->id ? 'selected' : ''}}>{{$user->name}}</option>
+                                        <option value="{{$user->user_id}}" {{$transaction->user_id == $user->user_id ? 'selected' : ''}}>{{$user->name}}</option>
                                     @endforeach
                                 </select>
                                 <!-- error message untuk role -->
@@ -129,7 +129,7 @@
                                 <label for="transaction_type_id">Tipe Transaksi</label>
                                 <select name="transaction_type_id" class="form-control" required readonly>
                                     @foreach ($types as $type)
-                                        <option value="{{$type->id}}" {{$transaction->transaction_type_id == $type->id ? 'selected' : ''}} >{{$type->type}}</option>
+                                        <option value="{{$type->transaction_type_id}}" {{$transaction->transaction_type_id == $type->transaction_type_id ? 'selected' : ''}} >{{$type->transaction_type}}</option>
                                     @endforeach
                                 </select>
                                 <!-- error message untuk role -->
@@ -159,7 +159,7 @@
                                 <label for="payment_method_id">Pembayaran</label>
                                 <select name="payment_method_id" class="form-control" required readonly>
                                     @foreach ($payments as $payment)
-                                        <option value="{{$payment->id}}" {{$transaction->payment_method_id == $payment->id ? 'selected' : ''}} >{{$payment->payment_method}}</option>
+                                        <option value="{{$payment->payment_id}}" {{$transaction->payment_method_id == $payment->payment_id ? 'selected' : ''}} >{{$payment->payment_method}}</option>
                                     @endforeach
                                 </select>
                                 <!-- error message untuk role -->

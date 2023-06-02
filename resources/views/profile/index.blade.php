@@ -95,11 +95,11 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="role_id">Role Level</label>
+                                <label for="role_id">Role</label>
                                 <select name="role_id" class="form-control" required>
-                                    <option value="" >-- role level --</option>
+                                    <option value="" >-- role --</option>
                                     @foreach ($roles as $role)
-                                        <option value="{{$role->id}}" {{$profile->role_id ==  $role->id ? 'selected' : ''}}>{{$role->role_name}}</option>
+                                        <option value="{{$role->role_id}}" {{$profile->role_id ==  $role->role_id ? 'selected' : ''}}>{{$role->role_name}}</option>
                                     @endforeach
                                 </select>
 
@@ -132,7 +132,7 @@
                                 <select name="store_id" class="form-control" required>
                                     <option value="" >-- Toko --</option>
                                     @foreach ($stores as $store)
-                                        <option value="{{$store->id}}" {{$profile->store_id == $store->id ? 'selected' : ''}} >{{$store->branch_name}}</option>
+                                        <option value="{{$store->store_id}}" {{$profile->store_id == $store->store_id ? 'selected' : ''}} >{{$store->store_name}}</option>
                                     @endforeach
                                 </select>
 

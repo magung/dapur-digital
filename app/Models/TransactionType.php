@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class TransactionType extends Model
 {
     use HasFactory;
+    protected $primaryKey='transaction_type_id';
     protected $fillable = [
-        'type'
+        'transaction_type'
     ];
 }

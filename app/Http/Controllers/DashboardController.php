@@ -12,9 +12,9 @@ class DashboardController extends Controller
     public function view(){
         $user = Auth::user();
         $products = DB::table('products')
-        ->select(['products.*', 'categories.category_name','categories.satuan', 'stores.branch_name'])
-        ->join('categories', 'categories.id', '=', 'products.category_id')
-        ->leftJoin('stores', 'stores.id', '=', 'products.store_id')
+        ->select(['products.*', 'categories.category_name','categories.satuan', 'stores.store_name'])
+        ->join('categories', 'categories.category_id', '=', 'products.category_id')
+        ->leftJoin('stores', 'stores.store_id', '=', 'products.store_id')
         ->get();
         $categories = Category::latest()->get();
         if($user != null) {

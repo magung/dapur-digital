@@ -2,53 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Role;
-use App\Models\Store;
-use App\Models\User;
+use App\Models\Customer;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 
-class UserController extends Controller
+class CustomerController extends Controller
 {
     public function index()
     {
-        // $login = Auth::user();
-        // var_dump($login);die();
-        // if($login->role_id == null) {
-        //     return redirect()
-        //     ->route('/')
-        //     ->with([
-        //         'error' => 'Do not have access this menu'
-        //     ]);
-        // }
-        $users = User::latest()
-                ->join('roles', 'roles.role_id', '=', 'users.role_id')
-                ->leftJoin('stores', 'stores.store_id', '=', 'users.store_id')
-                ->select('users.*', 'roles.role_name', 'stores.store_name')
-                ->get();
-        return view('user.index', compact('users'));
+        $customers = Customer::latest()->get();
+        return view('customer.index', compact('customers'));
     }
     public function create()
     {
-        $roles =  Role::latest()->get();
-        $stores = Store::latest()->get();
-        return view('user.create', compact('roles', 'stores'));
+        return view('customer.create');
     }
 
     public function store(Request $request)
     {
         $this->validate($request, [
             'name'          => 'required',
-            'email'         => 'required|unique:users,email',
+            'email'         => 'required|unique:customers,email',
             'password'      => 'required',
-            'role_id'       => 'required',
             'phone_number'  => 'required',
             'gender'        => 'required',
-            // 'birthday'   => 'required',
+            'birthday'      => 'required',
             'address'       => 'required',
-            'status'       => 'required',
+            'status'        => 'required',
             'photo'         => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
@@ -57,25 +37,23 @@ class UserController extends Controller
 
         $request->photo->move(public_path('uploads'), $photo);
 
-        $user = User::create([
+        $customer = Customer::create([
             'name'          => $request->name,
             'email'         => $request->email,
             'password'      => Hash::make($request->password),
-            'role_id'       => $request->role_id,
             'phone_number'  => $request->phone_number,
             'gender'        => $request->gender,
             'birthday'      => $request->birthday,
             'address'       => $request->address,
-            'status'       => $request->status,
-            'store_id'      => $request->store_id,
+            'status'        => $request->status,
             'photo'         => $photo,
         ]);
 
-        if ($user) {
+        if ($customer) {
             return redirect()
-                ->route('user.index')
+                ->route('customer.index')
                 ->with([
-                    'success' => 'New user has been created successfully'
+                    'success' => 'New customer has been created successfully'
                 ]);
         } else {
             return redirect()
@@ -89,10 +67,8 @@ class UserController extends Controller
 
     public function edit($id)
     {
-        $user = User::findOrFail($id);
-        $roles =  Role::latest()->get();
-        $stores = Store::latest()->get();
-        return view('user.edit', compact('user', 'roles', 'stores'));
+        $customer = Customer::findOrFail($id);
+        return view('customer.edit', compact('customer'));
     }
 
     public function update(Request $request, $id)
@@ -100,7 +76,6 @@ class UserController extends Controller
         $this->validate($request, [
             'name'          => 'required',
             'email'         => 'required',
-            'role_id'       => 'required',
             'phone_number'  => 'required',
             'gender'        => 'required',
             'address'       => 'required',
@@ -110,22 +85,20 @@ class UserController extends Controller
         $datasend = [
             'name'          => $request->name,
             'email'         => $request->email,
-            'role_id'       => $request->role_id,
             'phone_number'  => $request->phone_number,
             'gender'        => $request->gender,
             'birthday'      => $request->birthday,
             'address'       => $request->address,
-            'store_id'      => $request->store_id,
             'status'       => $request->status,
         ];
-        $user = User::findOrFail($id);
+        $customer = Customer::findOrFail($id);
         
         if(isset($request->photo)) {
             $photo = 'PHOTO-PROFILE-'.time().'.'.$request->photo->extension();
             $request->photo->move(public_path('uploads'), $photo);
             $datasend['photo'] = $photo;
-            if (file_exists(public_path('uploads').'/'.$user->photo)) {
-                unlink(public_path('uploads').'/'.$user->photo);
+            if (file_exists(public_path('uploads').'/'.$customer->photo)) {
+                unlink(public_path('uploads').'/'.$customer->photo);
             } 
         }
         
@@ -134,13 +107,13 @@ class UserController extends Controller
             $datasend['password'] = Hash::make($request->password);
         }
         
-        $user->update($datasend);
+        $customer->update($datasend);
 
-        if ($user) {
+        if ($customer) {
             return redirect()
-                ->route('user.index')
+                ->route('customer.index')
                 ->with([
-                    'success' => 'user has been updated successfully'
+                    'success' => 'customer has been updated successfully'
                 ]);
         } else {
             return redirect()
@@ -154,21 +127,21 @@ class UserController extends Controller
 
     public function destroy($id)
     {
-        $user = User::findOrFail($id);
-        if (file_exists(public_path('uploads').'/'.$user->photo)) {
-            unlink(public_path('uploads').'/'.$user->photo);
+        $customer = Customer::findOrFail($id);
+        if (file_exists(public_path('uploads').'/'.$customer->photo)) {
+            unlink(public_path('uploads').'/'.$customer->photo);
         } 
-        $user->delete();
+        $customer->delete();
         
-        if ($user) {
+        if ($customer) {
             return redirect()
-                ->route('user.index')
+                ->route('customer.index')
                 ->with([
-                    'success' => 'user has been deleted successfully'
+                    'success' => 'customer has been deleted successfully'
                 ]);
         } else {
             return redirect()
-                ->route('user.index')
+                ->route('customer.index')
                 ->with([
                     'error' => 'Some problem has occurred, please try again'
                 ]);

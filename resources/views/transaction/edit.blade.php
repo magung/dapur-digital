@@ -36,13 +36,13 @@
 
                 <div class="card border-0 shadow rounded">
                     <div class="card-body">
-                        <form action="{{ route('transaction.update', $transaction->id) }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('transaction.update', $transaction->transaction_list_id) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
 
                             <div class="">
                                 <label for="">List Produk</label><br>
-                                <a href="{{ route('transaction.product.create', $transaction->id) }}" class="btn btn-md btn-success mb-3 ">+ Produk</a>
+                                <a href="{{ route('transaction.product.create', $transaction->transaction_list_id) }}" class="btn btn-md btn-success mb-3 ">+ Produk</a>
                                 <table class="table table-bordered mt-1">
                                     <thead>
                                         <tr>
@@ -78,8 +78,8 @@
                                                 <td>Rp. {{number_format($product->price)}}</td>
                                                 <td>Rp. {{number_format($product->total_price)}}</td>
                                                 <td class="text-center">
-                                                    <a href="{{ route('transaction.product.edit', $product->id) }}" class="btn btn-sm btn-primary">EDIT</a>
-                                                    <a href="{{route('transaction.product.destroy', $product->id) }}" class="btn btn-sm btn-danger">HAPUS</a>
+                                                    <a href="{{ route('transaction.product.edit', $product->product_id) }}" class="btn btn-sm btn-primary">EDIT</a>
+                                                    <a href="{{route('transaction.product.destroy', $product->product_id) }}" class="btn btn-sm btn-danger">HAPUS</a>
                                                 </td>
                                             </tr>
                                             @php
@@ -99,7 +99,7 @@
                                 <select name="store_id" class="form-control" required>
                                     <option value="" >-- Toko --</option>
                                     @foreach ($stores as $store)
-                                        <option value="{{$store->id}}" {{$store_id == $store->id ? 'selected' : ''}} >{{$store->branch_name}}</option>
+                                        <option value="{{$store->store_id}}" {{$store_id == $store->store_id ? 'selected' : ''}} >{{$store->store_name}}</option>
                                     @endforeach
                                 </select>
                                 <!-- error message untuk role -->
@@ -115,7 +115,7 @@
                                 <select name="user_id" class="form-control" required>
                                     <option value="0" >Umum</option>
                                     @foreach ($users as $user)
-                                        <option value="{{$user->id}}" {{$transaction->user_id == $user->id ? 'selected' : ''}}>{{$user->name}}</option>
+                                        <option value="{{$user->user_id}}" {{$transaction->user_id == $user->user_id ? 'selected' : ''}}>{{$user->name}}</option>
                                     @endforeach
                                 </select>
                                 <!-- error message untuk role -->
@@ -130,7 +130,7 @@
                                 <label for="transaction_type_id">Tipe Transaksi</label>
                                 <select name="transaction_type_id" class="form-control" required>
                                     @foreach ($types as $type)
-                                        <option value="{{$type->id}}" {{$transaction->transaction_type_id == $type->id ? 'selected' : ''}} >{{$type->type}}</option>
+                                        <option value="{{$type->transaction_type_id}}" {{$transaction->transaction_type_id == $type->transaction_type_id ? 'selected' : ''}} >{{$type->transaction_type}}</option>
                                     @endforeach
                                 </select>
                                 <!-- error message untuk role -->
@@ -160,7 +160,7 @@
                                 <label for="payment_method_id">Pembayaran</label>
                                 <select name="payment_method_id" class="form-control" required>
                                     @foreach ($payments as $payment)
-                                        <option value="{{$payment->id}}" {{$transaction->payment_method_id == $payment->id ? 'selected' : ''}} >{{$payment->payment_method}}</option>
+                                        <option value="{{$payment->payment_id}}" {{$transaction->payment_method_id == $payment->payment_id ? 'selected' : ''}} >{{$payment->payment_method}}</option>
                                     @endforeach
                                 </select>
                                 <!-- error message untuk role -->

@@ -31,12 +31,12 @@
 
                 <div class="card border-0 shadow rounded">
                     <div class="card-body">
-                        <a href="{{ route('role.create') }}" class="btn btn-md btn-success mb-3 float-right">Tambah Role Level</a>
+                        <a href="{{ route('role.create') }}" class="btn btn-md btn-success mb-3 float-right">Tambah Role</a>
 
                         <table class="table table-bordered mt-1">
                             <thead>
                                 <tr>
-                                    <th scope="col">Level</th>
+                                    <th scope="col">Role</th>
                                     <th scope="col">Satuan</th>
                                     <th scope="col">Action</th>
                                 </tr>
@@ -48,8 +48,8 @@
                                     <td>{{ $role->status == 1 ? 'Aktif' : 'Tidak Aktif' }}</td>
                                     <td class="text-center">
                                         <form onsubmit="return confirm('Apakah Anda Yakin ?');"
-                                            action="{{ route('role.destroy', $role->id) }}" method="POST">
-                                            <a href="{{ route('role.edit', $role->id) }}"
+                                            action="{{ route('role.destroy', $role->role_id) }}" method="POST">
+                                            <a href="{{ route('role.edit', $role->role_id) }}"
                                                 class="btn btn-sm btn-primary">EDIT</a>
                                             @csrf
                                             @method('DELETE')

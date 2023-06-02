@@ -36,7 +36,7 @@
 
                 <div class="card border-0 shadow rounded">
                     <div class="card-body">
-                        <form action="{{ route('payment.update', $payment->id) }}" method="POST">
+                        <form action="{{ route('payment.update', $payment->payment_id) }}" method="POST">
                             @csrf
                             @method('PUT')
 

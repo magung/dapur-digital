@@ -46,7 +46,7 @@
                         <ul class="dropdown-menu dropdown-menu-light text-small shadow">
                             @foreach ($categories as $category)
                                 <li><a class="dropdown-item"
-                                        href="/list-product-category/{{ $category->id }}">{{ $category->category_name }}</a>
+                                        href="/list-product-category/{{ $category->category_id }}">{{ $category->category_name }}</a>
                                 </li>
                             @endforeach
                         </ul>

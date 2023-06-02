@@ -49,14 +49,14 @@
                                 <tr>
                                     <td>{{ $product->product_name }}</td>
                                     <td>{{ $product->category_name }}</td>
-                                    <td>{{ $product->branch_name }}</td>
+                                    <td>{{ $product->store_name }}</td>
                                     <td>{{ $product->price }}</td>
                                     <td>{{ $product->satuan }}</td>
                                     <td>{{ $product->stock }}</td>
                                     <td class="text-center">
                                         <form onsubmit="return confirm('Apakah Anda Yakin ?');"
-                                            action="{{ route('product.destroy', $product->id) }}" method="POST">
-                                            <a href="{{ route('product.edit', $product->id) }}"
+                                            action="{{ route('product.destroy', $product->product_id) }}" method="POST">
+                                            <a href="{{ route('product.edit', $product->product_id) }}"
                                                 class="btn btn-sm btn-primary">EDIT</a>
                                             @csrf
                                             @method('DELETE')

@@ -45,8 +45,8 @@
                                     <td>{{ $payment->payment_method }}</td>
                                     <td class="text-center">
                                         <form onsubmit="return confirm('Apakah Anda Yakin ?');"
-                                            action="{{ route('payment.destroy', $payment->id) }}" method="POST">
-                                            <a href="{{ route('payment.edit', $payment->id) }}"
+                                            action="{{ route('payment.destroy', $payment->payment_id) }}" method="POST">
+                                            <a href="{{ route('payment.edit', $payment->payment_id) }}"
                                                 class="btn btn-sm btn-primary">EDIT</a>
                                             @csrf
                                             @method('DELETE')

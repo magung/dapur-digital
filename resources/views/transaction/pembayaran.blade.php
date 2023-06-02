@@ -36,7 +36,7 @@
 
                 <div class="card border-0 shadow rounded">
                     <div class="card-body">
-                        <form action="{{ route('transaction.update', $transaction->id) }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('transaction.update', $transaction->transaction_list_id) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
 
@@ -44,7 +44,7 @@
                                 <label for="payment_method_id">Pembayaran</label>
                                 <select name="payment_method_id" class="form-control" required>
                                     @foreach ($payments as $payment)
-                                        <option value="{{$payment->id}}" {{$transaction->payment_method_id == $payment->id ? 'selected' : ''}} >{{$payment->payment_method}}</option>
+                                        <option value="{{$payment->payment_id}}" {{$transaction->payment_method_id == $payment->payment_id ? 'selected' : ''}} >{{$payment->payment_method}}</option>
                                     @endforeach
                                 </select>
                                 <!-- error message untuk role -->

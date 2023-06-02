@@ -50,7 +50,7 @@
                             <tbody>
                                 @forelse ($transaction_statuses as $transaction_statuse)
                                 <tr>
-                                    <td>{{ $transaction_statuse->status }}</td>
+                                    <td>{{ $transaction_statuse->transaction_status }}</td>
                                 </tr>
                                 @empty
                                 <tr>

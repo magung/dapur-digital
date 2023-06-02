@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class TransactionList extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'transaction_list_id';
     protected $fillable = [
         'store_id',
         'transaction_type_id',

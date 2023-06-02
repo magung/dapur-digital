@@ -13,10 +13,10 @@ class CartController extends Controller
 {
     public function create()
     {
-        $user = Auth::user();
+        $user = Auth::guard('customer')->user();
         $store_id = $user->store_id;
         $products = Product::latest()
-                    ->join('categories', 'categories.id', '=', 'products.category_id')
+                    ->join('categories', 'categories.category_id', '=', 'products.category_id')
                     ->select('products.*', 'categories.satuan')
                     ->where('store_id', $store_id)->get();
         $finishings = Finishing::latest()->get();
@@ -25,25 +25,25 @@ class CartController extends Controller
     }
 
     public function addToCart($id) {
-        $user_id =  Auth::id();
+        $user_id =  Auth::guard('customer')->id();
         $product = Product::latest()
-                    ->where('products.id', $id)
-                    ->leftJoin('categories','categories.id', '=', 'products.category_id')
+                    ->where('products.product_id', $id)
+                    ->leftJoin('categories','categories.category_id', '=', 'products.category_id')
                     ->select('products.*', 'categories.satuan')
                     ->first();
         $datasend = [
-            'product_id' => $product->id,
+            'product_id' => $product->product_id,
             'qty' => 1,
             'panjang' => 1,
             'lebar' => 1,
             'price' => $product->price,
             'total_price' => $product->price,
-            'user_id' => $user_id,
+            'customer_id' => $user_id,
             'satuan' => $product->satuan
         ];
 
         $cart = Cart::latest()
-            ->where('user_id', $user_id)
+            ->where('customer_id', $user_id)
             ->where('product_id', $product->product_id)->first();
         if($cart) {
             $cart->update($datasend);
@@ -68,7 +68,7 @@ class CartController extends Controller
 
     public function store(Request $request)
     {
-        $user_id =  Auth::id();
+        $user_id =  Auth::guard('customer')->id();
         $validators = [
             'product_id'    => 'required',
             'qty'           => 'required|numeric|min:1',
@@ -88,7 +88,7 @@ class CartController extends Controller
             'qty' => $request->qty,
             'price' => $request->price,
             'total_price' => $request->total_price,
-            'user_id' => $user_id,
+            'customer_id' => $user_id,
             'satuan' => $request->satuan,
             'finishing_id' => $request->finishing_id,
             'finishing_price' => $request->finishing_price,
@@ -102,13 +102,13 @@ class CartController extends Controller
         }
 
         $cart = Cart::latest()
-            ->where('user_id', $user_id)
+            ->where('customer_id', $user_id)
             ->where('product_id', $request->product_id)->first();
 
         if($cart) {
             // var_dump($cart);
             // die();
-            // $cart = Cart::findOrFail($cart->id);
+            // $cart = Cart::findOrFail($cart->cart_id);
             $cart->update($datasend);
         } else {
             $cart = Cart::create($datasend);
@@ -133,12 +133,10 @@ class CartController extends Controller
 
     public function edit($id)
     {
-        $user = Auth::user();
-        $store_id = $user->store_id;
+        $user = Auth::guard('customer')->user();
         $products = Product::latest()
-                    ->join('categories', 'categories.id', '=', 'products.category_id')
-                    ->select('products.*', 'categories.satuan')
-                    ->where('store_id', $store_id)->get();
+                    ->join('categories', 'categories.category_id', '=', 'products.category_id')
+                    ->select('products.*', 'categories.satuan')->get();
         $cart = Cart::findOrFail($id);
         $finishings = Finishing::latest()->get();
         $cuttings = Cutting::latest()->get();
@@ -167,7 +165,7 @@ class CartController extends Controller
             'qty' => $request->qty,
             'price' => $request->price,
             'total_price' => $request->total_price,
-            'user_id' => Auth::id(),
+            'customer_id' => Auth::guard('customer')->id(),
             'satuan' => $request->satuan,
             'finishing_id' => $request->finishing_id,
             'finishing_price' => $request->finishing_price,
@@ -221,7 +219,7 @@ class CartController extends Controller
             'qty' => $request->qty,
             'price' => $request->price,
             'total_price' => $request->total_price,
-            'user_id' => Auth::id(),
+            'customer_id' => Auth::guard('customer')->id(),
             'satuan' => $request->satuan,
             'finishing_id' => $request->finishing_id,
             'finishing_price' => $request->finishing_price,

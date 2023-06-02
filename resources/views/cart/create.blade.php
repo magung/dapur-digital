@@ -112,7 +112,7 @@
                                 <select name="product_id" id="product" class="form-control" required onchange="setSatuan()">
                                     <option value="" >-- pilih produk --</option>
                                     @foreach ($products as $product)
-                                        <option value="{{$product->id}}" data-satuan="{{$product->satuan}}" data-price="{{$product->price}}" >{{$product->product_name}}</option>
+                                        <option value="{{$product->product_id}}" data-satuan="{{$product->satuan}}" data-price="{{$product->price}}" >{{$product->product_name}}</option>
                                     @endforeach
                                 </select>
                                 <!-- error message untuk product_id -->
@@ -193,7 +193,7 @@
                                 <select name="finishing_id" id="finishings" class="form-control" onchange="setLuas()" >
                                     <option value="" >-- pilih finishing --</option>
                                     @foreach ($finishings as $finishing)
-                                        <option value="{{$finishing->id}}" data-price="{{$finishing->finishing_price}}">{{$finishing->finishing}} - Rp. {{ number_format($finishing->finishing_price) }}</option>
+                                        <option value="{{$finishing->finishing_id}}" data-price="{{$finishing->finishing_price}}">{{$finishing->finishing}} - Rp. {{ number_format($finishing->finishing_price) }}</option>
                                     @endforeach
                                 </select>
                                 <!-- error message untuk role -->
@@ -210,7 +210,7 @@
                                 <select name="cutting_id" id="cuttings" class="form-control" onchange="setLuas()">
                                     <option value="" >-- pilih cutting --</option>
                                     @foreach ($cuttings as $cutting)
-                                        <option value="{{$cutting->id}}" data-price="{{$cutting->cutting_price}}" >{{$cutting->cutting}} - Rp. {{ number_format($cutting->cutting_price) }}</option>
+                                        <option value="{{$cutting->cutting_id}}" data-price="{{$cutting->cutting_price}}" >{{$cutting->cutting}} - Rp. {{ number_format($cutting->cutting_price) }}</option>
                                     @endforeach
                                 </select>
                                 <!-- error message untuk role -->

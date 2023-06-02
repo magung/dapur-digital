@@ -44,14 +44,14 @@
                         <tbody>
                             @forelse ($stores as $store)
                                 <tr>
-                                    <td>{{ $store->branch_name }}</td>
-                                    <td>{{ $store->branch_address }}</td>
+                                    <td>{{ $store->store_name }}</td>
+                                    <td>{{ $store->store_address }}</td>
                                     <td>{{ $store->email }}</td>
                                     <td>{{ $store->sosial_media }}</td>
                                     <td class="text-center">
                                         <form onsubmit="return confirm('Apakah Anda Yakin ?');"
-                                            action="{{ route('store.destroy', $store->id) }}" method="POST">
-                                            <a href="{{ route('store.edit', $store->id) }}"
+                                            action="{{ route('store.destroy', $store->store_id) }}" method="POST">
+                                            <a href="{{ route('store.edit', $store->store_id) }}"
                                                 class="btn btn-sm btn-primary">EDIT</a>
                                             @csrf
                                             @method('DELETE')

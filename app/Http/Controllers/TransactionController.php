@@ -25,14 +25,14 @@ class TransactionController extends Controller
     {
         $user = Auth::user();
         $transactions = TransactionList::latest()
-                        ->select('transaction_lists.*', 'transaction_statuses.status', 'users.name', 'users.email', 'payment_statuses.payment_status')
-                        ->join('transaction_statuses', 'transaction_statuses.id', '=', 'transaction_lists.transaction_status_id')
-                        ->join('payment_statuses', 'payment_statuses.id', '=', 'transaction_lists.payment_status_id')
-                        ->leftJoin('users', 'users.id', '=', 'transaction_lists.user_id')
+                        ->select('transaction_lists.*', 'transaction_statuses.transaction_status', 'users.name', 'users.email', 'payment_statuses.payment_status')
+                        ->join('transaction_statuses', 'transaction_statuses.transaction_status_id', '=', 'transaction_lists.transaction_status_id')
+                        ->join('payment_statuses', 'payment_statuses.payment_status_id', '=', 'transaction_lists.payment_status_id')
+                        ->leftJoin('users', 'users.user_id', '=', 'transaction_lists.user_id')
                         ->get();
         foreach($transactions as $transaction) {
-            $transaction->products = TransactionProductList::where(['transaction_id' => $transaction->id])
-                                    ->join('products', 'products.id', '=', 'transaction_product_lists.product_id')
+            $transaction->products = TransactionProductList::where(['transaction_list_id' => $transaction->transaction_list_id])
+                                    ->join('products', 'products.product_id', '=', 'transaction_product_lists.product_id')
                                     ->get();
         }
         return view('transaction.index', compact('transactions', 'user'));
@@ -42,14 +42,14 @@ class TransactionController extends Controller
     {
         $user = Auth::user();
         $transactions = TransactionList::latest()
-                        ->select('transaction_lists.*', 'transaction_statuses.status', 'users.name', 'users.email')
-                        ->join('transaction_statuses', 'transaction_statuses.id', '=', 'transaction_lists.transaction_status_id')
-                        ->join('users', 'users.id', '=', 'transaction_lists.user_id')
+                        ->select('transaction_lists.*', 'transaction_statuses.transaction_status', 'users.name', 'users.email')
+                        ->join('transaction_statuses', 'transaction_statuses.transaction_status_id', '=', 'transaction_lists.transaction_status_id')
+                        ->join('users', 'users.user_id', '=', 'transaction_lists.user_id')
                         ->where('transaction_lists.user_id', Auth::id())
                         ->get();
         foreach($transactions as $transaction) {
-            $transaction->products = TransactionProductList::where(['transaction_id' => $transaction->id])
-                                    ->join('products', 'products.id', '=', 'transaction_product_lists.product_id')
+            $transaction->products = TransactionProductList::where(['transaction_list_id' => $transaction->transaction_list_id])
+                                    ->join('products', 'products.product_id', '=', 'transaction_product_lists.product_id')
                                     ->get();
         }
         return view('transaction.index', compact('transactions', 'user'));
@@ -63,7 +63,7 @@ class TransactionController extends Controller
         $store_id = $user->store_id;
         // var_dump($store_id);
         // $products = Product::latest()
-        //             ->join('categories', 'categories.id', '=', 'products.category_id')
+        //             ->join('categories', 'categories.category_id', '=', 'products.category_id')
         //             ->select('products.*', 'categories.satuan')
         //             ->where('store_id', $store_id)->get();
         // echo "<pre>";
@@ -78,11 +78,11 @@ class TransactionController extends Controller
         $stores = Store::latest()->get();
         $payment_statuses = PaymentStatus::latest()->get();
         $carts = Cart::latest()
-                ->join('products', 'products.id', '=', 'carts.product_id')
-                ->leftJoin('finishings', 'finishings.id', '=', 'carts.finishing_id')
-                ->leftJoin('cuttings', 'cuttings.id', '=', 'carts.cutting_id')
+                ->join('products', 'products.product_id', '=', 'carts.product_id')
+                ->leftJoin('finishings', 'finishings.finishing_id', '=', 'carts.finishing_id')
+                ->leftJoin('cuttings', 'cuttings.cutting_id', '=', 'carts.cutting_id')
                 ->select('carts.*', 'products.product_name', 'finishings.finishing', 'cuttings.cutting')
-                ->where('user_id', $user->id)->get();
+                ->where('user_id', $user->user_id)->get();
         $total_harga = 0;
         foreach($carts as $cart) {
             $total_harga += $cart->total_price;
@@ -106,33 +106,29 @@ class TransactionController extends Controller
 
     public function createTransacationPelanggan()
     {
-        $user = Auth::user();
-        $store_id = $user->store_id;
-        $users = User::latest()->where('role_id', 4)->get(); // where role is pelanggan
+        $customer = Auth::guard('customer')->user();
         $payments = Payment::latest()->get();
         $statuses = TransactionStatus::latest()->get();
         $types = TransactionType::latest()->get();
         $stores = Store::latest()->get();
         $payment_statuses = PaymentStatus::latest()->get();
         $carts = Cart::latest()
-                ->join('products', 'products.id', '=', 'carts.product_id')
-                ->leftJoin('finishings', 'finishings.id', '=', 'carts.finishing_id')
-                ->leftJoin('cuttings', 'cuttings.id', '=', 'carts.cutting_id')
+                ->join('products', 'products.product_id', '=', 'carts.product_id')
+                ->leftJoin('finishings', 'finishings.finishing_id', '=', 'carts.finishing_id')
+                ->leftJoin('cuttings', 'cuttings.cutting_id', '=', 'carts.cutting_id')
                 ->select('carts.*', 'products.product_name', 'finishings.finishing', 'cuttings.cutting')
-                ->where('user_id', $user->id)->get();
+                ->where('customer_id', $customer->customer_id)->get();
         $total_harga = 0;
         foreach($carts as $cart) {
             $total_harga += $cart->total_price;
         }
         return view('cart-list.create', 
                     compact(
-                            'users', 
                             'payments', 
                             'statuses', 
                             'types',
                             'stores',
                             'payment_statuses',
-                            'store_id',
                             'carts',
                             'total_harga'
                         ));
@@ -174,12 +170,12 @@ class TransactionController extends Controller
         // var_dump($transaction);
         // die();
 
-        $carts = Cart::latest()->where('user_id', Auth::id())->get();
+        $carts = Cart::latest()->where('customer_id', Auth::id())->get();
         //  var_dump($carts);
         // die();
         foreach($carts as $cart) {
             TransactionProductList::create([
-                'transaction_id' => $transaction->id,
+                'transaction_list_id' => $transaction->transaction_list_id,
                 'product_id' => $cart->product_id,
                 'qty' => $cart->qty,
                 'panjang' => $cart->panjang,
@@ -192,7 +188,7 @@ class TransactionController extends Controller
                 'cutting_id' => $cart->cutting_id,
                 'cutting_price' => $cart->cutting_price,
             ]);
-            $cart = Cart::findOrFail($cart->id);
+            $cart = Cart::findOrFail($cart->cart_id);
             $cart->delete();
         }
 
@@ -262,7 +258,7 @@ class TransactionController extends Controller
         // die();
         foreach($carts as $cart) {
             TransactionProductList::create([
-                'transaction_id' => $transaction->id,
+                'transaction_list_id' => $transaction->transaction_list_id,
                 'product_id' => $cart->product_id,
                 'qty' => $cart->qty,
                 'panjang' => $cart->panjang,
@@ -275,7 +271,7 @@ class TransactionController extends Controller
                 'cutting_id' => $cart->cutting_id,
                 'cutting_price' => $cart->cutting_price,
             ]);
-            $cart = Cart::findOrFail($cart->id);
+            $cart = Cart::findOrFail($cart->cart_id);
             $cart->delete();
         }
 
@@ -307,11 +303,11 @@ class TransactionController extends Controller
         $payment_statuses = PaymentStatus::latest()->get();
         $transaction = TransactionList::findOrFail($id);
         $transaction_product_lists = TransactionProductList::latest()
-                ->join('products', 'products.id', '=', 'transaction_product_lists.product_id')
-                ->leftJoin('finishings', 'finishings.id', '=', 'transaction_product_lists.finishing_id')
-                ->leftJoin('cuttings', 'cuttings.id', '=', 'transaction_product_lists.cutting_id')
+                ->join('products', 'products.product_id', '=', 'transaction_product_lists.product_id')
+                ->leftJoin('finishings', 'finishings.finishing_id', '=', 'transaction_product_lists.finishing_id')
+                ->leftJoin('cuttings', 'cuttings.cutting_id', '=', 'transaction_product_lists.cutting_id')
                 ->select('transaction_product_lists.*', 'products.product_name', 'finishings.finishing', 'cuttings.cutting')
-                ->where('transaction_id', $transaction->id)->get();
+                ->where('transaction_list_id', $transaction->transaction_list_id)->get();
         $total_harga = 0;
         foreach($transaction_product_lists as $product) {
             $total_harga += $product->total_price;
@@ -353,11 +349,11 @@ class TransactionController extends Controller
         $payment_statuses = PaymentStatus::latest()->get();
         $transaction = TransactionList::findOrFail($id);
         $transaction_product_lists = TransactionProductList::latest()
-                ->join('products', 'products.id', '=', 'transaction_product_lists.product_id')
-                ->leftJoin('finishings', 'finishings.id', '=', 'transaction_product_lists.finishing_id')
-                ->leftJoin('cuttings', 'cuttings.id', '=', 'transaction_product_lists.cutting_id')
+                ->join('products', 'products.product_id', '=', 'transaction_product_lists.product_id')
+                ->leftJoin('finishings', 'finishings.finishing_id', '=', 'transaction_product_lists.finishing_id')
+                ->leftJoin('cuttings', 'cuttings.cutting_id', '=', 'transaction_product_lists.cutting_id')
                 ->select('transaction_product_lists.*', 'products.product_name', 'finishings.finishing', 'cuttings.cutting')
-                ->where('transaction_id', $transaction->id)->get();
+                ->where('transaction_list_id', $transaction->transaction_list_id)->get();
         $total_harga = 0;
         foreach($transaction_product_lists as $product) {
             $total_harga += $product->total_price;
@@ -383,13 +379,13 @@ class TransactionController extends Controller
         $user = Auth::user();
         $store_id = $user->store_id;
         $products = Product::latest()
-                    ->join('categories', 'categories.id', '=', 'products.category_id')
+                    ->join('categories', 'categories.category_id', '=', 'products.category_id')
                     ->select('products.*', 'categories.satuan')
                     ->where('store_id', $store_id)->get();
         $finishings = Finishing::latest()->get();
         $cuttings = Cutting::latest()->get();
-        $transaction_id = $id;
-        return view('transaction.product.create', compact('products', 'finishings', 'cuttings', 'transaction_id'));
+        $transaction_list_id = $id;
+        return view('transaction.product.create', compact('products', 'finishings', 'cuttings', 'transaction_list_id'));
     }
 
     public function storeProductList(Request $request)
@@ -400,7 +396,7 @@ class TransactionController extends Controller
             'qty'           => 'required|numeric|min:1',
             'total_price'   => 'required|numeric',
             'satuan'        => 'required',
-            'transaction_id'    => 'required',
+            'transaction_list_id'    => 'required',
         ];
 
         if($request->satuan == 'M') {
@@ -410,14 +406,14 @@ class TransactionController extends Controller
 
         $this->validate($request, $validators);
 
-        $transaction_id = $request->transaction_id;
+        $transaction_list_id = $request->transaction_list_id;
 
         $datasend = [
             'product_id' => $request->product_id,
             'qty' => $request->qty,
             'price' => $request->price,
             'total_price' => $request->total_price,
-            'transaction_id' => $transaction_id,
+            'transaction_list_id' => $transaction_list_id,
             'satuan' => $request->satuan,
             'finishing_id' => $request->finishing_id,
             'finishing_price' => $request->finishing_price,
@@ -431,10 +427,10 @@ class TransactionController extends Controller
         }
 
         $product = TransactionProductList::latest()
-            ->where('transaction_id', $transaction_id)
+            ->where('transaction_list_id', $transaction_list_id)
             ->where('product_id', $request->product_id)->first();
 
-        $transaction = TransactionList::findOrFail($transaction_id);
+        $transaction = TransactionList::findOrFail($transaction_list_id);
 
         if($product) {
             $transaction->final_price = $transaction->final_price - $product->total_price + $request->total_price;
@@ -448,7 +444,7 @@ class TransactionController extends Controller
 
         if ($product) {
             return redirect()
-                ->route('transaction.edit', $transaction_id)
+                ->route('transaction.edit', $transaction_list_id)
                 ->with([
                     'success' => 'New product has been created successfully'
                 ]);
@@ -467,7 +463,7 @@ class TransactionController extends Controller
         $user = Auth::user();
         $store_id = $user->store_id;
         $products = Product::latest()
-                    ->join('categories', 'categories.id', '=', 'products.category_id')
+                    ->join('categories', 'categories.category_id', '=', 'products.category_id')
                     ->select('products.*', 'categories.satuan')
                     ->where('store_id', $store_id)->get();
         $finishings = Finishing::latest()->get();
@@ -511,14 +507,14 @@ class TransactionController extends Controller
 
         $product = TransactionProductList::findOrFail($id);
 
-        $transaction = TransactionList::findOrFail($product->transaction_id);
+        $transaction = TransactionList::findOrFail($product->transaction_list_id);
         $transaction->final_price = $transaction->final_price - $product->total_price + $request->total_price;
         $transaction->save();
         $product->update($datasend);
 
         if ($product) {
             return redirect()
-                ->route('transaction.edit', $product->transaction_id)
+                ->route('transaction.edit', $product->transaction_list_id)
                 ->with([
                     'success' => 'New product has been created successfully'
                 ]);
@@ -587,7 +583,7 @@ class TransactionController extends Controller
     public function destroy($id)
     {
         $transaction = TransactionList::findOrFail($id);
-        $transaction_product_lists = TransactionProductList::latest()->where('transaction_id', $id)->get();
+        $transaction_product_lists = TransactionProductList::latest()->where('transaction_list_id', $id)->get();
         foreach($transaction_product_lists as $product) {
             $product->delete();
         }
@@ -611,21 +607,21 @@ class TransactionController extends Controller
     public function destroyProductList($id)
     {
         $transaction_product_list = TransactionProductList::findOrFail($id);
-        $transaction_id = $transaction_product_list->transaction_id;
-        $transaction = TransactionList::findOrFail($transaction_id);
+        $transaction_list_id = $transaction_product_list->transaction_list_id;
+        $transaction = TransactionList::findOrFail($transaction_list_id);
         $transaction->final_price = $transaction->final_price - $transaction_product_list->total_price;
         $transaction->save();
         $transaction_product_list->delete();
 
         if($transaction_product_list) {
             return redirect()
-                ->route('transaction.edit', $transaction_id)
+                ->route('transaction.edit', $transaction_list_id)
                 ->with([
                     'success' => 'transaction has been deleted successfully'
                 ]);
         } else {
             return redirect()
-                ->route('transaction.edit', $transaction_id)
+                ->route('transaction.edit', $transaction_list_id)
                 ->with([
                     'error' => 'Some problem has occurred, please try again'
                 ]);

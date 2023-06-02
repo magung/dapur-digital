@@ -46,8 +46,8 @@
                                     <td>{{ $finishing->finishing_price }}</td>
                                     <td class="text-center">
                                         <form onsubmit="return confirm('Apakah Anda Yakin ?');"
-                                            action="{{ route('finishing.destroy', $finishing->id) }}" method="POST">
-                                            <a href="{{ route('finishing.edit', $finishing->id) }}"
+                                            action="{{ route('finishing.destroy', $finishing->finishing_id) }}" method="POST">
+                                            <a href="{{ route('finishing.edit', $finishing->finishing_id) }}"
                                                 class="btn btn-sm btn-primary">EDIT</a>
                                             @csrf
                                             @method('DELETE')

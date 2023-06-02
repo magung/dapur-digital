@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class PaymentStatus extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'payment_status_id';
+    protected $fillable = ['payment_status'];
 }

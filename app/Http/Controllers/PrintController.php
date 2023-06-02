@@ -18,7 +18,7 @@ class PrintController extends Controller
         $store_email = 'yourmart@email.com';
         $store_website = 'yourmart.com';
         $tax_percentage = 10;
-        $transaction_id = 'TX123ABC456';
+        $transaction_list_id = 'TX123ABC456';
         $currency = 'Rp';
         $image_path = 'logo.png';
 
@@ -75,7 +75,7 @@ class PrintController extends Controller
         $printer->calculateGrandTotal();
 
         // Set transaction ID
-        $printer->setTransactionID($transaction_id);
+        $printer->setTransactionID($transaction_list_id);
 
         // Set logo
         // Uncomment the line below if $image_path is defined
@@ -83,7 +83,7 @@ class PrintController extends Controller
 
         // Set QR code
         $printer->setQRcode([
-            'tid' => $transaction_id,
+            'tid' => $transaction_list_id,
         ]);
 
         // Print receipt

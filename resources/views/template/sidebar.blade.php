@@ -31,6 +31,9 @@
                     <ion-icon name="server-outline"></ion-icon> <span class="ms-1 d-none d-sm-inline ">Master Data</span> </a>
                 <ul class="collapse nav flex-column ms-1 show" id="master-data" data-bs-parent="#menu">
                     <li class="w-100">
+                        <a href="/customer" class="nav-link text-black px-0"> <ion-icon name="chevron-forward-outline"></ion-icon> <span class="d-none d-sm-inline">Customer</span></a>
+                    </li>
+                    <li class="w-100">
                         <a href="/user" class="nav-link text-black px-0"> <ion-icon name="chevron-forward-outline"></ion-icon> <span class="d-none d-sm-inline">User</span></a>
                     </li>
                     <li class="w-100">
@@ -46,7 +49,7 @@
                         <a href="/payment" class="nav-link text-black px-0"> <ion-icon name="chevron-forward-outline"></ion-icon> <span class="d-none d-sm-inline">Pembayaran</span></a>
                     </li>
                     <li>
-                        <a href="/role" class="nav-link text-black px-0"> <ion-icon name="chevron-forward-outline"></ion-icon> <span class="d-none d-sm-inline">Level</span></a>
+                        <a href="/role" class="nav-link text-black px-0"> <ion-icon name="chevron-forward-outline"></ion-icon> <span class="d-none d-sm-inline">Role</span></a>
                     </li>
                     <li>
                         <a href="/cutting" class="nav-link text-black px-0"> <ion-icon name="chevron-forward-outline"></ion-icon> <span class="d-none d-sm-inline">Cutting</span></a>

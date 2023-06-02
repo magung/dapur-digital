@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Store extends Model
 {
     use HasFactory;
+    protected $primaryKey='store_id';
     protected $fillable = [
-        'branch_name','branch_address', 'email', 'sosial_media',
+        'store_name','store_address', 'email', 'sosial_media',
     ];
 }

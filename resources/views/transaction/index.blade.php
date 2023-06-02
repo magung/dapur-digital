@@ -63,7 +63,7 @@
                             <tbody>
                                 @forelse ($transactions as $transaction)
                                 <tr>
-                                    <td>{{ $transaction->id }}</td>
+                                    <td>{{ $transaction->transaction_list_id }}</td>
                                     <td>{{ $transaction->created_at }}</td>
                                     <td>{{ $transaction->user_id == 0 ? 'Umum' : $transaction->name }} <br>{{ $transaction->email }} </td>
                                     <td>
@@ -87,10 +87,10 @@
                                     <td class="text-center">
                                         @if ($user->role_id != 4)
                                         <form onsubmit="return confirm('Apakah Anda Yakin ?');"
-                                            action="{{ route('transaction.destroy', $transaction->id) }}" method="POST">
-                                            <a href="{{ route('transaction.edit', $transaction->id) }}"
+                                            action="{{ route('transaction.destroy', $transaction->transaction_list_id) }}" method="POST">
+                                            <a href="{{ route('transaction.edit', $transaction->transaction_list_id) }}"
                                                 class="btn btn-sm btn-primary">EDIT</a>
-                                            <a href="{{ route('transaction.detail', $transaction->id) }}"
+                                            <a href="{{ route('transaction.detail', $transaction->transaction_list_id) }}"
                                                 class="btn btn-sm btn-warning">DETAIL</a>
                                             @csrf
                                             @method('DELETE')
@@ -98,11 +98,11 @@
                                         </form>
                                         @endif
                                         @if ($user->role_id == 4)
-                                        <a href="{{ route('transaction.detail', $transaction->id) }}"
+                                        <a href="{{ route('transaction.detail', $transaction->transaction_list_id) }}"
                                             class="btn btn-sm btn-warning">DETAIL</a>
                                             @if ($transaction->payment_status != 'LUNAS')
                                             <br>
-                                            <a href="{{ route('transaction.pembayaran', $transaction->id) }}"
+                                            <a href="{{ route('transaction.pembayaran', $transaction->transaction_list_id) }}"
                                                 class="btn btn-sm btn-primary">PEMBAYARAN</a>
                                             @endif
                                         @endif

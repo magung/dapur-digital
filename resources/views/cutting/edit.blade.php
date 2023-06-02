@@ -36,7 +36,7 @@
 
                 <div class="card border-0 shadow rounded">
                     <div class="card-body">
-                        <form action="{{ route('cutting.update', $cutting->id) }}" method="POST">
+                        <form action="{{ route('cutting.update', $cutting->cutting_id) }}" method="POST">
                             @csrf
                             @method('PUT')
 

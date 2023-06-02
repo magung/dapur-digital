@@ -27,15 +27,15 @@ class StoreController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'branch_name' => 'required|string',
-            'branch_address' => 'required',
+            'store_name' => 'required|string',
+            'store_address' => 'required',
             'email' => 'required',
             'sosial_media' => 'required'
         ]);
 
         $store = Store::create([
-            'branch_name' => $request->branch_name,
-            'branch_address' => $request->branch_address,
+            'store_name' => $request->store_name,
+            'store_address' => $request->store_address,
             'email' => $request->email,
             'sosial_media' => $request->sosial_media
         ]);
@@ -71,8 +71,8 @@ class StoreController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'branch_name' => 'required|string',
-            'branch_address' => 'required',
+            'store_name' => 'required|string',
+            'store_address' => 'required',
             'email' => 'required',
             'sosial_media' => 'required'
         ]);
@@ -82,8 +82,8 @@ class StoreController extends Controller
         // var_dump($store);
         // die();
         $store->update([
-            'branch_name' => $request->branch_name,
-            'branch_address' => $request->branch_address,
+            'store_name' => $request->store_name,
+            'store_address' => $request->store_address,
             'email' => $request->email,
             'sosial_media' => $request->sosial_media
         ]);

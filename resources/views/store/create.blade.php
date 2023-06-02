@@ -40,12 +40,12 @@
                             @csrf
 
                             <div class="form-group">
-                                <label for="branch_name">Nama Toko</label>
-                                <input type="text" class="form-control @error('branch_name') is-invalid @enderror"
-                                    name="branch_name" value="{{ old('branch_name') }}" required>
+                                <label for="store_name">Nama Toko</label>
+                                <input type="text" class="form-control @error('store_name') is-invalid @enderror"
+                                    name="store_name" value="{{ old('store_name') }}" required>
 
-                                <!-- error message untuk branch_name -->
-                                @error('branch_name')
+                                <!-- error message untuk store_name -->
+                                @error('store_name')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
@@ -53,15 +53,15 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="branch_address">Alamat Toko</label>
+                                <label for="store_address">Alamat Toko</label>
                                 <textarea
-                                    name="branch_address" id="branch_address"
-                                    class="form-control @error('branch_address') is-invalid @enderror"
+                                    name="store_address" id="store_address"
+                                    class="form-control @error('store_address') is-invalid @enderror"
                                     rows="5"
-                                    required>{{ old('branch_address') }}</textarea>
+                                    required>{{ old('store_address') }}</textarea>
 
-                                <!-- error message untuk branch_address -->
-                                @error('branch_address')
+                                <!-- error message untuk store_address -->
+                                @error('store_address')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>

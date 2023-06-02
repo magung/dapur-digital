@@ -36,17 +36,17 @@
 
                 <div class="card border-0 shadow rounded">
                     <div class="card-body">
-                        <form action="{{ route('store.update', $store->id) }}" method="POST">
+                        <form action="{{ route('store.update', $store->store_id) }}" method="POST">
                             @csrf
                             @method('PUT')
 
                             <div class="form-group">
-                                <label for="branch_name">Nama Toko</label>
-                                <input type="text" class="form-control @error('branch_name') is-invalid @enderror"
-                                    name="branch_name" value="{{ old('branch_name', $store->branch_name) }}" required>
+                                <label for="store_name">Nama Toko</label>
+                                <input type="text" class="form-control @error('store_name') is-invalid @enderror"
+                                    name="store_name" value="{{ old('store_name', $store->store_name) }}" required>
 
-                                <!-- error message untuk branch_name -->
-                                @error('branch_name')
+                                <!-- error message untuk store_name -->
+                                @error('store_name')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
@@ -54,14 +54,14 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="branch_address">Alamat Toko</label>
+                                <label for="store_address">Alamat Toko</label>
                                 <textarea
-                                    name="branch_address" id="branch_address"
-                                    class="form-control @error('branch_address') is-invalid @enderror" name="branch_address" id="branch_address"
-                                    rows="5" required>{{ old('branch_address', $store->branch_address) }}</textarea>
+                                    name="store_address" id="store_address"
+                                    class="form-control @error('store_address') is-invalid @enderror" name="store_address" id="store_address"
+                                    rows="5" required>{{ old('store_address', $store->store_address) }}</textarea>
 
-                                <!-- error message untuk branch_address -->
-                                @error('branch_address')
+                                <!-- error message untuk store_address -->
+                                @error('store_address')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>

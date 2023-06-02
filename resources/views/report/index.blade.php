@@ -32,7 +32,7 @@
                             <tbody>
                                 @forelse ($transactions as $transaction)
                                 <tr>
-                                    <td>{{ $transaction->id }}</td>
+                                    <td>{{ $transaction->transaction_list_id }}</td>
                                     <td>{{ $transaction->created_at }}</td>
                                     <td>{{ $transaction->user_id == 0 ? 'Umum' : $transaction->name }} <br>{{ $transaction->email }} </td>
                                     <td>
@@ -83,7 +83,7 @@
                                 <tr>
                                     <td>{{ $product->product_name }}</td>
                                     <td>{{ $product->category_name }}</td>
-                                    <td>{{ $product->branch_name }}</td>
+                                    <td>{{ $product->store_name }}</td>
                                     <td>{{ $product->price }}</td>
                                     <td>{{ $product->satuan }}</td>
                                     <td>{{ $product->stock }}</td>

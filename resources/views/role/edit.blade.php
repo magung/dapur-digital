@@ -36,7 +36,7 @@
 
                 <div class="card border-0 shadow rounded">
                     <div class="card-body">
-                        <form action="{{ route('role.update', $role->id) }}" method="POST">
+                        <form action="{{ route('role.update', $role->role_id) }}" method="POST">
                             @csrf
                             @method('PUT')
 
@@ -57,7 +57,7 @@
                                 <label for="status">Status</label>
                                 <select name="status" class="form-control" required>
                                     <option value="1" {{ $role->status == '1' ? 'selected':'' }}>Aktif</option>
-                                    <option value="2" {{ $role->status == '2' ? 'selected':'' }}>Tidak Aktif</option>
+                                    <option value="2" {{ $role->status == '0' ? 'selected':'' }}>Tidak Aktif</option>
                                 </select>
                             </div>
 

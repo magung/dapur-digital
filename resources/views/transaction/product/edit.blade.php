@@ -111,10 +111,10 @@
                                 <select name="product_id" id="product" class="form-control" required onchange="setSatuan()">
                                     @foreach ($products as $product)
                                         <option 
-                                            value="{{$product->id}}" 
+                                            value="{{$product->product_id}}" 
                                             data-satuan="{{$product->satuan}}" 
                                             data-price="{{$product->price}}" 
-                                            {{$transaction_product_list->product_id == $product->id ? 'selected' : ''}}
+                                            {{$transaction_product_list->product_id == $product->product_id ? 'selected' : ''}}
                                             >{{$product->product_name}}</option>
                                     @endforeach
                                 </select>
@@ -197,7 +197,7 @@
                                 <select name="finishing_id" id="finishings" class="form-control" onchange="setLuas()" >
                                     <option value="" >-- pilih finishing --</option>
                                     @foreach ($finishings as $finishing)
-                                        <option value="{{$finishing->id}}" data-price="{{$finishing->finishing_price}}" {{$transaction_product_list->finishing_id == $finishing->id ? 'selected' : ''}}>{{$finishing->finishing}} - Rp. {{ number_format($finishing->finishing_price) }}</option>
+                                        <option value="{{$finishing->finishing_id}}" data-price="{{$finishing->finishing_price}}" {{$transaction_product_list->finishing_id == $finishing->finishing_id ? 'selected' : ''}}>{{$finishing->finishing}} - Rp. {{ number_format($finishing->finishing_price) }}</option>
                                     @endforeach
                                 </select>
                                 <!-- error message untuk role -->
@@ -214,7 +214,7 @@
                                 <select name="cutting_id" id="cuttings" class="form-control" onchange="setLuas()">
                                     <option value="" >-- pilih cutting --</option>
                                     @foreach ($cuttings as $cutting)
-                                        <option value="{{$cutting->id}}" data-price="{{$cutting->cutting_price}}" {{$transaction_product_list->cutting_id == $cutting->id ? 'selected' : ''}}>{{$cutting->cutting}} - Rp. {{ number_format($cutting->cutting_price) }}</option>
+                                        <option value="{{$cutting->cutting_id}}" data-price="{{$cutting->cutting_price}}" {{$transaction_product_list->cutting_id == $cutting->cutting_id ? 'selected' : ''}}>{{$cutting->cutting}} - Rp. {{ number_format($cutting->cutting_price) }}</option>
                                     @endforeach
                                 </select>
                                 <!-- error message untuk role -->
@@ -239,7 +239,7 @@
                             </div>
 
                             <button type="submit" class="btn btn-md btn-primary">Save</button>
-                            <a href="{{ route('transaction.edit', $transaction_product_list->transaction_id) }}" class="btn btn-md btn-secondary">back</a>
+                            <a href="{{ route('transaction.edit', $transaction_product_list->transaction_list_id) }}" class="btn btn-md btn-secondary">back</a>
 
                         </form>
                     </div>

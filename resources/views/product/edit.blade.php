@@ -36,7 +36,7 @@
 
                 <div class="card border-0 shadow rounded">
                     <div class="card-body">
-                        <form action="{{ route('product.update', $product->id) }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('product.update', $product->product_id) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
 
@@ -58,7 +58,7 @@
                                 <select name="category" class="form-control" required>
                                     <option value="" >-- kategori --</option>
                                     @foreach ($categories as $category)
-                                        <option value="{{ $category->id }}" {{ $product->category_id == $category->id ? 'selected':'' }} >{{$category->category_name}}</option>
+                                        <option value="{{ $category->category_id }}" {{ $product->category_id == $category->category_id ? 'selected':'' }} >{{$category->category_name}}</option>
                                     @endforeach
                                     
                                 </select>
@@ -69,7 +69,7 @@
                                 <select name="store" class="form-control" required>
                                     <option value="" >-- toko --</option>
                                     @foreach ($stores as $store)
-                                        <option value="{{ $store->id }}" {{ $product->store_id == $store->id ? 'selected':'' }}>{{$store->branch_name}}</option>
+                                        <option value="{{ $store->store_id }}" {{ $product->store_id == $store->store_id ? 'selected':'' }}>{{$store->store_name}}</option>
                                     @endforeach
                                     
                                 </select>

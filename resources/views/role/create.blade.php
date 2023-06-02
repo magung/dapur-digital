@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Tambah Role Level</title>
+    <title>Tambah Role</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- include summernote css -->
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
@@ -15,7 +15,7 @@
 
     <div class="container mt-5 mb-5">
         <h1 class="display-4">
-            Tambah Role Level
+            Tambah Role
         </h1>
         <div class="row">
             <div class="col-md-12">
@@ -40,7 +40,7 @@
                             @csrf
 
                             <div class="form-group">
-                                <label for="role_name">Nama Role Level</label>
+                                <label for="role_name">Nama Role</label>
                                 <input type="text" class="form-control @error('role_name') is-invalid @enderror"
                                     name="role_name" value="{{ old('role_name') }}" required>
 
@@ -57,7 +57,7 @@
                                 <select name="status" class="form-control" required>
                                     <option value="" >-- status --</option>
                                     <option value="1" >Aktif</option>
-                                    <option value="2" >Tidak Aktif</option>
+                                    <option value="0" >Tidak Aktif</option>
                                 </select>
                             </div>
 
