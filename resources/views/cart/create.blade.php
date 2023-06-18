@@ -1,15 +1,8 @@
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Tambah Produk ke Keranjang</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- include summernote css -->
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
-</head>
+@php
+    $title = 'Keranjang';
+    $user = Auth::guard('customer')->user();
+@endphp
+@include('template.header-pelanggan')
 
 <script>
     function numberWithCommas(x) {
@@ -82,11 +75,15 @@
 <body>
 
     <div class="container mt-5 mb-5">
+        <br>
         <h1 class="display-4">
-            Tambah Produk ke Keranjang
+            {{ $product->product_name }}
         </h1>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
+                <img src="{{asset('uploads/'.$product->photo)}}" alt="" width="100%">
+            </div>
+            <div class="col-md-6">
 
                 <!-- Notifikasi menggunakan flash session data -->
                 @if (session('success'))
@@ -104,17 +101,14 @@
                 <div class="card border-0 shadow rounded">
                     <div class="card-body">
 
-                        <form action="{{ route('cart.store') }}" method="POST">
+                        <form action="{{ route('cart.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
 
                             <div class="form-group">
                                 <label for="product_id">Produk</label>
-                                <select name="product_id" id="product" class="form-control" required onchange="setSatuan()">
-                                    <option value="" >-- pilih produk --</option>
-                                    @foreach ($products as $product)
-                                        <option value="{{$product->product_id}}" data-satuan="{{$product->satuan}}" data-price="{{$product->price}}" >{{$product->product_name}}</option>
-                                    @endforeach
-                                </select>
+                                <label for="product_id">Produk</label>
+                                <h3>{{ $product->product_name }}</h3>
+                                <input type="hidden" name="product_id" value="{{$product->product_id}}">
                                 <!-- error message untuk product_id -->
                                 @error('product_id')
                                 <div class="invalid-feedback">
@@ -125,8 +119,12 @@
 
                             <div class="form-group">
                                 <label for="price">Harga Satuan</label>
-                                <input type="hidden"  name="price" id="price" value="{{ old('price') }}" required readonly>
-                                <input type="text" class="form-control @error('price') is-invalid @enderror" id="price_show" value="{{ old('price') }}" required readonly>
+                                <input type="hidden" class="form-control @error('price') is-invalid @enderror"
+                                    name="price" id="price" value="{{ old('price', $product->price) }}" required
+                                    readonly>
+                                <input type="text" class="form-control @error('price') is-invalid @enderror"
+                                    id="price_show" value="{{ old('price', number_format($product->price)) }}" required
+                                    readonly>
                                 <!-- error message untuk price -->
                                 @error('price')
                                 <div class="invalid-feedback">
@@ -135,49 +133,57 @@
                                 @enderror
                             </div>
 
-                            <div class="form-group">
-                                <label for="satuan">Satuan</label>
-                                <input type="text" class="form-control @error('satuan') is-invalid @enderror"
-                                    name="satuan" id="satuan" value="{{ old('satuan') }}" required readonly>
-
-                                <!-- error message untuk satuan -->
-                                @error('satuan')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
+                            
+                            <div class="row" id="form-panjang">
+                                <div class="col-md-3">
+                                    <div class="form-group " >
+                                        <label for="panjang">Panjang</label>
+                                        <input type="number" class="form-control @error('panjang') is-invalid @enderror"
+                                            name="panjang" id="panjang" value="{{ old('panjang', 1) }}" onchange="setLuas()" required min="1">
+        
+                                        <!-- error message untuk panjang -->
+                                        @error('panjang')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
+                                    </div>
                                 </div>
-                                @enderror
+                                <div class="col-md-3">
+                                    <div class="form-group" id="form-lebar">
+                                        <label for="lebar">Lebar</label>
+                                        <input type="number" class="form-control @error('lebar') is-invalid @enderror"
+                                            name="lebar" id="lebar" value="{{ old('lebar', 1) }}" onchange="setLuas()" required min="1">
+        
+                                        <!-- error message untuk lebar -->
+                                        @error('lebar')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="satuan">Satuan</label>
+                                        <input type="text" class="form-control @error('satuan') is-invalid @enderror"
+                                            name="satuan" id="satuan" value="{{ $product->satuan }}" required readonly min="1">
+        
+                                        <!-- error message untuk satuan -->
+                                        @error('satuan')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="form-group" id="form-panjang">
-                                <label for="panjang">Panjang</label>
-                                <input type="number" class="form-control @error('panjang') is-invalid @enderror"
-                                    name="panjang" id="panjang" value="{{ old('panjang', 1) }}" onchange="setLuas()" required>
-
-                                <!-- error message untuk panjang -->
-                                @error('panjang')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group" id="form-lebar">
-                                <label for="lebar">Lebar</label>
-                                <input type="number" class="form-control @error('lebar') is-invalid @enderror"
-                                    name="lebar" id="lebar" value="{{ old('lebar', 1) }}" onchange="setLuas()" required>
-
-                                <!-- error message untuk lebar -->
-                                @error('lebar')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                                @enderror
-                            </div>
 
                             <div class="form-group" >
-                                <label for="qty">Qty</label>
+                                <label for="qty">Jumlah</label>
                                 <input type="number" class="form-control @error('qty') is-invalid @enderror"
-                                    name="qty" id="qty" value="{{ old('qty', 1) }}" onchange="setQty()" required>
+                                    name="qty" id="qty" value="{{ old('qty', 1) }}" onchange="setQty()" required min="1">
 
                                 <!-- error message untuk qty -->
                                 @error('qty')
@@ -233,8 +239,23 @@
                                 @enderror
                             </div>
 
-                            <button type="submit" class="btn btn-md btn-primary">Save</button>
-                            <a href="{{ route('transaction.create') }}" class="btn btn-md btn-secondary">back</a>
+                            <div class="form-group">
+                                <label for="file">File Cetak</label>
+                                <input type="file" class="form-control @error('file') is-invalid @enderror"
+                                    name="file"  >
+
+                                <!-- error message untuk file -->
+                                @error('file')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+                            <br>
+                            <div>
+                                <button type="submit" class="btn btn-md btn-primary">Beli</button>
+                                <a  href="{{ url()->previous() }}" class="btn btn-md btn-secondary">back</a>
+                            </div>
 
                         </form>
                     </div>
@@ -243,24 +264,5 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous">
-    </script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <!-- include summernote js -->
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#content').summernote({
-                height: 250, //set editable area's height
-            });
-
-            $('#form-panjang').hide();
-            $('#form-lebar').hide();
-        })
-    </script>
-</body>
-
-</html>
+    @include('template.footer-pelanggan')

@@ -11,17 +11,18 @@ use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
-    public function create()
+    public function create($id)
     {
         $user = Auth::guard('customer')->user();
         $store_id = $user->store_id;
-        $products = Product::latest()
+        $product = Product::latest()
                     ->join('categories', 'categories.category_id', '=', 'products.category_id')
                     ->select('products.*', 'categories.satuan')
-                    ->where('store_id', $store_id)->get();
+                    ->where('products.product_id', '=', $id)
+                    ->first();
         $finishings = Finishing::latest()->get();
         $cuttings = Cutting::latest()->get();
-        return view('cart.create', compact('products', 'finishings', 'cuttings'));
+        return view('cart.create', compact('product', 'finishings', 'cuttings'));
     }
 
     public function addToCart($id) {
@@ -52,9 +53,9 @@ class CartController extends Controller
         }
         if ($cart) {
             return redirect()
-                ->route('dashboard')
+                ->to(route('dashboard') . '#produk_kami')
                 ->with([
-                    'success' => 'Produk berhasil ditambahkan ke keranjang'
+                    'success' => 'Sukses'
                 ]);
         } else {
             return redirect()
@@ -74,6 +75,7 @@ class CartController extends Controller
             'qty'           => 'required|numeric|min:1',
             'total_price'   => 'required|numeric',
             'satuan'        => 'required',
+            'file'          => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ];
 
         if($request->satuan == 'M') {
@@ -96,6 +98,12 @@ class CartController extends Controller
             'cutting_price' => $request->cutting_price,
         ];
 
+        if(isset($request->file)) {
+            $file = 'CETAK-'.Auth::guard('customer')->id().'-'.time().'.'.$request->file->extension();
+            $request->file->move(public_path('files-cetak'), $file);
+            $datasend['file'] = $file;
+        }
+
         if($request->satuan == 'M') {
             $datasend['panjang'] = $request->panjang;
             $datasend['lebar'] = $request->lebar;
@@ -106,27 +114,23 @@ class CartController extends Controller
             ->where('product_id', $request->product_id)->first();
 
         if($cart) {
-            // var_dump($cart);
-            // die();
-            // $cart = Cart::findOrFail($cart->cart_id);
             $cart->update($datasend);
         } else {
             $cart = Cart::create($datasend);
         }
 
-
         if ($cart) {
             return redirect()
-                ->route('transaction.create')
+                ->route('cart.list')
                 ->with([
-                    'success' => 'New Cart has been created successfully'
+                    'success' => 'Sukses'
                 ]);
         } else {
             return redirect()
                 ->back()
                 ->withInput()
                 ->with([
-                    'error' => 'Some problem occurred, please try again'
+                    'error' => 'Gagal'
                 ]);
         }
     }
@@ -134,13 +138,15 @@ class CartController extends Controller
     public function edit($id)
     {
         $user = Auth::guard('customer')->user();
-        $products = Product::latest()
-                    ->join('categories', 'categories.category_id', '=', 'products.category_id')
-                    ->select('products.*', 'categories.satuan')->get();
         $cart = Cart::findOrFail($id);
+        $product = Product::latest()
+                    ->join('categories', 'categories.category_id', '=', 'products.category_id')
+                    ->select('products.*', 'categories.satuan')
+                    ->where('products.product_id', '=', $cart->product_id)
+                    ->first();
         $finishings = Finishing::latest()->get();
         $cuttings = Cutting::latest()->get();
-        return view('cart.edit', compact('products', 'cart', 'finishings', 'cuttings', 'user'));
+        return view('cart.edit', compact('product', 'cart', 'finishings', 'cuttings', 'user'));
 
     }
 
@@ -151,6 +157,7 @@ class CartController extends Controller
             'qty'           => 'required|numeric|min:1',
             'total_price'   => 'required|numeric',
             'satuan'        => 'required',
+            'file'          => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ];
 
         if($request->satuan == 'M') {
@@ -173,6 +180,12 @@ class CartController extends Controller
             'cutting_price' => $request->cutting_price,
         ];
 
+        if(isset($request->file)) {
+            $file = 'CETAK-'.Auth::guard('customer')->id().'-'.time().'.'.$request->file->extension();
+            $request->file->move(public_path('files-cetak'), $file);
+            $datasend['file'] = $file;
+        }
+
         if($request->satuan == 'M') {
             $datasend['panjang'] = $request->panjang;
             $datasend['lebar'] = $request->lebar;
@@ -184,16 +197,16 @@ class CartController extends Controller
 
         if ($cart) {
             return redirect()
-                ->route('transaction.create')
+                ->route('cart.list')
                 ->with([
-                    'success' => 'cart has been updated successfully'
+                    'success' => 'Sukses'
                 ]);
         } else {
             return redirect()
                 ->back()
                 ->withInput()
                 ->with([
-                    'error' => 'Some problem has occured, please try again'
+                    'error' => 'Gagal'
                 ]);
         }
     }
@@ -240,14 +253,14 @@ class CartController extends Controller
             return redirect()
                 ->route('cart.list')
                 ->with([
-                    'success' => 'cart has been updated successfully'
+                    'success' => 'Sukses'
                 ]);
         } else {
             return redirect()
                 ->back()
                 ->withInput()
                 ->with([
-                    'error' => 'Some problem has occured, please try again'
+                    'error' => 'Gagal'
                 ]);
         }
     }
@@ -259,13 +272,13 @@ class CartController extends Controller
 
         if ($cart) {
             return redirect()
-                ->route('transaction.create')
+                ->route('cart.list')
                 ->with([
-                    'success' => 'cart has been deleted successfully'
+                    'success' => 'Sukses'
                 ]);
         } else {
             return redirect()
-                ->route('transaction.create')
+                ->route('cart.list')
                 ->with([
                     'error' => 'Some problem has occurred, please try again'
                 ]);

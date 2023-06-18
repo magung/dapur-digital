@@ -21,6 +21,22 @@ class ProductController extends Controller
 
         return view('product.index', compact('products'));
     }
+
+    public function getProducts(Request $request) {
+        $category_id = $request->query('category_id');
+        $product_name = $request->query('product_name');
+        $products = DB::table('products')
+        ->select(['products.*', 'categories.category_name','categories.satuan'])
+        ->join('categories', 'categories.category_id', '=', 'products.category_id');
+        if($category_id != null) {
+            $products = $products->where('categories.category_id', '=', $category_id);
+        }
+        if($product_name != null) {
+            $products = $products->where('products.product_name', 'LIKE', '%' . $product_name . '%');
+        }
+        $products = $products->get();
+        return $products;
+    }
     public function create()
     {
         $categories = Category::latest()->get();
@@ -43,7 +59,6 @@ class ProductController extends Controller
 
         $request->photo->move(public_path('uploads'), $photo);
 
-
         $product = Product::create([
             'product_name' => $request->product_name,
             'category_id' => $request->category,
@@ -57,14 +72,14 @@ class ProductController extends Controller
             return redirect()
                 ->route('product.index')
                 ->with([
-                    'success' => 'New Product has been created successfully'
+                    'success' => 'Sukses'
                 ]);
         } else {
             return redirect()
                 ->back()
                 ->withInput()
                 ->with([
-                    'error' => 'Some problem occurred, please try again'
+                    'error' => 'Gagal'
                 ]);
         }
     }
@@ -113,14 +128,14 @@ class ProductController extends Controller
             return redirect()
                 ->route('product.index')
                 ->with([
-                    'success' => 'category has been updated successfully'
+                    'success' => 'Sukses'
                 ]);
         } else {
             return redirect()
                 ->back()
                 ->withInput()
                 ->with([
-                    'error' => 'Some problem has occured, please try again'
+                    'error' => 'Gagal'
                 ]);
         }
     }
@@ -137,7 +152,7 @@ class ProductController extends Controller
             return redirect()
                 ->route('product.index')
                 ->with([
-                    'success' => 'category has been deleted successfully'
+                    'success' => 'Sukses'
                 ]);
         } else {
             return redirect()
@@ -148,14 +163,32 @@ class ProductController extends Controller
         }
     }
 
-    public function indexProductList()
+    public function indexProductList(Request $request)
     {
+        $products = $this->getProducts($request);
+        $categories = Category::latest()->get();
+        $product_name = $request->query('product_name');
+        $category_id = $request->query('category_id');
+        return view('product-list.index', compact('products', 'categories', 'product_name', 'category_id'));
+    }
+
+    public function detailProduct($id)
+    {
+        $product = Product::findOrFail($id);
+        $categories = Category::latest()->get();
+        $stores = \App\Models\Store::latest()->get();
+        return view('home.product-detail', compact('product','categories','stores'));
+    }
+
+    public function list_product_category($id)
+    {
+        $categories = Category::latest()->get();
         $products = DB::table('products')
         ->select(['products.*', 'categories.category_name','categories.satuan', 'stores.store_name'])
         ->join('categories', 'categories.category_id', '=', 'products.category_id')
         ->join('stores', 'stores.store_id', '=', 'products.store_id')
+        ->where('categories.category_id', '=', $id)
         ->get();
-
-        return view('product-list.index', compact('products'));
+        return view('home.index', compact('products', 'categories'));
     }
 }

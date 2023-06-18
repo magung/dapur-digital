@@ -33,14 +33,14 @@ class CuttingController extends Controller
             return redirect()
                 ->route('cutting.index')
                 ->with([
-                    'success' => 'New Cutting has been created successfully'
+                    'success' => 'Sukses'
                 ]);
         } else {
             return redirect()
                 ->back()
                 ->withInput()
                 ->with([
-                    'error' => 'Some problem occurred, please try again'
+                    'error' => 'Gagal'
                 ]);
         }
     }
@@ -69,14 +69,14 @@ class CuttingController extends Controller
             return redirect()
                 ->route('cutting.index')
                 ->with([
-                    'success' => 'cutting has been updated successfully'
+                    'success' => 'Sukses'
                 ]);
         } else {
             return redirect()
                 ->back()
                 ->withInput()
                 ->with([
-                    'error' => 'Some problem has occured, please try again'
+                    'error' => 'Gagal'
                 ]);
         }
     }
@@ -90,7 +90,7 @@ class CuttingController extends Controller
             return redirect()
                 ->route('cutting.index')
                 ->with([
-                    'success' => 'cutting has been deleted successfully'
+                    'success' => 'Sukses'
                 ]);
         } else {
             return redirect()

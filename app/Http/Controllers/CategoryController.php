@@ -33,14 +33,14 @@ class CategoryController extends Controller
             return redirect()
                 ->route('category.index')
                 ->with([
-                    'success' => 'New Category has been created successfully'
+                    'success' => 'Sukses'
                 ]);
         } else {
             return redirect()
                 ->back()
                 ->withInput()
                 ->with([
-                    'error' => 'Some problem occurred, please try again'
+                    'error' => 'Gagal'
                 ]);
         }
     }
@@ -69,14 +69,14 @@ class CategoryController extends Controller
             return redirect()
                 ->route('category.index')
                 ->with([
-                    'success' => 'category has been updated successfully'
+                    'success' => 'Sukses'
                 ]);
         } else {
             return redirect()
                 ->back()
                 ->withInput()
                 ->with([
-                    'error' => 'Some problem has occured, please try again'
+                    'error' => 'Gagal'
                 ]);
         }
     }
@@ -90,7 +90,7 @@ class CategoryController extends Controller
             return redirect()
                 ->route('category.index')
                 ->with([
-                    'success' => 'category has been deleted successfully'
+                    'success' => 'Sukses'
                 ]);
         } else {
             return redirect()

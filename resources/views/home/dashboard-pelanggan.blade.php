@@ -21,7 +21,7 @@
         
         <a href="{{route('product-list.index')}}" class="btn btn-warning">List Produk</a>
         <a href="/cart-list" class="btn btn-warning">List Keranjang</a>
-        <a href="/transaction-list" class="btn btn-warning">List Transaksi</a>
+        <a href="{{route('transaction.customer.index')}}" class="btn btn-warning">List Transaksi</a>
         <a href="/profile" class="btn btn-warning">Profile</a>
         <br>
         <br>

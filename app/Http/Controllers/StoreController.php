@@ -44,14 +44,14 @@ class StoreController extends Controller
             return redirect()
                 ->route('store.index')
                 ->with([
-                    'success' => 'New Store has been created successfully'
+                    'success' => 'Sukses'
                 ]);
         } else {
             return redirect()
                 ->back()
                 ->withInput()
                 ->with([
-                    'error' => 'Some problem occurred, please try again'
+                    'error' => 'Gagal'
                 ]);
         }
     }
@@ -92,14 +92,14 @@ class StoreController extends Controller
             return redirect()
                 ->route('store.index')
                 ->with([
-                    'success' => 'Store has been updated successfully'
+                    'success' => 'Sukses'
                 ]);
         } else {
             return redirect()
                 ->back()
                 ->withInput()
                 ->with([
-                    'error' => 'Some problem has occured, please try again'
+                    'error' => 'Gagal'
                 ]);
         }
     }
@@ -113,7 +113,7 @@ class StoreController extends Controller
             return redirect()
                 ->route('store.index')
                 ->with([
-                    'success' => 'store has been deleted successfully'
+                    'success' => 'Sukses'
                 ]);
         } else {
             return redirect()

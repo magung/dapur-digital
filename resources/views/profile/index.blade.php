@@ -36,7 +36,7 @@
 
                 <div class="card border-0 shadow rounded">
                     <div class="card-body">
-                        <form action="{{ route('profile.update', $profile->id) }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('profile.update', $profile->user_id) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
 

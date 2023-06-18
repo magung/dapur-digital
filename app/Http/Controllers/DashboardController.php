@@ -2,35 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Banner;
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
-    public function view(){
+    public function view(Request $request){
+        $category_id = $request->query('category_id');
+        $product_name = $request->query('product_name');
         $user = Auth::user();
-        $products = DB::table('products')
-        ->select(['products.*', 'categories.category_name','categories.satuan', 'stores.store_name'])
-        ->join('categories', 'categories.category_id', '=', 'products.category_id')
-        ->leftJoin('stores', 'stores.store_id', '=', 'products.store_id')
-        ->get();
+        $productController = new ProductController();
+        $products = $productController->getProducts($request);
         $categories = Category::latest()->get();
+        $stores = \App\Models\Store::latest()->get();
+        $banners = Banner::latest()->get();
         if($user != null) {
-            if($user->role_id == 4) {
-                return view('home.index', compact('user', 'products', 'categories'));
-            } else {
-                return view('home.dashboard', compact('user'));
-            }
+            return view('home.dashboard', compact('user','products', 'categories', 'stores', 'category_id', 'product_name', 'banners'));
         } else {
-            return view('home.index', compact('products', 'categories'));
+            return view('home.index', compact('products', 'categories', 'stores', 'category_id', 'product_name', 'banners'));
         }
     }
 
-    public function image($file)
-    {
-        $path = public_path('uploads') . '/' . $file;
-        return response()->download($path);
-    }
 }

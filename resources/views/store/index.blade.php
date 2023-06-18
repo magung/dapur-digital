@@ -31,7 +31,7 @@
                 <div class="card-body">
                     <a href="{{ route('store.create') }}" class="btn btn-md btn-success mb-3 float-right">Tambah Toko</a>
 
-                    <table class="table table-bordered mt-1">
+                    <table id="myTable" class="table table-striped">
                         <thead>
                             <tr>
                                 <th scope="col">Toko</th>

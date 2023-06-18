@@ -38,21 +38,22 @@ class TransactionController extends Controller
         return view('transaction.index', compact('transactions', 'user'));
     }
 
-    public function indexPelanggan()
+    public function indexTransactionCustomer()
     {
-        $user = Auth::user();
+        $customer = Auth::guard('customer')->user();
         $transactions = TransactionList::latest()
-                        ->select('transaction_lists.*', 'transaction_statuses.transaction_status', 'users.name', 'users.email')
+                        ->select('transaction_lists.*', 'transaction_statuses.transaction_status', 'payment_statuses.payment_status')
                         ->join('transaction_statuses', 'transaction_statuses.transaction_status_id', '=', 'transaction_lists.transaction_status_id')
-                        ->join('users', 'users.user_id', '=', 'transaction_lists.user_id')
-                        ->where('transaction_lists.user_id', Auth::id())
+                        ->join('payments', 'payments.payment_id', '=', 'transaction_lists.payment_method_id')
+                        ->join('payment_statuses', 'payment_statuses.payment_status_id', '=', 'transaction_lists.payment_status_id')
+                        ->where('transaction_lists.customer_id', $customer->customer_id)
                         ->get();
         foreach($transactions as $transaction) {
             $transaction->products = TransactionProductList::where(['transaction_list_id' => $transaction->transaction_list_id])
                                     ->join('products', 'products.product_id', '=', 'transaction_product_lists.product_id')
                                     ->get();
         }
-        return view('transaction.index', compact('transactions', 'user'));
+        return view('transaction-customer.index', compact('transactions', 'customer'));
     }
     public function create()
     {
@@ -104,7 +105,7 @@ class TransactionController extends Controller
                         ));
     }
 
-    public function createTransacationPelanggan()
+    public function createTransacationCustomer()
     {
         $customer = Auth::guard('customer')->user();
         $payments = Payment::latest()->get();
@@ -134,45 +135,32 @@ class TransactionController extends Controller
                         ));
     }
 
-    public function storePelanggan(Request $request)
+    public function storeTransactionCustomer(Request $request)
     {
-        
+        $customer = Auth::guard('customer')->user();
         
         $this->validate($request, [
             'store_id' => 'required',
             'transaction_type_id' => 'required',
             'payment_method_id' => 'required',
-            'final_price' => 'required',
-            'file' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'final_price' => 'required'
         ]);
 
-        // var_dump($request);
-        // die();
-        
         $datasend = [
             'store_id' => $request->store_id,
             'transaction_type_id' => $request->transaction_type_id,
             'transaction_status_id' => 1,
             'payment_method_id' => $request->payment_method_id,
-            'user_id' => Auth::id(),
+            'customer_id' => $customer->customer_id,
             'final_price' => $request->final_price,
             'payment_status_id' => 2,
-            'created_by' => Auth::id()
+            'created_by' => $customer->customer_id
         ];
-
-        if(isset($request->file)) {
-            $file = 'CETAK-'.$request->user_id.'-'.time().'.'.$request->file->extension();
-            $request->file->move(public_path('files-cetak'), $file);
-            $datasend['file'] = $file;
-        }
         
         $transaction = TransactionList::create($datasend);
-        // var_dump($transaction);
-        // die();
 
         $carts = Cart::latest()->where('customer_id', Auth::id())->get();
-        //  var_dump($carts);
-        // die();
+
         foreach($carts as $cart) {
             TransactionProductList::create([
                 'transaction_list_id' => $transaction->transaction_list_id,
@@ -187,6 +175,7 @@ class TransactionController extends Controller
                 'finishing_price' => $cart->finishing_price,
                 'cutting_id' => $cart->cutting_id,
                 'cutting_price' => $cart->cutting_price,
+                'file' => $cart->file,
             ]);
             $cart = Cart::findOrFail($cart->cart_id);
             $cart->delete();
@@ -194,32 +183,22 @@ class TransactionController extends Controller
 
         if ($transaction) {
             return redirect()
-                ->route('transaction-list')
+                ->route('transaction.customer.index')
                 ->with([
-                    'success' => 'New transaction has been created successfully'
+                    'success' => 'Sukses'
                 ]);
         } else {
             return redirect()
                 ->back()
                 ->withInput()
                 ->with([
-                    'error' => 'Some problem occurred, please try again'
+                    'error' => 'Gagal'
                 ]);
         }
     }
 
     public function store(Request $request)
     {
-        
-        // $validations = [
-        //     'store_id' => 'required',
-        //     'transaaction_type_id' => 'required',
-        //     'transaaction_status_id' => 'required',
-        //     'payment_method_id' => 'required',
-        //     'user_id' => 'required',
-        //     'final_price' => 'required|numeric|min:1',
-        //     'payment_status_id' => 'required',
-        // ];
         
         $this->validate($request, [
             'store_id' => 'required',
@@ -228,8 +207,7 @@ class TransactionController extends Controller
             'payment_method_id' => 'required',
             'user_id' => 'required',
             'final_price' => 'required',
-            'payment_status_id' => 'required',
-            'file' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'payment_status_id' => 'required'
         ]);
         
         $datasend = [
@@ -242,20 +220,10 @@ class TransactionController extends Controller
             'payment_status_id' => $request->payment_status_id,
             'created_by' => Auth::id()
         ];
-
-        if(isset($request->file)) {
-            $file = 'CETAK-'.$request->user_id.'-'.time().'.'.$request->file->extension();
-            $request->file->move(public_path('files-cetak'), $file);
-            $datasend['file'] = $file;
-        }
         
         $transaction = TransactionList::create($datasend);
-        // var_dump($transaction);
-        // die();
-
         $carts = Cart::latest()->where('user_id', Auth::id())->get();
-        //  var_dump($carts);
-        // die();
+
         foreach($carts as $cart) {
             TransactionProductList::create([
                 'transaction_list_id' => $transaction->transaction_list_id,
@@ -270,6 +238,7 @@ class TransactionController extends Controller
                 'finishing_price' => $cart->finishing_price,
                 'cutting_id' => $cart->cutting_id,
                 'cutting_price' => $cart->cutting_price,
+                'file' => $cart->file,
             ]);
             $cart = Cart::findOrFail($cart->cart_id);
             $cart->delete();
@@ -279,14 +248,14 @@ class TransactionController extends Controller
             return redirect()
                 ->route('transaction.index')
                 ->with([
-                    'success' => 'New transaction has been created successfully'
+                    'success' => 'Sukses'
                 ]);
         } else {
             return redirect()
                 ->back()
                 ->withInput()
                 ->with([
-                    'error' => 'Some problem occurred, please try again'
+                    'error' => 'Gagal'
                 ]);
         }
     }
@@ -326,14 +295,79 @@ class TransactionController extends Controller
         ));
     }
 
-
+    public function detailTransactionCustomer($id)
+    {
+        $transaction = TransactionList::latest()
+            ->select('transaction_lists.*', 'transaction_statuses.transaction_status', 'payment_statuses.payment_status', 'transaction_types.transaction_type', 'payments.payment_method')
+            ->join('transaction_statuses', 'transaction_statuses.transaction_status_id', '=', 'transaction_lists.transaction_status_id')
+            ->join('transaction_types', 'transaction_types.transaction_type_id', '=', 'transaction_lists.transaction_type_id')
+            ->join('payments', 'payments.payment_id', '=', 'transaction_lists.payment_method_id')
+            ->join('payment_statuses', 'payment_statuses.payment_status_id', '=', 'transaction_lists.payment_status_id')
+            ->where('transaction_lists.transaction_list_id', $id)
+            ->first();
+        $transaction_product_lists = TransactionProductList::latest()
+                ->join('products', 'products.product_id', '=', 'transaction_product_lists.product_id')
+                ->leftJoin('finishings', 'finishings.finishing_id', '=', 'transaction_product_lists.finishing_id')
+                ->leftJoin('cuttings', 'cuttings.cutting_id', '=', 'transaction_product_lists.cutting_id')
+                ->select('transaction_product_lists.*', 'products.product_name', 'finishings.finishing', 'cuttings.cutting')
+                ->where('transaction_list_id', $id)->get();
+        $total_harga = 0;
+        foreach($transaction_product_lists as $product) {
+            $total_harga += $product->total_price;
+        }
+        $stores = Store::latest()->get();
+        return view('transaction-customer.detail', compact(
+            'transaction', 
+            'transaction_product_lists',
+            'total_harga',
+            'stores'
+        ));
+    }
     public function pembayaran($id)
     {
         $payments = Payment::latest()->get();
         $statuses = TransactionStatus::latest()->get();
         $types = TransactionType::latest()->get();
         $transaction = TransactionList::findOrFail($id);
-        return view('transaction.pembayaran', compact('transaction', 'payments', 'types'));
+        return view('transaction-customer.pembayaran', compact('transaction', 'payments', 'types'));
+    }
+
+    public function updatePembayaran(Request $request, $id)
+    {
+        $this->validate($request, [
+            'payment_method_id' => 'required',
+            'bukti_pembayaran' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ]);
+        
+        $datasend = [
+            'payment_method_id' => $request->payment_method_id,
+            'transaction_status_id' => 2,
+            'updated_by' => Auth::id()
+        ];
+
+        if(isset($request->bukti_pembayaran)) {
+            $bukti_pembayaran = 'BUKTI-PEMBAYARAN-'.$request->user_id.'-'.time().'.'.$request->bukti_pembayaran->extension();
+            $request->bukti_pembayaran->move(public_path('bukti-pembayaran'), $bukti_pembayaran);
+            $datasend['bukti'] = $bukti_pembayaran;
+        }
+
+        $transaction = TransactionList::findOrFail($id);
+        $transaction->update($datasend);
+        
+        if ($transaction) {
+            return redirect()
+                ->route('transaction.customer.index')
+                ->with([
+                    'success' => 'Sukses'
+                ]);
+        } else {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with([
+                    'error' => 'Gagal'
+                ]);
+        }
     }
 
     public function detail($id)
@@ -446,14 +480,14 @@ class TransactionController extends Controller
             return redirect()
                 ->route('transaction.edit', $transaction_list_id)
                 ->with([
-                    'success' => 'New product has been created successfully'
+                    'success' => 'Sukses'
                 ]);
         } else {
             return redirect()
                 ->back()
                 ->withInput()
                 ->with([
-                    'error' => 'Some problem occurred, please try again'
+                    'error' => 'Gagal'
                 ]);
         }
     }
@@ -516,14 +550,14 @@ class TransactionController extends Controller
             return redirect()
                 ->route('transaction.edit', $product->transaction_list_id)
                 ->with([
-                    'success' => 'New product has been created successfully'
+                    'success' => 'Sukses'
                 ]);
         } else {
             return redirect()
                 ->back()
                 ->withInput()
                 ->with([
-                    'error' => 'Some problem occurred, please try again'
+                    'error' => 'Gagal'
                 ]);
         }
     }
@@ -539,7 +573,6 @@ class TransactionController extends Controller
             'user_id' => 'required',
             'final_price' => 'required',
             'payment_status_id' => 'required',
-            'file' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
         
         $datasend = [
@@ -553,29 +586,21 @@ class TransactionController extends Controller
             'updated_by' => Auth::id()
         ];
 
-        if(isset($request->file)) {
-            $file = 'CETAK-'.$request->user_id.'-'.time().'.'.$request->file->extension();
-            $request->file->move(public_path('files-cetak'), $file);
-            $datasend['file'] = $file;
-        }
-
         $transaction = TransactionList::findOrFail($id);
         $transaction->update($datasend);
         
-
-
         if ($transaction) {
             return redirect()
                 ->route('transaction.index')
                 ->with([
-                    'success' => 'transaction has been updated successfully'
+                    'success' => 'Sukses'
                 ]);
         } else {
             return redirect()
                 ->back()
                 ->withInput()
                 ->with([
-                    'error' => 'Some problem has occured, please try again'
+                    'error' => 'Gagal'
                 ]);
         }
     }
@@ -593,7 +618,7 @@ class TransactionController extends Controller
             return redirect()
                 ->route('transaction.index')
                 ->with([
-                    'success' => 'transaction has been deleted successfully'
+                    'success' => 'Sukses'
                 ]);
         } else {
             return redirect()
@@ -617,7 +642,7 @@ class TransactionController extends Controller
             return redirect()
                 ->route('transaction.edit', $transaction_list_id)
                 ->with([
-                    'success' => 'transaction has been deleted successfully'
+                    'success' => 'Sukses'
                 ]);
         } else {
             return redirect()

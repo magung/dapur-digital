@@ -90,6 +90,22 @@
                             @enderror
                         </div>
                         <div class="form-group">
+                            <label for="store_id">Toko</label>
+                            <select name="store_id" class="form-control" >
+                                <option value="" >-- Toko --</option>
+                                @foreach ($stores as $store)
+                                    <option value="{{$store->store_id}}"  >{{$store->store_name}}</option>
+                                @endforeach
+                            </select>
+
+                            <!-- error message untuk role -->
+                            @error('store_id')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
                             <label for="address">Alamat</label>
                             <textarea name="address" id="address" class="form-control @error('address') is-invalid @enderror" rows="5"
                                 required>{{ old('address') }}</textarea>
@@ -114,6 +130,17 @@
                             @enderror
                         </div>
 
+                        <div class="form-group">
+                            <label for="birthday">Tanggal Lahir</label>
+                            <input type="date" class="form-control @error('birthday') is-invalid @enderror"
+                                name="birthday" >
+                            <!-- error message untuk role -->
+                            @error('birthday')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
+                        </div>
                         <div class="form-group">
                             <label for="password">Password</label>
                             <input type="password"

@@ -35,7 +35,11 @@ Route::post('register-admin',$ctrl.'\RegisterController@register_admin')->name('
 
 Route::get('/',$ctrl.'\DashboardController@view')->name('dashboard');
 Route::post('logout',$ctrl.'\LoginController@logout')->name('logout');
-Route::get('dashboard',$ctrl.'\DashboardController@view')->name('dashboard');
+Route::get('list-product-category/{id}',$ctrl.'\ProductController@list_product_category')->name('list-product-category');
+Route::get('product-detail/{id}',$ctrl.'\ProductController@detailProduct')->name('product-detail');
+
+// admin
+
 Route::middleware('auth')->get('store',$ctrl.'\StoreController@index')->name('store.index');
 Route::middleware('auth')->post('store',$ctrl.'\StoreController@store')->name('store.store');
 Route::middleware('auth')->get('store/create',$ctrl.'\StoreController@create')->name('store.create');
@@ -56,7 +60,6 @@ Route::middleware('auth')->get('product/create',$ctrl.'\ProductController@create
 Route::middleware('auth')->get('product/{id}',$ctrl.'\ProductController@edit')->name('product.edit');
 Route::middleware('auth')->put('product/{id}',$ctrl.'\ProductController@update')->name('product.update');
 Route::middleware('auth')->delete('product/{id}',$ctrl.'\ProductController@destroy')->name('product.destroy');
-
 
 Route::middleware('auth')->get('payment',$ctrl.'\PaymentController@index')->name('payment.index');
 Route::middleware('auth')->post('payment',$ctrl.'\PaymentController@store')->name('payment.store');
@@ -111,28 +114,16 @@ Route::middleware('auth')->get('transaction/detail/{id}',$ctrl.'\TransactionCont
 Route::middleware('auth')->get('transaction/payment/{id}',$ctrl.'\TransactionController@pembayaran')->name('transaction.pembayaran');
 Route::middleware('auth')->get('transaction/{id}',$ctrl.'\TransactionController@edit')->name('transaction.edit');
 
-Route::middleware('auth')->get('cart/create',$ctrl.'\CartController@create')->name('cart.create');
-Route::middleware('auth')->post('cart',$ctrl.'\CartController@store')->name('cart.store');
-Route::middleware('auth')->get('cart/delete/{id}',$ctrl.'\CartController@destroy')->name('cart.destroy');
-Route::middleware('auth')->get('cart/edit/{id}',$ctrl.'\CartController@edit')->name('cart.edit');
-Route::middleware('auth')->put('cart/{id}',$ctrl.'\CartController@update')->name('cart.update');
 
 Route::middleware('auth')->get('download/{file}',$ctrl.'\TransactionController@download')->name('download');
 
 Route::middleware('auth')->get('profile',$ctrl.'\ProfileController@index')->name('profile.index');
 Route::middleware('auth')->put('profile/{id}',$ctrl.'\ProfileController@update')->name('profile.update');
 
-Route::middleware('auth:customer')->get('product-list',$ctrl.'\ProductController@indexProductList')->name('product-list.index');
-Route::middleware('auth:customer')->get('add-to-cart/{id}',$ctrl.'\CartController@addToCart')->name('add.to.cart');
-Route::middleware('auth:customer')->get('cart-list',$ctrl.'\TransactionController@createTransacationPelanggan')->name('cart.list');
-Route::middleware('auth:customer')->post('transaction',$ctrl.'\TransactionController@store')->name('transaction.store');
-Route::middleware('auth:customer')->put('update-cart/{id}',$ctrl.'\CartController@updatePelanggan')->name('cart.list.update');
-Route::middleware('auth:customer')->get('transaction-list', $ctrl . '\TransactionController@index')->name('transaction-list');
-Route::middleware('auth:customer')->post('transaction.pelanggan.store',$ctrl.'\TransactionController@storePelanggan')->name('transaction.pelanggan.store');
+Route::middleware('auth')->get('report-transaction',$ctrl.'\ReportController@reportTransaction')->name('report.reportTransaction');
+Route::middleware('auth')->get('report-stock-product',$ctrl.'\ReportController@reportStockProduct')->name('report.reportStockProduct');
 
-Route::middleware('auth')->get('report',$ctrl.'\ReportController@index')->name('report.index');
-
-Route::middleware('auth')->get('image/{file}',$ctrl.'\DashboardController@image')->name('image');
+Route::middleware('auth')->get('image/{file}',$ctrl.'\ImageController@image')->name('image');
 
 Route::middleware('auth')->get('print-struk',$ctrl.'\PrintController@printStruk')->name('print.struk');
 
@@ -142,3 +133,46 @@ Route::middleware('auth')->get('customer/create',$ctrl.'\CustomerController@crea
 Route::middleware('auth')->put('customer/{id}',$ctrl.'\CustomerController@update')->name('customer.update');
 Route::middleware('auth')->delete('customer/{id}',$ctrl.'\CustomerController@destroy')->name('customer.destroy');
 Route::middleware('auth')->get('customer/{id}',$ctrl.'\CustomerController@edit')->name('customer.edit');
+
+Route::middleware('auth')->get('banner',$ctrl.'\BannerController@index')->name('banner.index');
+Route::middleware('auth')->post('banner',$ctrl.'\BannerController@store')->name('banner.store');
+Route::middleware('auth')->get('banner/create',$ctrl.'\BannerController@create')->name('banner.create');
+Route::middleware('auth')->get('banner/{id}',$ctrl.'\BannerController@edit')->name('banner.edit');
+Route::middleware('auth')->put('banner/{id}',$ctrl.'\BannerController@update')->name('banner.update');
+Route::middleware('auth')->delete('banner/{id}',$ctrl.'\BannerController@destroy')->name('banner.destroy');
+
+
+// customer
+
+
+Route::middleware('auth:customer')->get('profile-customer',$ctrl.'\ProfileController@profile_customer')->name('profile-customer.index');
+Route::middleware('auth:customer')->put('profile-customer/{id}',$ctrl.'\ProfileController@update_profile_customer')->name('profile-customer.update');
+Route::get('product-list',$ctrl.'\ProductController@indexProductList')->name('product-list');
+Route::middleware('auth:customer')->get('add-to-cart/{id}',$ctrl.'\CartController@addToCart')->name('add.to.cart');
+Route::middleware('auth:customer')->get('cart-list',$ctrl.'\TransactionController@createTransacationCustomer')->name('cart.list');
+Route::middleware('auth:customer')->put('update-cart/{id}',$ctrl.'\CartController@updatePelanggan')->name('cart.list.update');
+
+Route::middleware('auth:customer')->get('cart/create/{id}',$ctrl.'\CartController@create')->name('cart.create');
+Route::middleware('auth:customer')->post('cart',$ctrl.'\CartController@store')->name('cart.store');
+Route::middleware('auth:customer')->get('cart/delete/{id}',$ctrl.'\CartController@destroy')->name('cart.destroy');
+Route::middleware('auth:customer')->get('cart/edit/{id}',$ctrl.'\CartController@edit')->name('cart.edit');
+Route::middleware('auth:customer')->put('cart/{id}',$ctrl.'\CartController@update')->name('cart.update');
+
+
+Route::middleware('auth:customer')->get('transaction-customer', $ctrl . '\TransactionController@indexTransactionCustomer')->name('transaction.customer.index');
+Route::middleware('auth:customer')->post('transaction-customer',$ctrl.'\TransactionController@storeTransactionCustomer')->name('transaction.customer.store');
+Route::middleware('auth:customer')->get('transaction-customer/create',$ctrl.'\TransactionController@create')->name('transaction.customer.create');
+Route::middleware('auth:customer')->get('transaction-customer-product/create/{id}',$ctrl.'\TransactionController@createProductList')->name('transaction.customer.product.create');
+Route::middleware('auth:customer')->get('transaction-customer-product/delete/{id}',$ctrl.'\TransactionController@destroyProductList')->name('transaction.customer.product.destroy');
+Route::middleware('auth:customer')->get('transaction-customer-product/edit/{id}',$ctrl.'\TransactionController@editProductList')->name('transaction.customer.product.edit');
+Route::middleware('auth:customer')->post('transaction-customer-product',$ctrl.'\TransactionController@storeProductList')->name('transaction.customer.product.store');
+Route::middleware('auth:customer')->put('transaction-customer-product/{id}',$ctrl.'\TransactionController@updateProductList')->name('transaction.customer.product.update');
+Route::middleware('auth:customer')->put('transaction-customer/{id}',$ctrl.'\TransactionController@update')->name('transaction.customer.update');
+Route::middleware('auth:customer')->delete('transaction-customer/{id}',$ctrl.'\TransactionController@destroy')->name('transaction.customer.destroy');
+Route::middleware('auth:customer')->get('transaction-customer/detail/{id}',$ctrl.'\TransactionController@detailTransactionCustomer')->name('transaction.customer.detail');
+Route::middleware('auth:customer')->get('transaction-customer/payment/{id}',$ctrl.'\TransactionController@pembayaran')->name('transaction.customer.pembayaran');
+Route::middleware('auth:customer')->put('transaction-customer/payment/{id}',$ctrl.'\TransactionController@updatePembayaran')->name('transaction.customer.update.pembayaran');
+Route::middleware('auth:customer')->get('transaction-customer/{id}',$ctrl.'\TransactionController@edit')->name('transaction.customer.edit');
+
+
+

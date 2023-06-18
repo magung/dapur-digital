@@ -1,14 +1,14 @@
 <!doctype html>
 <html lang="en">
     @php
-    $title = 'Level';
+    $title = 'Role';
     $user = Auth::user();
 @endphp
 @include('template.header')
 
     <div class="container mt-5">
         <h1 class="display-4">
-            Level
+            Role
         </h1>
     </div>
 
@@ -33,7 +33,7 @@
                     <div class="card-body">
                         <a href="{{ route('role.create') }}" class="btn btn-md btn-success mb-3 float-right">Tambah Role</a>
 
-                        <table class="table table-bordered mt-1">
+                        <table id="myTable" class="table table-striped">
                             <thead>
                                 <tr>
                                     <th scope="col">Role</th>

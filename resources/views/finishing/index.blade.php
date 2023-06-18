@@ -31,7 +31,7 @@
                     <a href="{{ route('finishing.create') }}" class="btn btn-md btn-success mb-3 float-right">Tambah
                         finishing</a>
 
-                    <table class="table table-bordered mt-1">
+                    <table id="myTable" class="table table-striped">
                         <thead>
                             <tr>
                                 <th scope="col">Finishing</th>
@@ -46,7 +46,8 @@
                                     <td>{{ $finishing->finishing_price }}</td>
                                     <td class="text-center">
                                         <form onsubmit="return confirm('Apakah Anda Yakin ?');"
-                                            action="{{ route('finishing.destroy', $finishing->finishing_id) }}" method="POST">
+                                            action="{{ route('finishing.destroy', $finishing->finishing_id) }}"
+                                            method="POST">
                                             <a href="{{ route('finishing.edit', $finishing->finishing_id) }}"
                                                 class="btn btn-sm btn-primary">EDIT</a>
                                             @csrf

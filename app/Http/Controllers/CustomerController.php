@@ -53,14 +53,14 @@ class CustomerController extends Controller
             return redirect()
                 ->route('customer.index')
                 ->with([
-                    'success' => 'New customer has been created successfully'
+                    'success' => 'Sukses'
                 ]);
         } else {
             return redirect()
                 ->back()
                 ->withInput()
                 ->with([
-                    'error' => 'Some problem occurred, please try again'
+                    'error' => 'Gagal'
                 ]);
         }
     }
@@ -113,14 +113,14 @@ class CustomerController extends Controller
             return redirect()
                 ->route('customer.index')
                 ->with([
-                    'success' => 'customer has been updated successfully'
+                    'success' => 'Sukses'
                 ]);
         } else {
             return redirect()
                 ->back()
                 ->withInput()
                 ->with([
-                    'error' => 'Some problem has occured, please try again'
+                    'error' => 'Gagal'
                 ]);
         }
     }
@@ -137,7 +137,7 @@ class CustomerController extends Controller
             return redirect()
                 ->route('customer.index')
                 ->with([
-                    'success' => 'customer has been deleted successfully'
+                    'success' => 'Sukses'
                 ]);
         } else {
             return redirect()

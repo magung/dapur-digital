@@ -75,14 +75,14 @@ class UserController extends Controller
             return redirect()
                 ->route('user.index')
                 ->with([
-                    'success' => 'New user has been created successfully'
+                    'success' => 'Sukses'
                 ]);
         } else {
             return redirect()
                 ->back()
                 ->withInput()
                 ->with([
-                    'error' => 'Some problem occurred, please try again'
+                    'error' => 'Gagal'
                 ]);
         }
     }
@@ -140,14 +140,14 @@ class UserController extends Controller
             return redirect()
                 ->route('user.index')
                 ->with([
-                    'success' => 'user has been updated successfully'
+                    'success' => 'Sukses'
                 ]);
         } else {
             return redirect()
                 ->back()
                 ->withInput()
                 ->with([
-                    'error' => 'Some problem has occured, please try again'
+                    'error' => 'Gagal'
                 ]);
         }
     }
@@ -164,7 +164,7 @@ class UserController extends Controller
             return redirect()
                 ->route('user.index')
                 ->with([
-                    'success' => 'user has been deleted successfully'
+                    'success' => 'Sukses'
                 ]);
         } else {
             return redirect()

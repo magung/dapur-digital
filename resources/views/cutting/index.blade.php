@@ -32,7 +32,7 @@
                     <a href="{{ route('cutting.create') }}" class="btn btn-md btn-success mb-3 float-right">Tambah
                         Cutting</a>
 
-                    <table class="table table-bordered mt-1">
+                    <table id="myTable" class="table table-striped">
                         <thead>
                             <tr>
                                 <th scope="col">Cutting</th>
@@ -47,7 +47,8 @@
                                     <td>{{ $cutting->cutting_price }}</td>
                                     <td class="text-center">
                                         <form onsubmit="return confirm('Apakah Anda Yakin ?');"
-                                            action="{{ route('cutting.destroy', $cutting->cutting_id) }}" method="POST">
+                                            action="{{ route('cutting.destroy', $cutting->cutting_id) }}"
+                                            method="POST">
                                             <a href="{{ route('cutting.edit', $cutting->cutting_id) }}"
                                                 class="btn btn-sm btn-primary">EDIT</a>
                                             @csrf

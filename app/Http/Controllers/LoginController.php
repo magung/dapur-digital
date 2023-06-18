@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\Store;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,11 +25,18 @@ class LoginController extends Controller
         // var_dump($user);die();
         if($user != null) {
             if ($user->status == 0) {
+                $phone_number_admin = "";
+                if(isset($request->store_id)) {
+                    $phone_number_admin = Store::find($user->store_id)->phone_number;
+                } else {
+                    $phone_number_admin = Store::latest()->first()->phone_number;
+                }
                 return redirect()
                     ->back()
                     ->withInput()
                     ->with([
-                        'error' => 'akun belum aktif silakan hubungi admin Dapur Digital'
+                        'error' => 'akun belum aktif silakan hubungi admin Dapur Digital',
+                        'link_admin' => 'https://api.whatsapp.com/send/?phone='.$phone_number_admin
                     ]);
             }
             $credentials = $request->only('email', 'password');
@@ -36,7 +44,7 @@ class LoginController extends Controller
             // dd(Auth::guard('customer')->attempt($credentials));
             if (Auth::guard('customer')->attempt($credentials)) {
                 $request->session()->regenerate();
-                return redirect()->intended('dashboard');
+                return redirect()->intended('/');
             }
         }
 
@@ -73,7 +81,7 @@ class LoginController extends Controller
         
             if (Auth::attempt($credentials)) {
                 $request->session()->regenerate();
-                return redirect()->intended('dashboard');
+                return redirect('/');
             }
         }
     

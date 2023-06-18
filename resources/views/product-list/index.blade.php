@@ -1,33 +1,40 @@
-<!doctype html>
-<html lang="en">
+@php
+    $title = 'Cari Produk';
+    $user = Auth::guard('customer')->user();
+@endphp
+@include('template.header-pelanggan')
+<br>
 
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-
-    <title>Produk</title>
-</head>
 
 <body>
     <div class="container mt-5">
-        <h1 class="display-4">
-            Produk
-        </h1>
-        <a href="/" class="btn btn-success" >Home</a>
-        <a href="/cart-list" class="btn btn-warning">List Keranjang</a>
-        <a href="/transaction-list" class="btn btn-warning">List Transaksi</a>
-        
+        <h3 class="">
+            {{$title}}
+        </h3>
     </div>
-    <br>
-    <br>
-
     <div class="container mt-5">
         <div class="row">
+            <div class="row col-md-12">
+                <form class="d-flex  me-2" action="{{ route('product-list') }}" method="GET">
+                    <div class="col-md-4">
+                        <select name="category_id" id=""
+                                class="btn btn-light text-left text-black text-decoration-none form-control choices-single">
+                                <option value="">Kategori</option>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->category_id }}"
+                                        {{ $category_id == $category->category_id ? 'selected' : '' }}>
+                                        {{ $category->category_name }}</option>
+                                @endforeach
+                        </select>
+                    </div>
+                    &nbsp;
+                    <input class="form-control text-black text-decoration-none" type="search"
+                        placeholder="Cari Produk" value="{{ $product_name != '' ? $product_name : '' }}"
+                        name="product_name" aria-label="Search">
+                    &nbsp;
+                    <button class="btn btn-light" type="submit">Cari</button>
+                </form>
+            </div>
             <div class="col-md-12">
                 <!-- Notifikasi menggunakan flash session data -->
                 @if (session('success'))
@@ -42,26 +49,30 @@
                 </div>
                 @endif
             </div>
-            @forelse ($products as $product)
-                <div class="card border-0 shadow rounded col-md-4 col-sm-6">
-                    <div class="card-body">
-                        <div class="product-item">
-                            <img src="uploads/{{$product->photo}}" alt="{{$product->product_name}}" class="product-image img-fluid">
-                            <h3 class="product-name">{{$product->product_name}}</h3>
-                            <p class="product-price">Rp. {{number_format($product->price)}}</p>
-                            <a href="{{route('add.to.cart', $product->product_id)}}" class="btn btn-primary">Tambah ke Keranjang</a>
+            <div class="row row-cols-md-3 row-cols-sm-3 g-2">
+                @forelse ($products as $product)
+                    <div class="col-sm-4">
+                        <div class="card">
+                            <a href="{{ route('cart.create', $product->product_id) }}">
+                                <img src="{{ asset('uploads/' . $product->photo) }}" class="card-img-top" alt="...">
+                            </a>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ $product->product_name }}</h5>
+                                <p class="card-text">Deskripsi Produk</p>
+                                <p class="card-text">Harga Rp. {{ number_format($product->price) }}</p>
+                                @if ($user != null)
+                                    <a href="{{ route('cart.create', $product->product_id) }}" class="btn btn-primary">Tambah
+                                        ke
+                                        Keranjang</a>
+                                @endif
+                            </div>
                         </div>
                     </div>
-                </div>
-            @empty
-            <h2>Data tidak tersedia</h2>
-            @endforelse
+                @empty
+                <h2>Data tidak tersedia</h2>
+                @endforelse
+            </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
-    </script>
-</body>
-
-</html>
+@include('template.footer-pelanggan')

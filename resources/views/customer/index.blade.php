@@ -31,7 +31,7 @@
                 <div class="card border-0 shadow rounded">
                     <div class="card-body">
                         <a href="{{ route('customer.create') }}" class="btn btn-md btn-success mb-3 float-right">Tambah customer</a>
-                        <table class="table table-bordered mt-1">
+                        <table id="myTable" class="table table-striped">
                             <thead>
                                 <tr>
                                     <th scope="col">ID</th>

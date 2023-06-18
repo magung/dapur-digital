@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\Store;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -10,7 +11,8 @@ use Illuminate\Support\Facades\Hash;
 class RegisterController extends Controller
 {
     public function view(){
-        return view('auth.register');
+        $stores = Store::latest()->get();
+        return view('auth.register')->with('stores', $stores);
     }
 
     public function register(Request $request)
@@ -39,13 +41,21 @@ class RegisterController extends Controller
             'address'       => $request->address,
             'status'        => 0,
             'photo'         => $photo,
+            'store_id'      => $request->store_id
         ]);
+        $phone_number_admin = "";
+        if(isset($request->store_id)) {
+            $phone_number_admin = Store::find($request->store_id)->phone_number;
+        } else {
+            $phone_number_admin = Store::latest()->first()->phone_number;
+        }
 
         if ($user) {
             return redirect()
                 ->route('login')
                 ->with([
-                    'success' => 'Sukses Register, silakan hubungi admin Dapur Digital untuk mengaktifkan akun anda, kemudian login'
+                    'success' => 'Sukses Register, silakan hubungi admin Dapur Digital untuk mengaktifkan akun anda, kemudian login',
+                    'link_admin' => 'https://api.whatsapp.com/send/?phone='.$phone_number_admin
                 ]);
         } else {
             return redirect()

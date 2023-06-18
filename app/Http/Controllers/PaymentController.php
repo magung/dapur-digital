@@ -31,14 +31,14 @@ class PaymentController extends Controller
             return redirect()
                 ->route('payment.index')
                 ->with([
-                    'success' => 'New payment has been created successfully'
+                    'success' => 'Sukses'
                 ]);
         } else {
             return redirect()
                 ->back()
                 ->withInput()
                 ->with([
-                    'error' => 'Some problem occurred, please try again'
+                    'error' => 'Gagal'
                 ]);
         }
     }
@@ -65,14 +65,14 @@ class PaymentController extends Controller
             return redirect()
                 ->route('payment.index')
                 ->with([
-                    'success' => 'Payment has been updated successfully'
+                    'success' => 'Sukses'
                 ]);
         } else {
             return redirect()
                 ->back()
                 ->withInput()
                 ->with([
-                    'error' => 'Some problem has occured, please try again'
+                    'error' => 'Gagal'
                 ]);
         }
     }
@@ -86,7 +86,7 @@ class PaymentController extends Controller
             return redirect()
                 ->route('payment.index')
                 ->with([
-                    'success' => 'payment has been deleted successfully'
+                    'success' => 'Sukses'
                 ]);
         } else {
             return redirect()

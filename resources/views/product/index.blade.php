@@ -32,7 +32,7 @@
                     <a href="{{ route('product.create') }}" class="btn btn-md btn-success mb-3 float-right">Tambah
                         Produk</a>
 
-                    <table class="table table-bordered mt-1">
+                    <table id="myTable" class="table table-striped">
                         <thead>
                             <tr>
                                 <th scope="col">Produk</th>
@@ -55,7 +55,8 @@
                                     <td>{{ $product->stock }}</td>
                                     <td class="text-center">
                                         <form onsubmit="return confirm('Apakah Anda Yakin ?');"
-                                            action="{{ route('product.destroy', $product->product_id) }}" method="POST">
+                                            action="{{ route('product.destroy', $product->product_id) }}"
+                                            method="POST">
                                             <a href="{{ route('product.edit', $product->product_id) }}"
                                                 class="btn btn-sm btn-primary">EDIT</a>
                                             @csrf

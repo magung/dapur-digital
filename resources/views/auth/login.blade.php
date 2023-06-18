@@ -28,17 +28,27 @@
                             <div class="alert alert-success">
                                 {{ session('success') }}
                             </div>
+                            <div class="">
+                                <a href="{{ session('link_admin') }}"  target="_blank">Klik Link ini untuk menghubungi Admin</a>
+                            </div>
+                            <br>
                         @endif
     
                         @if (session('error'))
                             <div class="alert alert-error">
                                 {{ session('error') }}
                             </div>
+                            @if (session('link_admin') !== null)
+                                <div class="">
+                                    <a href="{{ session('link_admin') }}"  target="_blank">Klik Link ini untuk menghubungi Admin</a>
+                                </div>
+                                <br>
+                            @endif
                         @endif
                         <div class="form-floating">
                             <input type="text" class="form-control " name="email" id="email" required
                                 value="{{ old('email') }}" placeholder="name@example.com">
-                            <label for="email">Email / Username</label>
+                            <label for="email">Email</label>
                         </div>
                         <br>
                         <div class="form-floating">

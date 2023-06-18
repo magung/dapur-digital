@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.css">
     <title>{{$title}}</title>
     <link rel='icon' href='logo.png'>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
 </head>
 <body>
     <nav class="navbar fixed-top navbar-expand-lg navbar-light"  style="background-color: #e3f2fd;">

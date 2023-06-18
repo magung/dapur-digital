@@ -32,7 +32,7 @@
                     <a href="{{ route('payment.create') }}" class="btn btn-md btn-success mb-3 float-right">Tambah
                         Pembayaran</a>
 
-                    <table class="table table-bordered mt-1">
+                    <table id="myTable" class="table table-striped">
                         <thead>
                             <tr>
                                 <th scope="col">Pembayaran</th>

@@ -34,7 +34,7 @@
                     <a href="{{ route('category.create') }}" class="btn btn-md btn-success mb-3 float-right">Tambah
                         Kategori</a>
 
-                    <table class="table table-bordered mt-1">
+                    <table id="myTable" class="table table-striped">
                         <thead>
                             <tr>
                                 <th scope="col">Kategori</th>
@@ -49,7 +49,8 @@
                                     <td>{{ $category->satuan }}</td>
                                     <td class="text-center">
                                         <form onsubmit="return confirm('Apakah Anda Yakin ?');"
-                                            action="{{ route('category.destroy', $category->category_id) }}" method="POST">
+                                            action="{{ route('category.destroy', $category->category_id) }}"
+                                            method="POST">
                                             <a href="{{ route('category.edit', $category->category_id) }}"
                                                 class="btn btn-sm btn-primary">EDIT</a>
                                             @csrf

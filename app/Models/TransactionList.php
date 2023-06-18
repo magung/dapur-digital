@@ -19,6 +19,6 @@ class TransactionList extends Model
         'final_price',
         'created_by',
         'updated_by',
-        'file'
+        'customer_id'
     ];
 }

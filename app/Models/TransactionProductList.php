@@ -22,5 +22,6 @@ class TransactionProductList extends Model
         'cutting_id',
         'finishing_price',
         'cutting_price',
+        'file'
     ];
 }

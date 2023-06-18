@@ -144,7 +144,7 @@
                                 <label for="transaction_status_id">Status Transaksi</label>
                                 <select name="transaction_status_id" class="form-control" required readonly>
                                     @foreach ($statuses as $status)
-                                        <option value="{{$status->id}}" {{$transaction->transaction_status_id == $status->id ? 'selected' : ''}}>{{$status->status}}</option>
+                                        <option value="{{$status->transaction_status_id}}" {{$transaction->transaction_status_id == $status->transaction_status_id ? 'selected' : ''}}>{{$status->transaction_status}}</option>
                                     @endforeach
                                 </select>
                                 <!-- error message untuk role -->
