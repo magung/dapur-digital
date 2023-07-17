@@ -103,7 +103,7 @@
 
                             <img src="{{ route('image', $product->photo) }}" alt="" width="200">
 
-                            <a  href="{{ url()->previous() }}" class="btn btn-md btn-secondary">back</a>
+                            <a  href="{{ url()->previous() }}" class="btn btn-md btn-secondary">Kembali</a>
                         </form>
                     </div>
                 </div>

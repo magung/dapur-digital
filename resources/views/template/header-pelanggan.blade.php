@@ -40,7 +40,7 @@
             </button>
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                
+
                 @if ($title == 'Dashboard')
                     <form class="col-12 col-lg-6" action="{{ route('product-list') }}" method="GET">
                         <div class="row ">
@@ -54,7 +54,9 @@
                                 </select>
                             </div>
                             <div class="col-2 d-flex">
-                                <button class="btn btn-light" type="submit"><ion-icon name="search-outline"></ion-icon> Cari</button>
+                                <button class="btn btn-light" type="submit">
+                                    <ion-icon name="search-outline"></ion-icon> Cari
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -90,6 +92,10 @@
                                 </li>
                                 <li><a class="dropdown-item" href="{{ route('transaction.customer.index') }}">
                                         <ion-icon name="basket-outline"></ion-icon> Transaksi
+                                    </a></li>
+                                    <hr class="dropdown-divider">
+                                <li><a class="dropdown-item" href="{{ route('customer.address') }}">
+                                    <ion-icon name="location-outline"></ion-icon> Alamat
                                     </a></li>
                                 <li>
                                     <hr class="dropdown-divider">

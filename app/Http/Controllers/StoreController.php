@@ -119,7 +119,7 @@ class StoreController extends Controller
             return redirect()
                 ->route('store.index')
                 ->with([
-                    'error' => 'Some problem has occurred, please try again'
+                    'error' => 'Gagal'
                 ]);
         }
     }

@@ -96,7 +96,7 @@ class RoleController extends Controller
             return redirect()
                 ->route('role.index')
                 ->with([
-                    'error' => 'Some problem has occurred, please try again'
+                    'error' => 'Gagal'
                 ]);
         }
     }

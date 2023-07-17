@@ -19,4 +19,14 @@ class Category extends Model
     {
         return $this->hasMany(Product::class);
     }
+
+    public function finishings()
+    {
+        return $this->hasMany(Finishing::class);
+    }
+
+    public function cuttings()
+    {
+        return $this->hasMany(Cutting::class);
+    }
 }

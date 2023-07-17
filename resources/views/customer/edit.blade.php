@@ -170,8 +170,8 @@
                             </div>
 
                             <br>
-                            <button type="submit" class="btn btn-md btn-primary">Update</button>
-                            <a href="{{ route('customer.index') }}" class="btn btn-md btn-secondary">back</a>
+                            <button type="submit" class="btn btn-md btn-primary">Simpan</button>
+                            <a href="{{ route('customer.index') }}" class="btn btn-md btn-secondary">Kembali</a>
                         </form>
                     </div>
                 </div>

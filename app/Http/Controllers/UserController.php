@@ -170,7 +170,7 @@ class UserController extends Controller
             return redirect()
                 ->route('user.index')
                 ->with([
-                    'error' => 'Some problem has occurred, please try again'
+                    'error' => 'Gagal'
                 ]);
         }
     }

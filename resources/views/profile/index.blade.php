@@ -184,8 +184,8 @@
                                 <img src="/uploads/{{$profile->photo}}" alt="" width="200">
                             </div>
 
-                            <button type="submit" class="btn btn-md btn-primary">Update</button>
-                            <a href="/" class="btn btn-md btn-secondary">back</a>
+                            <button type="submit" class="btn btn-md btn-primary">Simpan</button>
+                            <a href="/" class="btn btn-md btn-secondary">Kembali</a>
                         </form>
                     </div>
                 </div>

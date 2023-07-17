@@ -9,5 +9,15 @@ class Courier extends Model
 {
     use HasFactory;
     protected $primaryKey = 'courier_id';
-    protected $fillable = ['courier'];
+    protected $fillable = [
+            'courier_name', 
+            'courier_code', 
+            'courier_service_name',
+            'courier_service_code',
+            'description',
+            'service_type',
+            'shipping_type',
+            'shipment_duration_range',
+            'shipment_duration_unit',
+];
 }

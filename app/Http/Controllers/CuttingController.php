@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Cutting;
 use Illuminate\Http\Request;
 
@@ -14,19 +15,22 @@ class CuttingController extends Controller
     }
     public function create()
     {
-        return view('cutting.create');
+        $categories = Category::latest()->get();
+        return view('cutting.create', compact('categories'));
     }
 
     public function store(Request $request)
     {
         $this->validate($request, [
             'cutting' => 'required',
-            'cutting_price' => 'required'
+            'cutting_price' => 'required',
+            'category_id' => 'required'
         ]);
 
         $cutting = Cutting::create([
             'cutting' => $request->cutting,
-            'cutting_price' => $request->cutting_price
+            'cutting_price' => $request->cutting_price,
+            'category_id' => $request->category_id
         ]);
 
         if ($cutting) {
@@ -48,21 +52,24 @@ class CuttingController extends Controller
     public function edit($id)
     {
         $cutting = Cutting::findOrFail($id);
-        return view('cutting.edit', compact('cutting'));
+        $categories = Category::latest()->get();
+        return view('cutting.edit', compact('cutting', 'categories'));
     }
 
     public function update(Request $request, $id)
     {
         $this->validate($request, [
             'cutting' => 'required',
-            'cutting_price' => 'required'
+            'cutting_price' => 'required',
+            'category_id' => 'required'
         ]);
 
         $cutting = Cutting::findOrFail($id);
 
         $cutting->update([
             'cutting' => $request->cutting,
-            'cutting_price' => $request->cutting_price
+            'cutting_price' => $request->cutting_price,
+            'category_id' => $request->category_id
         ]);
 
         if ($cutting) {
@@ -96,7 +103,7 @@ class CuttingController extends Controller
             return redirect()
                 ->route('cutting.index')
                 ->with([
-                    'error' => 'Some problem has occurred, please try again'
+                    'error' => 'Gagal'
                 ]);
         }
     }

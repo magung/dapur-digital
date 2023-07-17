@@ -53,6 +53,23 @@
                             </div>
 
                             <div class="form-group">
+                                <label for="category">Category</label>
+                                <select name="category_id" id="" required class="form-control">
+                                    <option value="">Pilih Category</option>
+                                    @foreach ($categories as $category)
+                                        <option value="{{$category->category_id}}">{{$category->category_name}}</option>
+                                    @endforeach
+                                </select>
+
+                                <!-- error message untuk category -->
+                                @error('category')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+
+                            <div class="form-group">
                                 <label for="cutting_price">Harga</label>
                                 <input type="number" class="form-control @error('cutting_price') is-invalid @enderror"
                                     name="cutting_price" value="{{ old('cutting_price') }}" required>
@@ -65,8 +82,8 @@
                                 @enderror
                             </div>
 
-                            <button type="submit" class="btn btn-md btn-primary">Save</button>
-                            <a href="{{ route('cutting.index') }}" class="btn btn-md btn-secondary">back</a>
+                            <button type="submit" class="btn btn-md btn-primary">Simpan</button>
+                            <a href="{{ route('cutting.index') }}" class="btn btn-md btn-secondary">Kembali</a>
 
                         </form>
                     </div>

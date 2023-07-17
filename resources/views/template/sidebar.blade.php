@@ -65,9 +65,35 @@
             @endif
             @if ($user->role_id == 1 || $user->role_id == 2)
             <li class="nav-item">
-                <a href="/transaction" class="nav-link text-black  align-middle px-0">
+                <a href="#transaction"  data-bs-toggle="collapse"  class="nav-link text-black px-0 align-middle">
                     <ion-icon name="bar-chart-outline"></ion-icon> <span class="ms-1 d-none d-sm-inline">Transaksi</span>
                 </a>
+                <ul class="collapse nav flex-column ms-1 show" id="transaction" data-bs-parent="#menu">
+                    <li class="w-100">
+                        <a href="{{route('transaction.index')}}" class="nav-link text-black px-0"> <ion-icon name="chevron-forward-outline"></ion-icon> <span class="d-none d-sm-inline">Semua Transaksi</span></a>
+                    </li>
+                    <li class="w-100">
+                        <a href="{{route('transaction.index.pending')}}" class="nav-link text-black px-0"> <ion-icon name="chevron-forward-outline"></ion-icon> <span class="d-none d-sm-inline">Pending</span></a>
+                    </li>
+                    <li class="w-100">
+                        <a href="{{route('transaction.index.menunggu.konfirmasi')}}" class="nav-link text-black px-0"> <ion-icon name="chevron-forward-outline"></ion-icon> <span class="d-none d-sm-inline">Menunggu Konfirmasi</span></a>
+                    </li>
+                    <li class="w-100">
+                        <a href="{{route('transaction.index.approved')}}" class="nav-link text-black px-0"> <ion-icon name="chevron-forward-outline"></ion-icon> <span class="d-none d-sm-inline">Approved</span></a>
+                    </li>
+                    <li class="w-100">
+                        <a href="{{route('transaction.index.diproses')}}" class="nav-link text-black px-0"> <ion-icon name="chevron-forward-outline"></ion-icon> <span class="d-none d-sm-inline">Diproses</span></a>
+                    </li>
+                    <li class="w-100">
+                        <a href="{{route('transaction.index.dikirim')}}" class="nav-link text-black px-0"> <ion-icon name="chevron-forward-outline"></ion-icon> <span class="d-none d-sm-inline">Dikirim</span></a>
+                    </li>
+                    <li class="w-100">
+                        <a href="{{route('transaction.index.selesai')}}" class="nav-link text-black px-0"> <ion-icon name="chevron-forward-outline"></ion-icon> <span class="d-none d-sm-inline">Selesai</span></a>
+                    </li>
+                    <li class="w-100">
+                        <a href="{{route('transaction.index.batal')}}" class="nav-link text-black px-0"> <ion-icon name="chevron-forward-outline"></ion-icon> <span class="d-none d-sm-inline">Batal / Reject</span></a>
+                    </li>
+                </ul>
             </li>
             @endif
             @if ($user->role_id == 1 || $user->role_id == 3)

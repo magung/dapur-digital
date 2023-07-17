@@ -42,7 +42,7 @@
 
                             <div class="form-group">
                                 <label for="payment_method_id">Pembayaran</label>
-                                <select name="payment_method_id" class="form-control" required>
+                                <select name="payment_method_id" class="form-control" disabled>
                                     @foreach ($payments as $payment)
                                         <option value="{{$payment->payment_id}}" {{$transaction->payment_method_id == $payment->payment_id ? 'selected' : ''}} >{{$payment->payment_method}}</option>
                                     @endforeach
@@ -77,9 +77,15 @@
                                 @enderror
                             </div>
 
+                            <div class="form-group">
+                                <img src="{{asset('bukti-pembayaran/'.$transaction->bukti_pembayaran)}}" alt="" width="100%">
+                            </div>
+
+                            
+
 
                             <button type="submit" class="btn btn-md btn-primary">Upload</button>
-                            <a href="{{ route('transaction.customer.index') }}" class="btn btn-md btn-secondary">back</a>
+                            <a href="{{ route('transaction.customer.index') }}" class="btn btn-md btn-secondary">Kembali</a>
                         </form>
                     </div>
                 </div>

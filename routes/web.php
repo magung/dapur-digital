@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 $ctrl = '\App\Http\Controllers';
 
+Route::get('admin',$ctrl.'\LoginController@view_admin')->name('login-admin');
 Route::get('login-admin',$ctrl.'\LoginController@view_admin')->name('login-admin');
 Route::get('login',$ctrl.'\LoginController@view')->name('login');
 // Route::get('register-admin',$ctrl.'\RegisterController@view_admin')->name('register');
@@ -35,7 +36,6 @@ Route::post('register-admin',$ctrl.'\RegisterController@register_admin')->name('
 
 Route::get('/',$ctrl.'\DashboardController@view')->name('dashboard');
 Route::post('logout',$ctrl.'\LoginController@logout')->name('logout');
-Route::get('list-product-category/{id}',$ctrl.'\ProductController@list_product_category')->name('list-product-category');
 Route::get('product-detail/{id}',$ctrl.'\ProductController@detailProduct')->name('product-detail');
 
 // admin
@@ -101,8 +101,17 @@ Route::middleware('auth')->delete('user/{id}',$ctrl.'\UserController@destroy')->
 Route::middleware('auth')->get('user/{id}',$ctrl.'\UserController@edit')->name('user.edit');
 
 Route::middleware('auth')->get('transaction', $ctrl . '\TransactionController@index')->name('transaction.index');
+Route::middleware('auth')->get('transaction-pending', $ctrl . '\TransactionController@indexPending')->name('transaction.index.pending');
+Route::middleware('auth')->get('transaction-menunggu-konfirmasi', $ctrl . '\TransactionController@indexMenungguKonfirmasi')->name('transaction.index.menunggu.konfirmasi');
+Route::middleware('auth')->get('transaction-approved', $ctrl . '\TransactionController@indexApproved')->name('transaction.index.approved');
+Route::middleware('auth')->get('transaction-diproses', $ctrl . '\TransactionController@indexDiproses')->name('transaction.index.diproses');
+Route::middleware('auth')->get('transaction-dikirim', $ctrl . '\TransactionController@indexDikirim')->name('transaction.index.dikirim');
+Route::middleware('auth')->get('transaction-selesai', $ctrl . '\TransactionController@indexSelesai')->name('transaction.index.selesai');
+Route::middleware('auth')->get('transaction-batal', $ctrl . '\TransactionController@indexBatal')->name('transaction.index.batal');
+
 Route::middleware('auth')->post('transaction',$ctrl.'\TransactionController@store')->name('transaction.store');
 Route::middleware('auth')->get('transaction/create',$ctrl.'\TransactionController@create')->name('transaction.create');
+Route::middleware('auth')->get('transaction/product-list',$ctrl.'\ProductController@productListAdmin')->name('product-list-admin');
 Route::middleware('auth')->get('transaction-product/create/{id}',$ctrl.'\TransactionController@createProductList')->name('transaction.product.create');
 Route::middleware('auth')->get('transaction-product/delete/{id}',$ctrl.'\TransactionController@destroyProductList')->name('transaction.product.destroy');
 Route::middleware('auth')->get('transaction-product/edit/{id}',$ctrl.'\TransactionController@editProductList')->name('transaction.product.edit');
@@ -113,9 +122,15 @@ Route::middleware('auth')->delete('transaction/{id}',$ctrl.'\TransactionControll
 Route::middleware('auth')->get('transaction/detail/{id}',$ctrl.'\TransactionController@detail')->name('transaction.detail');
 Route::middleware('auth')->get('transaction/payment/{id}',$ctrl.'\TransactionController@pembayaran')->name('transaction.pembayaran');
 Route::middleware('auth')->get('transaction/{id}',$ctrl.'\TransactionController@edit')->name('transaction.edit');
+Route::middleware('auth')->post('transaction/update-transaction-status/{id}',$ctrl.'\TransactionController@updateTransactionStatus')->name('transaction.update.transaction.status');
+Route::middleware('auth')->post('transaction/update-payment-status/{id}',$ctrl.'\TransactionController@updatePaymentStatus')->name('transaction.update.payment.status');
+Route::middleware('auth')->get('admin/cart/create/{id}',$ctrl.'\CartController@admin_cart_create')->name('admin.cart.create');
+Route::middleware('auth')->post('admin/cart',$ctrl.'\CartController@admin_cart_store')->name('admin.cart.store');
+Route::middleware('auth')->get('admin/cart/delete/{id}',$ctrl.'\CartController@admin_cart_destroy')->name('admin.cart.destroy');
+Route::middleware('auth')->get('admin/cart/edit/{id}',$ctrl.'\CartController@admin_cart_edit')->name('admin.cart.edit');
+Route::middleware('auth')->put('admin/cart/update/{id}',$ctrl.'\CartController@admin_cart_update')->name('admin.cart.update');
 
-
-Route::middleware('auth')->get('download/{file}',$ctrl.'\TransactionController@download')->name('download');
+Route::get('download',$ctrl.'\ImageController@downloadFile')->name('download');
 
 Route::middleware('auth')->get('profile',$ctrl.'\ProfileController@index')->name('profile.index');
 Route::middleware('auth')->put('profile/{id}',$ctrl.'\ProfileController@update')->name('profile.update');
@@ -126,6 +141,8 @@ Route::middleware('auth')->get('report-stock-product',$ctrl.'\ReportController@r
 Route::middleware('auth')->get('image/{file}',$ctrl.'\ImageController@image')->name('image');
 
 Route::middleware('auth')->get('print-struk',$ctrl.'\PrintController@printStruk')->name('print.struk');
+Route::get('print-pdf/{id}',$ctrl.'\PrintController@printPDF')->name('print.pdf');
+
 
 Route::middleware('auth')->get('customer',$ctrl.'\CustomerController@index')->name('customer.index');
 Route::middleware('auth')->post('customer',$ctrl.'\CustomerController@store')->name('customer.store');
@@ -147,16 +164,17 @@ Route::middleware('auth')->delete('banner/{id}',$ctrl.'\BannerController@destroy
 
 Route::middleware('auth:customer')->get('profile-customer',$ctrl.'\ProfileController@profile_customer')->name('profile-customer.index');
 Route::middleware('auth:customer')->put('profile-customer/{id}',$ctrl.'\ProfileController@update_profile_customer')->name('profile-customer.update');
-Route::get('product-list',$ctrl.'\ProductController@indexProductList')->name('product-list');
+Route::get('product-list',$ctrl.'\ProductController@productList')->name('product-list');
 Route::middleware('auth:customer')->get('add-to-cart/{id}',$ctrl.'\CartController@addToCart')->name('add.to.cart');
-Route::middleware('auth:customer')->get('cart-list',$ctrl.'\TransactionController@createTransacationCustomer')->name('cart.list');
+Route::middleware('auth:customer')->get('cart-list',$ctrl.'\CartController@cartListCustomer')->name('cart.list');
+Route::middleware('auth:customer')->post('cart-payment',$ctrl.'\CartController@cartPaymentCustomer')->name('cart.payment');
 Route::middleware('auth:customer')->put('update-cart/{id}',$ctrl.'\CartController@updatePelanggan')->name('cart.list.update');
 
-Route::middleware('auth:customer')->get('cart/create/{id}',$ctrl.'\CartController@create')->name('cart.create');
+Route::get('cart/create/{id}',$ctrl.'\CartController@create')->name('cart.create');
 Route::middleware('auth:customer')->post('cart',$ctrl.'\CartController@store')->name('cart.store');
 Route::middleware('auth:customer')->get('cart/delete/{id}',$ctrl.'\CartController@destroy')->name('cart.destroy');
 Route::middleware('auth:customer')->get('cart/edit/{id}',$ctrl.'\CartController@edit')->name('cart.edit');
-Route::middleware('auth:customer')->put('cart/{id}',$ctrl.'\CartController@update')->name('cart.update');
+Route::middleware('auth:customer')->put('cart/update/{id}',$ctrl.'\CartController@update')->name('cart.update');
 
 
 Route::middleware('auth:customer')->get('transaction-customer', $ctrl . '\TransactionController@indexTransactionCustomer')->name('transaction.customer.index');
@@ -174,5 +192,16 @@ Route::middleware('auth:customer')->get('transaction-customer/payment/{id}',$ctr
 Route::middleware('auth:customer')->put('transaction-customer/payment/{id}',$ctrl.'\TransactionController@updatePembayaran')->name('transaction.customer.update.pembayaran');
 Route::middleware('auth:customer')->get('transaction-customer/{id}',$ctrl.'\TransactionController@edit')->name('transaction.customer.edit');
 
+Route::middleware('auth:customer')->get('address',$ctrl.'\AddressController@index')->name('customer.address');
+Route::middleware('auth:customer')->get('address-create',$ctrl.'\AddressController@create')->name('customer.address.create');
+Route::middleware('auth:customer')->post('address',$ctrl.'\AddressController@store')->name('customer.address.store');
+Route::middleware('auth:customer')->get('address/{id}',$ctrl.'\AddressController@edit')->name('customer.address.edit');
+Route::middleware('auth:customer')->put('address/{id}',$ctrl.'\AddressController@update')->name('customer.address.update');
+Route::middleware('auth:customer')->delete('address/{id}',$ctrl.'\AddressController@destroy')->name('customer.address.destroy');
 
+Route::get('/get-couriers',$ctrl.'\AddressController@getCouriers');
+Route::get('/get-provinces',$ctrl.'\AddressController@getProvinces');
+Route::get('/get-regencies/{provinceId}',$ctrl.'\AddressController@getRegencies');
+Route::get('/get-districts/{regencyId}',$ctrl.'\AddressController@getDistricts');
+Route::get('/get-villages/{districtId}',$ctrl.'\AddressController@getVillages');
 

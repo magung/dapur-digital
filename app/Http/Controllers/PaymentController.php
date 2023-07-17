@@ -92,7 +92,7 @@ class PaymentController extends Controller
             return redirect()
                 ->route('payment.index')
                 ->with([
-                    'error' => 'Some problem has occurred, please try again'
+                    'error' => 'Gagal'
                 ]);
         }
     }

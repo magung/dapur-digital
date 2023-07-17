@@ -238,8 +238,8 @@
                                 @enderror
                             </div>
 
-                            <button type="submit" class="btn btn-md btn-primary">Save</button>
-                            <a href="{{ route('transaction.customer.edit', $transaction_product_list->transaction_list_id) }}" class="btn btn-md btn-secondary">back</a>
+                            <button type="submit" class="btn btn-md btn-primary">Simpan</button>
+                            <a href="{{ route('transaction.customer.edit', $transaction_product_list->transaction_list_id) }}" class="btn btn-md btn-secondary">Kembali</a>
 
                         </form>
                     </div>

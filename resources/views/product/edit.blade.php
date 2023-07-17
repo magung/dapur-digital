@@ -39,85 +39,106 @@
                         <form action="{{ route('product.update', $product->product_id) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
-
-                            <div class="form-group">
-                                <label for="product_name">Nama Produk</label>
-                                <input type="text" class="form-control @error('product_name') is-invalid @enderror"
-                                    name="product_name" value="{{ old('product_name', $product->product_name) }}" required>
-
-                                <!-- error message untuk product_name -->
-                                @error('product_name')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="product_name">Nama Produk</label>
+                                        <input type="text" class="form-control @error('product_name') is-invalid @enderror"
+                                            name="product_name" value="{{ old('product_name', $product->product_name) }}" required>
+                                        <!-- error message untuk product_name -->
+                                        @error('product_name')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
+                                    </div>
                                 </div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <label for="category">Kategori</label>
-                                <select name="category" class="form-control" required>
-                                    <option value="" >-- kategori --</option>
-                                    @foreach ($categories as $category)
-                                        <option value="{{ $category->category_id }}" {{ $product->category_id == $category->category_id ? 'selected':'' }} >{{$category->category_name}}</option>
-                                    @endforeach
-                                    
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="store">Toko</label>
-                                <select name="store" class="form-control" required>
-                                    <option value="" >-- toko --</option>
-                                    @foreach ($stores as $store)
-                                        <option value="{{ $store->store_id }}" {{ $product->store_id == $store->store_id ? 'selected':'' }}>{{$store->store_name}}</option>
-                                    @endforeach
-                                    
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="stock">Stok</label>
-                                <input type="number" class="form-control @error('stock') is-invalid @enderror"
-                                    name="stock" value="{{ old('stock', $product->stock) }}" required>
-
-                                <!-- error message untuk stock -->
-                                @error('stock')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="category">Kategori</label>
+                                        <select name="category" class="form-control" required>
+                                            <option value="" >-- kategori --</option>
+                                            @foreach ($categories as $category)
+                                                <option value="{{ $category->category_id }}" {{ $product->category_id == $category->category_id ? 'selected':'' }} >{{$category->category_name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
-                                @enderror
                             </div>
-
-                            <div class="form-group">
-                                <label for="price">Harga</label>
-                                <input type="number" class="form-control @error('price') is-invalid @enderror"
-                                    name="price" value="{{ old('price', $product->price) }}" required>
-
-                                <!-- error message untuk price -->
-                                @error('price')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="stock">Stok</label>
+                                        <input type="number" class="form-control @error('stock') is-invalid @enderror"
+                                            name="stock" value="{{ old('stock', $product->stock) }}" required>
+                                        <!-- error message untuk stock -->
+                                        @error('stock')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
+                                    </div>
                                 </div>
-                                @enderror
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="weight">Berat (Gram) </label>
+                                        <input type="number" class="form-control @error('weight') is-invalid @enderror"
+                                            name="weight" min="0" required>
+                                        <!-- error message untuk weight -->
+                                        @error('weight')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="price">Harga</label>
+                                        <input type="number" class="form-control @error('price') is-invalid @enderror"
+                                            name="price" value="{{ old('price', $product->price) }}" required>
+                                        <!-- error message untuk price -->
+                                        @error('price')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
+                                    </div>
+                                </div>
                             </div>
-
                             <div class="form-group">
                                 <label for="photo">Foto Produk</label>
-                                <input type="file" class="form-control @error('photo') is-invalid @enderror"
-                                    name="photo" value="{{ old('photo') }}" >
-
-                                <!-- error message untuk photo -->
-                                @error('photo')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
+                                <div class="row">
+                                    <div class="col-6">
+                                        <input type="file" class="form-control @error('photo') is-invalid @enderror"
+                                            name="photo" value="{{ old('photo') }}" >
+                                        <!-- error message untuk photo -->
+                                        @error('photo')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-6">
+                                        <img src="{{ asset('uploads/'. $product->photo) }}" alt="" width="200">
+                                    </div>
                                 </div>
-                                @enderror
-
-                                <img src="{{ route('image', $product->photo) }}" alt="" width="200">
                             </div>
-
-                            <button type="submit" class="btn btn-md btn-primary">Update</button>
-                            <a href="{{ route('product.index') }}" class="btn btn-md btn-secondary">back</a>
+                            <div class="form-group">
+                                <label for="description">Deskripsi</label>
+                                <textarea name="description" id="description" class="form-control @error('description') is-invalid @enderror" rows="5"
+                                    required>{{ old('description', $product->description) }}</textarea>
+                                <!-- error message untuk description -->
+                                @error('description')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                            <div>
+                                <button type="submit" class="btn btn-md btn-primary">Simpan</button>
+                                <a href="{{ route('product.index') }}" class="btn btn-md btn-secondary">Kembali</a>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -134,7 +155,7 @@
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
     <script>
         $(document).ready(function() {
-            $('#content').summernote({
+            $('#description').summernote({
                 height: 250, //set editable area's height
             });
         })

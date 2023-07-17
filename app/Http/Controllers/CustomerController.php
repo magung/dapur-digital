@@ -143,7 +143,7 @@ class CustomerController extends Controller
             return redirect()
                 ->route('customer.index')
                 ->with([
-                    'error' => 'Some problem has occurred, please try again'
+                    'error' => 'Gagal'
                 ]);
         }
     }

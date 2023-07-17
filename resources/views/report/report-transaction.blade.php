@@ -36,7 +36,7 @@
                                 <tr>
                                     <td>{{ $transaction->transaction_list_id }}</td>
                                     <td>{{ $transaction->created_at }}</td>
-                                    <td>{{ $transaction->user_id == 0 ? 'Umum' : $transaction->name }}
+                                    <td>{{ $transaction->customer_id == 0 ? 'Umum' : $transaction->name }}
                                         <br>{{ $transaction->email }} </td>
                                     <td>
 

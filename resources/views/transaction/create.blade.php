@@ -1,21 +1,14 @@
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Tambah Transaksi</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- include summernote css -->
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
-</head>
-
-<body>
+    @php
+    $title = 'Tambah Transaksi';
+    $user = Auth::user();
+@endphp
+@include('template.header')
 
     <div class="container mt-5 mb-5">
         <h1 class="display-4">
-            Tambah Transaksi
+            {{$title}}
         </h1>
         <div class="row">
             <div class="col-md-12">
@@ -40,8 +33,8 @@
                             @csrf
 
                             <div class="">
-                                <label for="">List Produk di Keranjang</label><br>
-                                <a href="{{ route('cart.create') }}" class="btn btn-md btn-success mb-3 ">+ Produk</a>
+                                <label for="">List Produk</label><br>
+                                <a href="{{route('product-list-admin')}}" class="btn btn-md btn-success mb-3 ">+ Produk</a>
                                 <table class="table table-bordered mt-1">
                                     <thead>
                                         <tr>
@@ -61,24 +54,24 @@
                                             <tr>
                                                 <td>{{$no}}</td>
                                                 <td>
-                                                    {{$cart->product_name}}
+                                                    {{$cart->product->product_name}}
                                                     @if ($cart->satuan != 'PCS')
                                                         - {{$cart->panjang}} x {{$cart->lebar}} {{$cart->satuan}}
                                                     @endif
                                                     <br>
                                                     @if (isset($cart->finishing_id))
-                                                        <br><b>Finishing</b><br>{{$cart->finishing}} - Rp. {{number_format($cart->finishing_price)}}
+                                                        <br><b>Finishing</b><br>{{$cart->finishing->finishing}} - Rp. {{number_format($cart->finishing_price)}}
                                                     @endif
                                                     @if (isset($cart->cutting_id))
-                                                        <br><b>Cutting</b><br>{{$cart->cutting}} - Rp. {{number_format($cart->cutting_price)}}
+                                                        <br><b>Cutting</b><br>{{$cart->cutting->cutting}} - Rp. {{number_format($cart->cutting_price)}}
                                                     @endif
                                                 </td>
                                                 <td>{{$cart->qty}}</td>
                                                 <td>Rp. {{number_format($cart->price)}}</td>
                                                 <td>Rp. {{number_format($cart->total_price)}}</td>
                                                 <td class="text-center">
-                                                    <a href="{{ route('cart.edit', $cart->cart_id) }}" class="btn btn-sm btn-primary">EDIT</a>
-                                                    <a href="{{route('cart.destroy', $cart->cart_id) }}" class="btn btn-sm btn-danger">HAPUS</a>
+                                                    <a href="{{ route('admin.cart.edit', $cart->cart_id) }}" class="btn btn-sm btn-primary">EDIT</a>
+                                                    <a href="{{route('admin.cart.destroy', $cart->cart_id) }}" class="btn btn-sm btn-danger">HAPUS</a>
                                                 </td>
                                             </tr>
                                             @php
@@ -197,21 +190,8 @@
                                 @enderror
                             </div>
 
-                            <div class="form-group">
-                                <label for="file">File Cetak</label>
-                                <input type="file" class="form-control @error('file') is-invalid @enderror"
-                                    name="file" value="{{ old('file') }}" >
-
-                                <!-- error message untuk file -->
-                                @error('file')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                                @enderror
-                            </div>
-
-                            <button type="submit" class="btn btn-md btn-primary">Save</button>
-                            <a href="{{ route('transaction.index') }}" class="btn btn-md btn-secondary">back</a>
+                            <button type="submit" class="btn btn-md btn-primary">Simpan</button>
+                            <a href="{{ route('transaction.index') }}" class="btn btn-md btn-secondary">Kembali</a>
 
                         </form>
                     </div>

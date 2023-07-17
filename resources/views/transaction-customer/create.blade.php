@@ -198,8 +198,8 @@
                             </div>
                             <br>
                             <div>
-                                <button type="submit" class="btn btn-md btn-primary">Save</button>
-                                <a href="{{ route('transaction.index') }}" class="btn btn-md btn-secondary">back</a>
+                                <button type="submit" class="btn btn-md btn-primary">Simpan</button>
+                                <a href="{{ route('transaction.index') }}" class="btn btn-md btn-secondary">Kembali</a>
                             </div>
 
                         </form>

@@ -37,9 +37,9 @@
                             <tr>
                                 <th scope="col">Produk</th>
                                 <th scope="col">Kategori</th>
-                                <th scope="col">Toko</th>
                                 <th scope="col">Harga</th>
                                 <th scope="col">Satuan</th>
+                                <th scope="col">Berat (Gram) </th>
                                 <th scope="col">Stok</th>
                                 <th scope="col">Action</th>
                             </tr>
@@ -49,9 +49,9 @@
                                 <tr>
                                     <td>{{ $product->product_name }}</td>
                                     <td>{{ $product->category_name }}</td>
-                                    <td>{{ $product->store_name }}</td>
                                     <td>{{ $product->price }}</td>
                                     <td>{{ $product->satuan }}</td>
+                                    <td>{{ $product->weight }}</td>
                                     <td>{{ $product->stock }}</td>
                                     <td class="text-center">
                                         <form onsubmit="return confirm('Apakah Anda Yakin ?');"

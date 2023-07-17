@@ -22,6 +22,28 @@ class Cart extends Model
         'cutting_id',
         'finishing_price',
         'cutting_price',
-        'file'
+        'file',
+        'luas',
+        'user_id'
     ];
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id');
+    } 
+
+    public function finishing()
+    {
+        return $this->belongsTo(Finishing::class, 'finishing_id');
+    }
+
+    public function cutting()
+    {
+        return $this->belongsTo(Cutting::class, 'cutting_id');
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class, 'customer_id');
+    }
 }

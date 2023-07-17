@@ -141,11 +141,12 @@
                                 @enderror
                             </div>
 
+
                             <div class="form-group">
                                 <label for="transaction_status_id">Status Transaksi</label>
-                                <select name="transaction_status_id" class="form-control" required>
+                                <select name="transaction_status_id" class="form-control" required >
                                     @foreach ($statuses as $status)
-                                        <option value="{{$status->id}}" {{$transaction->transaction_status_id == $status->id ? 'selected' : ''}}>{{$status->status}}</option>
+                                        <option value="{{$status->transaction_status_id}}" {{$transaction->transaction_status_id == $status->transaction_status_id ? 'selected' : ''}}>{{$status->transaction_status}}</option>
                                     @endforeach
                                 </select>
                                 <!-- error message untuk role -->
@@ -175,7 +176,7 @@
                                 <label for="payment_status_id">Status Pembayaran</label>
                                 <select name="payment_status_id" class="form-control" required>
                                     @foreach ($payment_statuses as $payment_status)
-                                        <option value="{{$payment_status->id}}" {{$transaction->payment_status_id == $payment_status->id ? 'selected' : ''}}>{{$payment_status->payment_status}}</option>
+                                        <option value="{{$payment_status->payment_status_id}}" {{$transaction->payment_status_id == $payment_status->payment_status_id ? 'selected' : ''}}>{{$payment_status->payment_status}}</option>
                                     @endforeach
                                 </select>
                                 <!-- error message untuk role -->
@@ -211,8 +212,8 @@
                                 @enderror
                             </div>
 
-                            <button type="submit" class="btn btn-md btn-primary">Update</button>
-                            <a href="{{ route('transaction.index') }}" class="btn btn-md btn-secondary">back</a>
+                            <button type="submit" class="btn btn-md btn-primary">Simpan</button>
+                            <a href="{{ route('transaction.index') }}" class="btn btn-md btn-secondary">Kembali</a>
                         </form>
                     </div>
                 </div>

@@ -22,20 +22,27 @@
     <div class="col-md-6 py-1">
         <div class="card">
             <div class="card-body">
-                <canvas id="chBar"></canvas>
+                <canvas id="chDonut1"></canvas>
             </div>
         </div>
     </div>
+    {{-- <div class="col-md-6 py-1">
+        <div class="card">
+            <div class="card-body">
+                <canvas id="chBar"></canvas>
+            </div>
+        </div>
+    </div> --}}
 </div>
 <div class="row py-2">
-    <div class="col-md-4 py-1">
+    {{-- <div class="col-md-4 py-1">
         <div class="card">
             <div class="card-body">
                 <canvas id="chDonut1"></canvas>
             </div>
         </div>
-    </div>
-    <div class="col-md-4 py-1">
+    </div> --}}
+    {{-- <div class="col-md-4 py-1">
         <div class="card">
             <div class="card-body">
                 <canvas id="chDonut2"></canvas>
@@ -48,7 +55,7 @@
                 <canvas id="chDonut3"></canvas>
             </div>
         </div>
-    </div>
+    </div> --}}
 </div>
 
 @include('template.footer')
@@ -62,9 +69,9 @@
     /* large line chart */
     var chLine = document.getElementById("chLine");
     var chartData = {
-        labels: ["S", "M", "T", "W", "T", "F", "S"],
+        labels: ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"],
         datasets: [{
-                data: [589, 445, 483, 503, 689, 692, 634],
+                data: [{{$minggu}}, {{$senin}}, {{$selasa}}, {{$rabu}}, {{$kamis}}, {{$jumat}}, {{$sabtu}}],
                 backgroundColor: 'transparent',
                 borderColor: colors[0],
                 borderWidth: 4,
@@ -186,11 +193,11 @@
 
     // donut 1
     var chDonutData1 = {
-        labels: ['Bootstrap', 'Popper', 'Other'],
+        labels: ['Pending', 'Selesai', 'Menunggu Konfirmasi', 'Diproses', 'Batal / Reject', 'Approved', 'Dikirim'],
         datasets: [{
-            backgroundColor: colors.slice(0, 3),
+            backgroundColor: colors.slice(0, 7),
             borderWidth: 0,
-            data: [74, 11, 40]
+            data: [{{$pending}}, {{$selesai}}, {{$menunggu_konfirmasi}}, {{$diproses}}, {{$batal}}, {{$approved}}, {{$dikirim}}]
         }]
     };
 

@@ -96,7 +96,7 @@ class CategoryController extends Controller
             return redirect()
                 ->route('category.index')
                 ->with([
-                    'error' => 'Some problem has occurred, please try again'
+                    'error' => 'Gagal'
                 ]);
         }
     }

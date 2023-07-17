@@ -4,9 +4,24 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use charlieuki\ReceiptPrinter\ReceiptPrinter as ReceiptPrinter;
-
+use Illuminate\Support\Facades\Auth;
+use PDF;
 class PrintController extends Controller
 {
+    public function printPDF($id)
+    {
+        $user = Auth::user();
+        $transaction = new TransactionController();
+        $detail_transaction = $transaction->detailTransaction($id);
+        
+        $data = [
+            "detail_transaction" => $detail_transaction,
+            "user" => $user
+        ];
+        $pdf = PDF::loadView('struk.transaksi-detail', $data);
+
+        return $pdf->download('contoh.pdf');
+    }
     //
     public function printStruk()
     {

@@ -35,6 +35,7 @@
                         <thead>
                             <tr>
                                 <th scope="col">Finishing</th>
+                                <th scope="col">Category</th>
                                 <th scope="col">Harga</th>
                                 <th scope="col">Action</th>
                             </tr>
@@ -43,6 +44,7 @@
                             @forelse ($finishings as $finishing)
                                 <tr>
                                     <td>{{ $finishing->finishing }}</td>
+                                    <td>{{ $finishing->category->category_name }}</td>
                                     <td>{{ $finishing->finishing_price }}</td>
                                     <td class="text-center">
                                         <form onsubmit="return confirm('Apakah Anda Yakin ?');"

@@ -4,21 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // $products = Product::latest()->get();
-        $products = DB::table('products')
-            ->select(['products.*', 'categories.category_name','categories.satuan', 'stores.store_name'])
-            ->join('categories', 'categories.category_id', '=', 'products.category_id')
-            ->join('stores', 'stores.store_id', '=', 'products.store_id')
-            ->get();
-
+        $products = $this->getProducts($request);
         return view('product.index', compact('products'));
     }
 
@@ -40,8 +33,7 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::latest()->get();
-        $stores = Store::latest()->get();
-        return view('product.create', compact('categories', 'stores'));
+        return view('product.create', compact('categories'));
     }
 
     public function store(Request $request)
@@ -49,8 +41,9 @@ class ProductController extends Controller
         $this->validate($request, [
             'product_name' => 'required',
             'category' => 'required',
-            'store' => 'required',
+            'description' => 'required',
             'stock' => 'required',
+            'weight' => 'required',
             'price' => 'required',
             'photo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
@@ -62,8 +55,9 @@ class ProductController extends Controller
         $product = Product::create([
             'product_name' => $request->product_name,
             'category_id' => $request->category,
-            'store_id' => $request->store,
+            'description' => $request->description,
             'stock' => $request->stock,
+            'weight' => $request->weight,
             'price' => $request->price,
             'photo' => $photo
         ]);
@@ -88,8 +82,7 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
         $categories = Category::latest()->get();
-        $stores = Store::latest()->get();
-        return view('product.edit', compact('product','categories','stores'));
+        return view('product.edit', compact('product','categories'));
     }
 
     public function update(Request $request, $id)
@@ -97,16 +90,18 @@ class ProductController extends Controller
         $this->validate($request, [
             'product_name' => 'required',
             'category' => 'required',
-            'store' => 'required',
+            'description' => 'required',
             'stock' => 'required',
+            'weight' => 'required',
             'price' => 'required'
         ]);
 
         $datasend = [
             'product_name' => $request->product_name,
             'category_id' => $request->category,
-            'store_id' => $request->store,
+            'description' => $request->description,
             'stock' => $request->stock,
+            'weight' => $request->weight,
             'price' => $request->price,
         ];
 
@@ -158,12 +153,12 @@ class ProductController extends Controller
             return redirect()
                 ->route('product.index')
                 ->with([
-                    'error' => 'Some problem has occurred, please try again'
+                    'error' => 'Gagal'
                 ]);
         }
     }
 
-    public function indexProductList(Request $request)
+    public function productList(Request $request)
     {
         $products = $this->getProducts($request);
         $categories = Category::latest()->get();
@@ -172,23 +167,20 @@ class ProductController extends Controller
         return view('product-list.index', compact('products', 'categories', 'product_name', 'category_id'));
     }
 
+    public function productListAdmin(Request $request)
+    {
+        $products = $this->getProducts($request);
+        $categories = Category::latest()->get();
+        $product_name = $request->query('product_name');
+        $category_id = $request->query('category_id');
+        return view('product-list.product-list-admin', compact('products', 'categories', 'product_name', 'category_id'));
+    }
+
     public function detailProduct($id)
     {
         $product = Product::findOrFail($id);
         $categories = Category::latest()->get();
-        $stores = \App\Models\Store::latest()->get();
-        return view('home.product-detail', compact('product','categories','stores'));
+        return view('home.product-detail', compact('product','categories'));
     }
 
-    public function list_product_category($id)
-    {
-        $categories = Category::latest()->get();
-        $products = DB::table('products')
-        ->select(['products.*', 'categories.category_name','categories.satuan', 'stores.store_name'])
-        ->join('categories', 'categories.category_id', '=', 'products.category_id')
-        ->join('stores', 'stores.store_id', '=', 'products.store_id')
-        ->where('categories.category_id', '=', $id)
-        ->get();
-        return view('home.index', compact('products', 'categories'));
-    }
 }

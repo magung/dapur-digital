@@ -86,6 +86,7 @@
             $('#form-panjang').hide();
             $('#form-lebar').hide();
         }
+        
     })
 </script>
 

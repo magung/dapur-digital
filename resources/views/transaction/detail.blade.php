@@ -19,8 +19,8 @@
             Detail Transaksi
         </h1>
         @if ($role_id != 4)
-            <a href="{{ route('print.struk') }}" class="btn btn-sm btn-success">PRINT STRUK</a>
-            <a href="" class="btn btn-sm btn-primary">PRINT PDF</a>
+            {{-- <a href="{{ route('print.struk') }}" class="btn btn-sm btn-success">PRINT STRUK</a> --}}
+            <a href="{{route('print.pdf', $transaction->transaction_list_id)}}" class="btn btn-sm btn-primary">PRINT</a>
             <br>
             <br>
         @endif
@@ -55,6 +55,7 @@
                                             <th scope="col">Qty</th>
                                             <th scope="col">Harga</th>
                                             <th scope="col">Total</th>
+                                            <th scope="col">File Cetak</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -80,6 +81,14 @@
                                                 <td>{{$product->qty}}</td>
                                                 <td>Rp. {{number_format($product->price)}}</td>
                                                 <td>Rp. {{number_format($product->total_price)}}</td>
+                                                <td>
+                                                        <br>
+                                                        @if ($product->file)
+                                                            <a href="{{ route('download') .'?file='. $product->file }}" download  target="blank" class="btn btn-sm btn-danger">Download</a> {{$product->file}}
+                                                        @else
+                                                            <p>File Tidak Ada</p>
+                                                        @endif
+                                                </td>
                                             </tr>
                                             @php
                                                 $no++;
@@ -93,123 +102,79 @@
                                 </table>
                             </div>
 
-                            <div class="form-group">
-                                <label for="store_id">Toko</label>
-                                <select name="store_id" class="form-control" required readonly>
-                                    <option value="" >-- Toko --</option>
-                                    @foreach ($stores as $store)
-                                        <option value="{{$store->store_id}}" {{$transaction->store_id == $store->store_id ? 'selected' : ''}} >{{$store->store_name}}</option>
-                                    @endforeach
-                                </select>
-                                <!-- error message untuk role -->
-                                @error('store_id')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
+                            <div class="row">
+                                <div class="form-group col-6">
+                                    <label for="user_id">Pelanggan</label>
+                                    <input type="text" class="form-control"
+                                        value="{{ $transaction->customer->name != null ? $transaction->customer->name : 'UMUM' }}" readonly>
                                 </div>
-                                @enderror
-                            </div>
 
-                            <div class="form-group">
-                                <label for="user_id">Pelanggan</label>
-                                <select name="user_id" class="form-control" required readonly>
-                                    <option value="0" >Umum</option>
-                                    @foreach ($users as $user)
-                                        <option value="{{$user->user_id}}" {{$transaction->user_id == $user->user_id ? 'selected' : ''}}>{{$user->name}}</option>
-                                    @endforeach
-                                </select>
-                                <!-- error message untuk role -->
-                                @error('user_id')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
+                                <div class="form-group col-6">
+                                    <label for="transaction_type_id">Tipe Transaksi</label>
+                                    <input type="text" class="form-control"
+                                        value="{{ $transaction->transaction_type->transaction_type }}" readonly>
                                 </div>
-                                @enderror
-                            </div>
 
-                            <div class="form-group">
-                                <label for="transaction_type_id">Tipe Transaksi</label>
-                                <select name="transaction_type_id" class="form-control" required readonly>
-                                    @foreach ($types as $type)
-                                        <option value="{{$type->transaction_type_id}}" {{$transaction->transaction_type_id == $type->transaction_type_id ? 'selected' : ''}} >{{$type->transaction_type}}</option>
-                                    @endforeach
-                                </select>
-                                <!-- error message untuk role -->
-                                @error('transaction_type_id')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <label for="transaction_status_id">Status Transaksi</label>
-                                <select name="transaction_status_id" class="form-control" required readonly>
-                                    @foreach ($statuses as $status)
-                                        <option value="{{$status->transaction_status_id}}" {{$transaction->transaction_status_id == $status->transaction_status_id ? 'selected' : ''}}>{{$status->transaction_status}}</option>
-                                    @endforeach
-                                </select>
-                                <!-- error message untuk role -->
-                                @error('transaction_status_id')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <label for="payment_method_id">Pembayaran</label>
-                                <select name="payment_method_id" class="form-control" required readonly>
-                                    @foreach ($payments as $payment)
-                                        <option value="{{$payment->payment_id}}" {{$transaction->payment_method_id == $payment->payment_id ? 'selected' : ''}} >{{$payment->payment_method}}</option>
-                                    @endforeach
-                                </select>
-                                <!-- error message untuk role -->
-                                @error('payment_method_id')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <label for="payment_status_id">Status Pembayaran</label>
-                                <select name="payment_status_id" class="form-control" required readonly>
-                                    @foreach ($payment_statuses as $payment_status)
-                                        <option value="{{$payment_status->id}}" {{$transaction->payment_status_id == $payment_status->id ? 'selected' : ''}}>{{$payment_status->payment_status}}</option>
-                                    @endforeach
-                                </select>
-                                <!-- error message untuk role -->
-                                @error('payment_status_id')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <label for="final_price">Total Harga</label>
-                                <input type="hidden" name="final_price" class="form-control @error('price') is-invalid @enderror" value="{{ old('final_price', $total_harga) }}" required readonly>
-                                <input type="text"  class="form-control @error('price') is-invalid @enderror" value="Rp. {{ old('final_price', number_format($total_harga)) }}" required readonly>
-                                <!-- error message untuk role -->
-                                @error('final_price')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <label for="file">File Cetak</label>
-                                <br>
-                                @if ($transaction->file)
-                                    <a href="{{ route('download', $transaction->file) }}" download target="blank" class="btn btn-sm btn-danger">Download</a> {{$transaction->file}}
+                                @if ($transaction->transaction_type_id == 1)
+                                    <div class="form-group col-6">
+                                        <label for="transaction_type_id">Toko</label>
+                                        <input type="text" class="form-control"
+                                            value="{{ $transaction->store->store_name }}" readonly>
+                                    </div>
                                 @else
-                                    <p>File Tidak Ada</p>
+                                    <div class="form-group col-6">
+                                        <label for="">Alamat</label>
+                                        <input type="text" class="form-control"
+                                            value="{{ $transaction->address->name }} - {{$transaction->address->address}}" readonly>
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="">Kurir</label>
+                                        <input type="text" class="form-control"
+                                            value="{{ $transaction->courier->courier_name }} - {{$transaction->courier->courier_service_name}}" readonly>
+                                    </div>
                                 @endif
-                                
-                            </div>
 
+
+                                <div class="form-group col-6">
+                                    <label for="transaction_status_id">Status Transaksi</label>
+                                    <input type="text" class="form-control"
+                                        value="{{ $transaction->transaction_status->transaction_status }}" readonly>
+                                </div>
+
+                                <div class="form-group col-6">
+                                    <label for="payment_method_id">Pembayaran</label>
+                                    <input type="text" class="form-control"
+                                        value="{{ $transaction->payment->payment_method }}" readonly>
+                                </div>
+                                <div class="form-group col-6">
+                                    <label for="payment_status_id">Status Pembayaran</label>
+                                    <input type="text" class="form-control"
+                                        value="{{ $transaction->payment_status->payment_status }}" readonly>
+                                </div>
+                                <div class="form-group col-6">
+                                    <label for="final_price">Total Harga</label>
+                                    <input type="hidden" name="final_price"
+                                    class="form-control @error('price') is-invalid @enderror"
+                                    value="{{ old('final_price', $total_harga) }}" readonly>
+                                    <input type="text" class="form-control @error('price') is-invalid @enderror"
+                                    value="Rp. {{ old('final_price', number_format($total_harga)) }}" readonly>
+                                    <!-- error message untuk role -->
+                                    @error('final_price')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                                @if ($transaction->bukti_pembayaran != null)
+                                    <div class="form-group col-6">
+                                        <label for="">Bukti Pembayaran</label>
+                                        <img src="{{ asset('bukti-pembayaran/' . $transaction->bukti_pembayaran) }}"
+                                            alt="" sizes="" width="100%" srcset="">
+                                    </div>
+                                @endif
+                            </div>
                             
-                            <a href="{{ route('transaction.index') }}" class="btn btn-md btn-secondary">back</a>
+                            <a href="{{ route('transaction.index') }}" class="btn btn-md btn-secondary">Kembali</a>
                             
                         </form>
                     </div>

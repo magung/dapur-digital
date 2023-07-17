@@ -15,11 +15,16 @@ class Product extends Model
         'stock',
         'price',
         'photo',
-        'description'
+        'description',
+        'weight'
     ];
     public function category()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
+    public function cart()
+    {
+        return $this->hasMany(Cart::class);
+    }
 }

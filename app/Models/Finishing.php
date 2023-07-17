@@ -11,6 +11,17 @@ class Finishing extends Model
     protected $primaryKey = 'finishing_id';
     protected $fillable = [
         'finishing',
-        'finishing_price'
+        'finishing_price',
+        'category_id'
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    public function cart()
+    {
+        return $this->hasMany(Cart::class);
+    }
 }

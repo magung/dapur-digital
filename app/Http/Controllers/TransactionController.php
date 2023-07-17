@@ -18,18 +18,148 @@ use Facade\FlareClient\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Http;
 
 class TransactionController extends Controller
 {
+
+    public function createTransactionMidtrans($data) : string
+    {
+        $url = 'https://api.sandbox.midtrans.com/v1/payment-links';
+        $serverKey = env('SERVER_KEY');
+        $base64Auth = base64_encode($serverKey . ":");
+
+        $response = Http::withHeaders([
+            "Content-Type" => "application/json",
+            "Accept" => "application/json",
+            "Authorization" => "Basic " . $base64Auth
+        ])->post($url, $data);
+        // var_dump($data);
+        // Handle the response
+        if ($response->successful()) {
+            $transaction = $response->json();
+            // var_dump($transaction);die();
+            // Process the transaction data
+            // ...
+
+            return $transaction['payment_url'] ?? "";
+        } else {
+            $errorCode = $response->status();
+            $errorMessage = $response->body();
+            // var_dump($errorCode);
+            // var_dump($errorMessage);die();
+            // Handle the error
+            // ...
+            return "";
+        }
+    }
+
+    function getPaymentLinkUrl($order_id) : string
+    {
+        $url = "https://api.sandbox.midtrans.com/v1/payment-links/{$order_id}";
+        $serverKey = env('SERVER_KEY');
+
+        // var_dump($serverKey);
+        $base64Auth = base64_encode($serverKey . ":");
+        $headers = [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'Authorization' => 'Basic '.$base64Auth,
+        ];
+
+        $response = Http::withHeaders($headers)->get($url);
+        $responseData = $response->json();
+        // var_dump($responseData);die();
+        return $responseData['payment_link_url'] ?? "";
+    }
     public function index()
     {
         $user = Auth::user();
-        $transactions = TransactionList::latest()
-                        ->select('transaction_lists.*', 'transaction_statuses.transaction_status', 'users.name', 'users.email', 'payment_statuses.payment_status')
-                        ->join('transaction_statuses', 'transaction_statuses.transaction_status_id', '=', 'transaction_lists.transaction_status_id')
-                        ->join('payment_statuses', 'payment_statuses.payment_status_id', '=', 'transaction_lists.payment_status_id')
-                        ->leftJoin('users', 'users.user_id', '=', 'transaction_lists.user_id')
-                        ->get();
+        $transactions = TransactionList::orderBy('transaction_list_id', 'DESC')->get();
+        foreach($transactions as $transaction) {
+            $transaction->products = TransactionProductList::where(['transaction_list_id' => $transaction->transaction_list_id])
+                                    ->join('products', 'products.product_id', '=', 'transaction_product_lists.product_id')
+                                    ->get();
+        }
+        return view('transaction.index', compact('transactions', 'user'));
+    }
+
+    public function indexPending()
+    {
+        $user = Auth::user();
+        $transactions = TransactionList::where('transaction_status_id', '=', 1)->orderBy('transaction_list_id', 'DESC')->get();
+        foreach($transactions as $transaction) {
+            $transaction->products = TransactionProductList::where(['transaction_list_id' => $transaction->transaction_list_id])
+                                    ->join('products', 'products.product_id', '=', 'transaction_product_lists.product_id')
+                                    ->get();
+        }
+        return view('transaction.index', compact('transactions', 'user'));
+    }
+
+    public function indexMenungguKonfirmasi()
+    {
+        $user = Auth::user();
+        $transactions = TransactionList::where('transaction_status_id', '=', 2)->orderBy('transaction_list_id', 'DESC')->get();
+        foreach($transactions as $transaction) {
+            $transaction->products = TransactionProductList::where(['transaction_list_id' => $transaction->transaction_list_id])
+                                    ->join('products', 'products.product_id', '=', 'transaction_product_lists.product_id')
+                                    ->get();
+        }
+        return view('transaction.index', compact('transactions', 'user'));
+    }
+
+    public function indexApproved()
+    {
+        $user = Auth::user();
+        $transactions = TransactionList::where('transaction_status_id', '=', 3)->orderBy('transaction_list_id', 'DESC')->get();
+        foreach($transactions as $transaction) {
+            $transaction->products = TransactionProductList::where(['transaction_list_id' => $transaction->transaction_list_id])
+                                    ->join('products', 'products.product_id', '=', 'transaction_product_lists.product_id')
+                                    ->get();
+        }
+        return view('transaction.index', compact('transactions', 'user'));
+    }
+
+    public function indexDiproses()
+    {
+        $user = Auth::user();
+        $transactions = TransactionList::where('transaction_status_id', '=', 5 )->orderBy('transaction_list_id', 'DESC')->get();
+        foreach($transactions as $transaction) {
+            $transaction->products = TransactionProductList::where(['transaction_list_id' => $transaction->transaction_list_id])
+                                    ->join('products', 'products.product_id', '=', 'transaction_product_lists.product_id')
+                                    ->get();
+        }
+        return view('transaction.index', compact('transactions', 'user'));
+    }
+
+    public function indexDikirim()
+    {
+        $user = Auth::user();
+        $transactions = TransactionList::where('transaction_status_id', '=', 6)->orderBy('transaction_list_id', 'DESC')->get();
+        foreach($transactions as $transaction) {
+            $transaction->products = TransactionProductList::where(['transaction_list_id' => $transaction->transaction_list_id])
+                                    ->join('products', 'products.product_id', '=', 'transaction_product_lists.product_id')
+                                    ->get();
+        }
+        return view('transaction.index', compact('transactions', 'user'));
+    }
+
+    public function indexSelesai()
+    {
+        $user = Auth::user();
+        $transactions = TransactionList::where('transaction_status_id', '=', 7)->orderBy('transaction_list_id', 'DESC')->get();
+        foreach($transactions as $transaction) {
+            $transaction->products = TransactionProductList::where(['transaction_list_id' => $transaction->transaction_list_id])
+                                    ->join('products', 'products.product_id', '=', 'transaction_product_lists.product_id')
+                                    ->get();
+        }
+        return view('transaction.index', compact('transactions', 'user'));
+    }
+
+    public function indexBatal()
+    {
+        $user = Auth::user();
+        $transactions = TransactionList::whereIn('transaction_status_id', [4,8] )->orderBy('transaction_list_id', 'DESC')->get();
         foreach($transactions as $transaction) {
             $transaction->products = TransactionProductList::where(['transaction_list_id' => $transaction->transaction_list_id])
                                     ->join('products', 'products.product_id', '=', 'transaction_product_lists.product_id')
@@ -78,12 +208,7 @@ class TransactionController extends Controller
         $types = TransactionType::latest()->get();
         $stores = Store::latest()->get();
         $payment_statuses = PaymentStatus::latest()->get();
-        $carts = Cart::latest()
-                ->join('products', 'products.product_id', '=', 'carts.product_id')
-                ->leftJoin('finishings', 'finishings.finishing_id', '=', 'carts.finishing_id')
-                ->leftJoin('cuttings', 'cuttings.cutting_id', '=', 'carts.cutting_id')
-                ->select('carts.*', 'products.product_name', 'finishings.finishing', 'cuttings.cutting')
-                ->where('user_id', $user->user_id)->get();
+        $carts = Cart::latest()->where('customer_id', null)->get();
         $total_harga = 0;
         foreach($carts as $cart) {
             $total_harga += $cart->total_price;
@@ -105,49 +230,27 @@ class TransactionController extends Controller
                         ));
     }
 
-    public function createTransacationCustomer()
-    {
-        $customer = Auth::guard('customer')->user();
-        $payments = Payment::latest()->get();
-        $statuses = TransactionStatus::latest()->get();
-        $types = TransactionType::latest()->get();
-        $stores = Store::latest()->get();
-        $payment_statuses = PaymentStatus::latest()->get();
-        $carts = Cart::latest()
-                ->join('products', 'products.product_id', '=', 'carts.product_id')
-                ->leftJoin('finishings', 'finishings.finishing_id', '=', 'carts.finishing_id')
-                ->leftJoin('cuttings', 'cuttings.cutting_id', '=', 'carts.cutting_id')
-                ->select('carts.*', 'products.product_name', 'finishings.finishing', 'cuttings.cutting')
-                ->where('customer_id', $customer->customer_id)->get();
-        $total_harga = 0;
-        foreach($carts as $cart) {
-            $total_harga += $cart->total_price;
-        }
-        return view('cart-list.create', 
-                    compact(
-                            'payments', 
-                            'statuses', 
-                            'types',
-                            'stores',
-                            'payment_statuses',
-                            'carts',
-                            'total_harga'
-                        ));
-    }
-
     public function storeTransactionCustomer(Request $request)
     {
         $customer = Auth::guard('customer')->user();
         
-        $this->validate($request, [
-            'store_id' => 'required',
+        $validators = [
             'transaction_type_id' => 'required',
             'payment_method_id' => 'required',
             'final_price' => 'required'
-        ]);
+        ];
+
+        if($request->transaction_type_id == 1) {
+            $validators['store_id'] = 'required';
+        } else {
+            $validators['address_id'] = 'required';
+            $validators['courier_id'] = 'required';
+            $validators['courier_price'] = 'required';
+        }
+
+        $this->validate($request, $validators);
 
         $datasend = [
-            'store_id' => $request->store_id,
             'transaction_type_id' => $request->transaction_type_id,
             'transaction_status_id' => 1,
             'payment_method_id' => $request->payment_method_id,
@@ -156,6 +259,14 @@ class TransactionController extends Controller
             'payment_status_id' => 2,
             'created_by' => $customer->customer_id
         ];
+
+        if($request->transaction_type_id == 1) {
+            $datasend['store_id'] = $request->store_id;
+        } else {
+            $datasend['address_id'] = $request->address_id;
+            $datasend['courier_id'] = $request->courier_id;
+            $datasend['courier_price'] = $request->courier_price;
+        }
         
         $transaction = TransactionList::create($datasend);
 
@@ -176,9 +287,30 @@ class TransactionController extends Controller
                 'cutting_id' => $cart->cutting_id,
                 'cutting_price' => $cart->cutting_price,
                 'file' => $cart->file,
+                'luas' => $cart->luas,
             ]);
+            $product = Product::findOrFail($cart->product_id);
+            $product->stock -= $cart->qty;
+            $product->save();
             $cart = Cart::findOrFail($cart->cart_id);
             $cart->delete();
+        }
+        $payment_url = null;
+        if($request->payment_method_id == 2){
+            $body = [
+                "transaction_details" => [
+                    "order_id" => $transaction->transaction_list_id,
+                    "gross_amount" => $transaction->final_price
+                ],
+                "usage_limit" => 1
+            ];
+
+            
+            $payment_url = $this->createTransactionMidtrans($body);
+            if($payment_url != "") {
+                return redirect()->away($payment_url)->with('new_tab', true);
+                
+            }
         }
 
         if ($transaction) {
@@ -295,32 +427,37 @@ class TransactionController extends Controller
         ));
     }
 
+    public function detailTransaction($id) {
+        $transaction = TransactionList::findOrFail($id);
+        return $transaction;
+    }
+
     public function detailTransactionCustomer($id)
     {
-        $transaction = TransactionList::latest()
-            ->select('transaction_lists.*', 'transaction_statuses.transaction_status', 'payment_statuses.payment_status', 'transaction_types.transaction_type', 'payments.payment_method')
-            ->join('transaction_statuses', 'transaction_statuses.transaction_status_id', '=', 'transaction_lists.transaction_status_id')
-            ->join('transaction_types', 'transaction_types.transaction_type_id', '=', 'transaction_lists.transaction_type_id')
-            ->join('payments', 'payments.payment_id', '=', 'transaction_lists.payment_method_id')
-            ->join('payment_statuses', 'payment_statuses.payment_status_id', '=', 'transaction_lists.payment_status_id')
-            ->where('transaction_lists.transaction_list_id', $id)
-            ->first();
-        $transaction_product_lists = TransactionProductList::latest()
-                ->join('products', 'products.product_id', '=', 'transaction_product_lists.product_id')
-                ->leftJoin('finishings', 'finishings.finishing_id', '=', 'transaction_product_lists.finishing_id')
-                ->leftJoin('cuttings', 'cuttings.cutting_id', '=', 'transaction_product_lists.cutting_id')
-                ->select('transaction_product_lists.*', 'products.product_name', 'finishings.finishing', 'cuttings.cutting')
-                ->where('transaction_list_id', $id)->get();
+        // $transaction = TransactionList::latest()
+        //     ->select('transaction_lists.*', 'transaction_statuses.transaction_status', 'payment_statuses.payment_status', 'transaction_types.transaction_type', 'payments.payment_method')
+        //     ->join('transaction_statuses', 'transaction_statuses.transaction_status_id', '=', 'transaction_lists.transaction_status_id')
+        //     ->join('transaction_types', 'transaction_types.transaction_type_id', '=', 'transaction_lists.transaction_type_id')
+        //     ->join('payments', 'payments.payment_id', '=', 'transaction_lists.payment_method_id')
+        //     ->join('payment_statuses', 'payment_statuses.payment_status_id', '=', 'transaction_lists.payment_status_id')
+        //     ->where('transaction_lists.transaction_list_id', $id)
+        //     ->first();
+        // $transaction_product_lists = TransactionProductList::latest()
+        //         ->join('products', 'products.product_id', '=', 'transaction_product_lists.product_id')
+        //         ->leftJoin('finishings', 'finishings.finishing_id', '=', 'transaction_product_lists.finishing_id')
+        //         ->leftJoin('cuttings', 'cuttings.cutting_id', '=', 'transaction_product_lists.cutting_id')
+        //         ->select('transaction_product_lists.*', 'products.product_name', 'finishings.finishing', 'cuttings.cutting')
+        //         ->where('transaction_list_id', $id)->get();
+        $transaction = TransactionList::findOrFail($id);
+        $transaction_product_lists = TransactionProductList::latest()->where('transaction_list_id', $id)->get();
         $total_harga = 0;
-        foreach($transaction_product_lists as $product) {
-            $total_harga += $product->total_price;
+        foreach($transaction_product_lists as $transaction_product) {
+            $total_harga += $transaction_product->total_price;
         }
-        $stores = Store::latest()->get();
         return view('transaction-customer.detail', compact(
             'transaction', 
             'transaction_product_lists',
-            'total_harga',
-            'stores'
+            'total_harga'
         ));
     }
     public function pembayaran($id)
@@ -329,26 +466,29 @@ class TransactionController extends Controller
         $statuses = TransactionStatus::latest()->get();
         $types = TransactionType::latest()->get();
         $transaction = TransactionList::findOrFail($id);
+        if($transaction->payment_method_id == 2) {
+            $payment_link = $this->getPaymentLinkUrl($id);
+            return redirect()->away($payment_link)->with('new_tab', true);
+        }
+
         return view('transaction-customer.pembayaran', compact('transaction', 'payments', 'types'));
     }
 
     public function updatePembayaran(Request $request, $id)
     {
         $this->validate($request, [
-            'payment_method_id' => 'required',
             'bukti_pembayaran' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
         
         $datasend = [
-            'payment_method_id' => $request->payment_method_id,
             'transaction_status_id' => 2,
             'updated_by' => Auth::id()
         ];
 
         if(isset($request->bukti_pembayaran)) {
-            $bukti_pembayaran = 'BUKTI-PEMBAYARAN-'.$request->user_id.'-'.time().'.'.$request->bukti_pembayaran->extension();
+            $bukti_pembayaran = 'BUKTI-PEMBAYARAN-'.Auth::id().'-'.time().'.'.$request->bukti_pembayaran->extension();
             $request->bukti_pembayaran->move(public_path('bukti-pembayaran'), $bukti_pembayaran);
-            $datasend['bukti'] = $bukti_pembayaran;
+            $datasend['bukti_pembayaran'] = $bukti_pembayaran;
         }
 
         $transaction = TransactionList::findOrFail($id);
@@ -624,7 +764,7 @@ class TransactionController extends Controller
             return redirect()
                 ->route('transaction.index')
                 ->with([
-                    'error' => 'Some problem has occurred, please try again'
+                    'error' => 'Gagal'
                 ]);
         }
     }
@@ -648,14 +788,78 @@ class TransactionController extends Controller
             return redirect()
                 ->route('transaction.edit', $transaction_list_id)
                 ->with([
-                    'error' => 'Some problem has occurred, please try again'
+                    'error' => 'Gagal'
                 ]);
         }
     }
 
-    public function download($file)
+    public function updateTransactionStatus(Request $request, $id)
     {
-        $path = public_path('files-cetak') . '/' . $file;
-        return response()->download($path);
+        $status = $request->status;
+        $transaction = TransactionList::findOrFail($id);
+        $transaction->transaction_status_id = $status;
+        $transaction->save();
+        if($transaction) {
+            return redirect()
+                ->route('transaction.index')
+                ->with([
+                    'success' => 'Sukses'
+                ]);
+        } else {
+            return redirect()
+                ->route('transaction.index')
+                ->with([
+                    'error' => 'Gagal'
+                ]);
+        }
     }
+
+    public function updatePaymentStatus(Request $request, $id)
+    {
+        $status = $request->status;
+        $transaction = TransactionList::findOrFail($id);
+        $transaction->payment_status_id = $status;
+        $transaction->save();
+        if($transaction) {
+            return redirect()
+                ->route('transaction.index')
+                ->with([
+                    'success' => 'Sukses'
+                ]);
+        } else {
+            return redirect()
+                ->route('transaction.index')
+                ->with([
+                    'error' => 'Gagal'
+                ]);
+        }
+    }
+
+    public function paymentNotifHandler(Request $request)
+    {
+        $transaction_status = $request->transaction_status;
+        $order_id = $request->order_id;
+        $parts = explode("-", $order_id);
+        $id = $parts[0];
+        $transaction = TransactionList::findOrFail($id);
+        if($transaction_status == 'capture' || $transaction_status == 'settlement'){
+            $transaction->payment_status_id = 1; // LUNAS
+            $transaction->transaction_status_id = 2; // Menunggu Konfirmasi
+            $transaction->save();
+        } else if ($transaction_status == 'deny' || $transaction_status == 'expire' || $transaction_status == 'cancel') {
+            
+            $transaction->transaction_status_id = 4; // 
+            $transaction->save();
+        }
+
+        $data = [
+            'message' => 'success',
+            'order_id' => $order_id
+        ];
+    
+        return response()->json($data, 200);
+    }
+
+
+
 }
