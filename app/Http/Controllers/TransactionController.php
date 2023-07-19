@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Address;
 use App\Models\Cart;
+use App\Models\Courier;
+use App\Models\Customer;
 use App\Models\Cutting;
 use App\Models\Finishing;
 use App\Models\Payment;
@@ -54,7 +57,7 @@ class TransactionController extends Controller
         }
     }
 
-    function getPaymentLinkUrl($order_id) : string
+    public function getPaymentLinkUrl($order_id) : string
     {
         $url = "https://api.sandbox.midtrans.com/v1/payment-links/{$order_id}";
         $serverKey = env('SERVER_KEY');
@@ -75,7 +78,7 @@ class TransactionController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $transactions = TransactionList::orderBy('transaction_list_id', 'DESC')->get();
+        $transactions = TransactionList::orderBy('transaction_list_id', 'desc')->get();
         foreach($transactions as $transaction) {
             $transaction->products = TransactionProductList::where(['transaction_list_id' => $transaction->transaction_list_id])
                                     ->join('products', 'products.product_id', '=', 'transaction_product_lists.product_id')
@@ -188,45 +191,31 @@ class TransactionController extends Controller
     public function create()
     {
         $user = Auth::user();
-        // echo "<pre>";
-        // var_dump($user);
-        // echo "</pre>";
         $store_id = $user->store_id;
-        // var_dump($store_id);
-        // $products = Product::latest()
-        //             ->join('categories', 'categories.category_id', '=', 'products.category_id')
-        //             ->select('products.*', 'categories.satuan')
-        //             ->where('store_id', $store_id)->get();
-        // echo "<pre>";
-        // var_dump($products);
-        // echo "</pre>";
-        // $finishings = Finishing::latest()->get();
-        // $cuttings = Cutting::latest()->get();
-        $users = User::latest()->where('role_id', 4)->get(); // where role is pelanggan
-        $payments = Payment::latest()->get();
-        $statuses = TransactionStatus::latest()->get();
+        $customers = Customer::latest()->get(); // where role is pelanggan
+        $payments = Payment::where('payment_id', '<>', 2)->get();
+        $transaction_statuses = TransactionStatus::latest()->get();
         $types = TransactionType::latest()->get();
         $stores = Store::latest()->get();
         $payment_statuses = PaymentStatus::latest()->get();
         $carts = Cart::latest()->where('customer_id', null)->get();
+        $couriers = Courier::where('status', 1)->get();
         $total_harga = 0;
         foreach($carts as $cart) {
             $total_harga += $cart->total_price;
         }
         return view('transaction.create', 
                     compact(
-                            // 'products', 
-                            // 'finishings', 
-                            // 'cuttings', 
-                            'users', 
+                            'customers', 
                             'payments', 
-                            'statuses', 
+                            'transaction_statuses', 
                             'types',
                             'stores',
                             'payment_statuses',
                             'store_id',
                             'carts',
-                            'total_harga'
+                            'total_harga',
+                            'couriers'
                         ));
     }
 
@@ -333,25 +322,56 @@ class TransactionController extends Controller
     {
         
         $this->validate($request, [
-            'store_id' => 'required',
-            'transaction_type_id' => 'required',
-            'transaction_status_id' => 'required',
-            'payment_method_id' => 'required',
-            'user_id' => 'required',
+            'transaction_type' => 'required',
+            'transaction_status' => 'required',
+            'payment_method' => 'required',
             'final_price' => 'required',
-            'payment_status_id' => 'required'
+            'payment_status' => 'required'
         ]);
+        $address_id = $request->address;
         
+        if($request->customer == "0" && $request->transaction_type == 2) {
+            $address = Address::create([
+                'address' => $request->address_text,
+                'contact_name' => $request->nama_pelanggan,
+                'contact_phone' => $request->nomor_pelanggan,
+                'name' => 'Rumah',
+                'customer_id' => $request->customer,
+                'postal_code' => $request->kode_pos,
+            ]);
+            $address_id = $address->address_id;
+        } else {
+            $address = Address::where('customer_id',$request->customer)->get();
+            if(count($address) == 0 && $request->transaction_type == 2) {
+                $address = Address::create([
+                    'address' => $request->address_text,
+                    'contact_name' => $request->nama_pelanggan,
+                    'contact_phone' => $request->nomor_pelanggan,
+                    'name' => 'Rumah',
+                    'customer_id' => $request->customer,
+                    'postal_code' => $request->kode_pos,
+                ]);
+                $address_id = $address->address_id;
+            }
+        }
         $datasend = [
-            'store_id' => $request->store_id,
-            'transaction_type_id' => $request->transaction_type_id,
-            'transaction_status_id' => $request->transaction_status_id,
-            'payment_method_id' => $request->payment_method_id,
-            'user_id' => $request->user_id,
+            'transaction_type_id' => $request->transaction_type,
+            'transaction_status_id' => $request->transaction_status,
+            'payment_method_id' => $request->payment_method,
+            'customer_id' => $request->customer,
+            'user_id' => Auth::id(),
             'final_price' => $request->final_price,
-            'payment_status_id' => $request->payment_status_id,
+            'payment_status_id' => $request->payment_status,
             'created_by' => Auth::id()
         ];
+
+        if($request->transaction_type == 2) {
+            $datasend['courier_id'] = $request->courier;
+            $datasend['courier_price'] = $request->ongkir;
+            $datasend['address_id'] = $address_id;
+        } else {
+            $datasend['store_id'] = $request->store;
+        }
         
         $transaction = TransactionList::create($datasend);
         $carts = Cart::latest()->where('user_id', Auth::id())->get();

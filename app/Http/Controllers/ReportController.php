@@ -12,11 +12,21 @@ class ReportController extends Controller
 {
     public function reportTransaction(Request $request)
     {
-        $transactions = TransactionList::latest()
-                        ->select('transaction_lists.*', 'transaction_statuses.transaction_status', 'users.name', 'users.email')
-                        ->join('transaction_statuses', 'transaction_statuses.transaction_status_id', '=', 'transaction_lists.transaction_status_id')
-                        ->leftJoin('users', 'users.user_id', '=', 'transaction_lists.user_id')
-                        ->get();
+        $daterange = $request->query('daterange');
+       
+
+        $transactions = TransactionList::latest();
+        if(!empty($daterange)) {
+            $explodeDateRange = explode(" - ", $daterange);
+            // var_dump($daterange);
+            // var_dump($explodeDateRange);die();
+            $startDate = $explodeDateRange[0] . " 00:00:00";
+            $endDate = $explodeDateRange[1] . " 23:59:59";
+            $transactions = $transactions->whereBetween('created_at', [$startDate, $endDate]);    
+        }
+
+        $transactions = $transactions->get();
+        
         foreach($transactions as $transaction) {
             $transaction->products = TransactionProductList::where(['transaction_list_id' => $transaction->transaction_list_id])
                                     ->join('products', 'products.product_id', '=', 'transaction_product_lists.product_id')

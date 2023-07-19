@@ -23,13 +23,14 @@ class RegisterController extends Controller
             'password'      => 'required',
             'phone_number'  => 'required',
             'gender'        => 'required',
-            'address'       => 'required',
-            'photo'         => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'photo'         => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-
-        $photo = 'PHOTO-PROFILE-'.time().'.'.$request->photo->extension();
-
-        $request->photo->move(public_path('uploads'), $photo);
+        $photo = "logo.png";
+        if(!empty($request->photo)) {
+            $photo = 'PHOTO-PROFILE-'.time().'.'.$request->photo->extension();
+    
+            $request->photo->move(public_path('uploads'), $photo);
+        }
 
         $user = Customer::create([
             'name'          => $request->name,
@@ -38,10 +39,9 @@ class RegisterController extends Controller
             'phone_number'  => $request->phone_number,
             'gender'        => $request->gender,
             'birthday'      => $request->birthday,
-            'address'       => $request->address,
             'status'        => 0,
             'photo'         => $photo,
-            'store_id'      => $request->store_id
+            'store_id'      => $request->store
         ]);
         $phone_number_admin = "";
         if(isset($request->store_id)) {

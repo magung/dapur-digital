@@ -69,46 +69,46 @@
                 </a>     --}}
                 @if ($user != null)
                     <div class="d-flex">
-                        <div class="dropdown ">
-                            <a href="#" class="align-items-center text-white text-decoration-none dropdown-toggle"
-                                id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img src="{{ asset('/uploads/' . $user->photo) }}" alt="hugenerd" width="30"
-                                    height="30" class="rounded-circle">
-                                <span class="d-none d-sm-inline mx-1">{{ $user->name }}</span>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-light text-small shadow">
-                                <li><a class="dropdown-item" href="{{ route('profile-customer.index') }}">
-                                        <ion-icon name="person-outline"></ion-icon> Profile
-                                    </a>
-                                </li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="{{ route('cart.list') }}">
-                                        <ion-icon name="cart-outline"></ion-icon> Keranjang
-                                    </a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="{{ route('transaction.customer.index') }}">
-                                        <ion-icon name="basket-outline"></ion-icon> Transaksi
-                                    </a></li>
-                                    <hr class="dropdown-divider">
-                                <li><a class="dropdown-item" href="{{ route('customer.address') }}">
-                                    <ion-icon name="location-outline"></ion-icon> Alamat
-                                    </a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li>
-                                    <form action="/logout" method="POST">
-                                        @csrf
-                                        <button class="dropdown-item">
-                                            <ion-icon name="log-out-outline"></ion-icon> Logout
-                                        </button>
-                                    </form>
-                                </li>
-                            </ul>
+                        <div class="dropdown "  style="min-width: 150px">
+                                <a href="#" class=" align-items-center text-white text-decoration-none dropdown-toggle "
+                                    id="dropdownUser1"  data-bs-toggle="dropdown" aria-expanded="false">
+                                    <img src="{{ asset('/uploads/' . $user->photo) }}" alt="hugenerd" width="30"
+                                        height="30" class="rounded-circle">
+                                    <span class="d-none d-sm-inline mx-1">{{ $user->name }}</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-light text-small shadow dropdown-menu-left">
+                                    <li><a class="dropdown-item" href="{{ route('profile-customer.index') }}">
+                                            <ion-icon name="person-outline"></ion-icon> Profile
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item" href="{{ route('cart.list') }}">
+                                            <ion-icon name="cart-outline"></ion-icon> Keranjang
+                                        </a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item" href="{{ route('transaction.customer.index') }}">
+                                            <ion-icon name="basket-outline"></ion-icon> Transaksi
+                                        </a></li>
+                                        <hr class="dropdown-divider">
+                                    <li><a class="dropdown-item" href="{{ route('customer.address') }}">
+                                        <ion-icon name="location-outline"></ion-icon> Alamat
+                                        </a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li>
+                                        <form action="/logout" method="POST">
+                                            @csrf
+                                            <button class="dropdown-item">
+                                                <ion-icon name="log-out-outline"></ion-icon> Logout
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
                         </div>
                     </div>
                 @endif

@@ -158,7 +158,7 @@
                             <label for="courier">Kurir</label>
 
                             <select name="courier" class="form-control" id="courier">
-                                <option value="">-- Pilih Alamat --</option>
+                                <option value="">-- Pilih Kurir --</option>
                                 @foreach ($couriers as $courier)
                                     <option value="{{ $courier->courier_id }}">{{ $courier->courier_name }} 
                                         <span>({{ $courier->courier_service_name }} - {{ $courier->description }})</span></option>

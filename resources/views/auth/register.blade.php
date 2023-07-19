@@ -90,8 +90,8 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="store_id">Toko</label>
-                            <select name="store_id" class="form-control" >
+                            <label for="store">Toko</label>
+                            <select name="store" class="form-control" >
                                 <option value="" >-- Toko --</option>
                                 @foreach ($stores as $store)
                                     <option value="{{$store->store_id}}"  >{{$store->store_name}}</option>
@@ -99,28 +99,16 @@
                             </select>
 
                             <!-- error message untuk role -->
-                            @error('store_id')
+                            @error('store')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="address">Alamat</label>
-                            <textarea name="address" id="address" class="form-control @error('address') is-invalid @enderror" rows="5"
-                                required>{{ old('address') }}</textarea>
-
-                            <!-- error message untuk address -->
-                            @error('address')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-                        <div class="form-group">
                             <label for="photo">Foto User</label>
                             <input type="file" class="form-control @error('photo') is-invalid @enderror"
-                                name="photo" value="{{ old('photo') }}" required>
+                                name="photo" value="{{ old('photo') }}" >
 
                             <!-- error message untuk photo -->
                             @error('photo')

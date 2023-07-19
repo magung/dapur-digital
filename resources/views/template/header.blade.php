@@ -32,7 +32,7 @@
                             <hr class="dropdown-divider">
                         </li>
                         <li>
-                            <form action="/logout" method="POST">
+                            <form action="{{route('logout-admin')}}" method="POST">
                                 @csrf
                                 <button class="dropdown-item">Logout</button>
                             </form>

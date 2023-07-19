@@ -13,7 +13,10 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <script>
     $(document).ready( function () {
-        $('#myTable').DataTable();
+        // $('#myTable').DataTable();
+        new DataTable('#myTable', {
+            order: [[0, 'desc']]
+        });
     } );
 </script>
 

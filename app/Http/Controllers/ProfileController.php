@@ -87,7 +87,6 @@ class ProfileController extends Controller
             'email'         => 'required',
             'phone_number'  => 'required',
             'gender'        => 'required',
-            'address'       => 'required'
         ]);
 
         $datasend = [
@@ -96,7 +95,7 @@ class ProfileController extends Controller
             'phone_number'  => $request->phone_number,
             'gender'        => $request->gender,
             'birthday'      => $request->birthday,
-            'address'       => $request->address,
+            'store_id'      => $request->toko,
         ];
         $user = Customer::findOrFail($id);
         

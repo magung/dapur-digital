@@ -306,7 +306,7 @@
                             </div>
                             <br>
                             <div>
-                                <button type="submit" class="btn btn-md btn-primary">Beli</button>
+                                <button type="submit" class="btn btn-md btn-primary">Tambah</button>
                                 <a href="{{ url()->previous() }}" class="btn btn-md btn-secondary">Kembali</a>
                             </div>
 

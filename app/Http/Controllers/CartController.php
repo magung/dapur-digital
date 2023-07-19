@@ -49,7 +49,58 @@ class CartController extends Controller
                         ));
     }
 
-    public function checkOngkir($data)
+    public function cekOngkir(Request $request)
+    {
+        $data = [
+            "shipper_contact_name" => "Dapur Digital",
+            "shipper_contact_phone" => "088704145010",
+            "origin_contact_name" => "dapur digital",
+            "origin_contact_phone" => "088704145010",
+            "origin_address" => "Cibinong, Kabupaten Bogor, Jawa Barat",
+            "origin_note" => "",
+            "origin_postal_code" => "16911",
+            "destination_contact_name" => $request->contact_name,
+            "destination_contact_phone" => $request->contact_phone,
+            "destination_address" => $request->address,
+            "destination_postal_code" => $request->postal_code,
+            "destination_note" =>  $request->note,
+            "courier_company" => $request->courier_code,
+            "courier_type" =>  $request->courier_service_code,
+            "delivery_type" => "now",
+            "order_note" => $request->note,
+            "metadata" => [],
+            "items" => $request->items
+        ];
+        $url = "https://api.biteship.com/v1/orders";
+        $apiKey = env('BITESHIP_KEY');
+        $response = Http::withHeaders([
+            "Authorization" => $apiKey,
+            "Content-Type" => "application/json"
+        ])->post($url, $data);
+
+        $price = 0;
+        $message = "";
+        $errorCode = "";
+        if ($response->successful()) {
+            $order = $response->json();
+            // Process the order data
+            $price = $order['price'];
+            $message = 'success';
+            $errorCode = $response->status();
+        } else {
+            $errorCode = $response->status();
+            $message = $response->body();
+            $price = 0;
+        }
+        $data = [
+            'message' => $message,
+            'error_code' => $errorCode,
+            'price' => $price
+        ];
+        return response()->json($data, 200);
+    }
+
+    public function apiCekOngkir($data)
     {
         $url = "https://api.biteship.com/v1/orders";
         $apiKey = env('BITESHIP_KEY');
@@ -59,31 +110,12 @@ class CartController extends Controller
             "Content-Type" => "application/json"
         ])->post($url, $data);
 
-        // var_dump($data);
-
         // Handle the response
         if ($response->successful()) {
             $order = $response->json();
-            // Process the order data
             $price = $order['price'];
-            // ...
-            // var_dump($order);die();
-            // return response()->json([
-            //     "success" => true,
-            //     "price" => $price
-            // ]);
-
             return $price;
         } else {
-            $errorCode = $response->status();
-            $errorMessage = $response->body();
-            // var_dump($errorCode);
-            // var_dump($errorMessage);die();
-            // Handle the error
-            // ...
-            // return response()->json([
-            //     "error" => $errorMessage
-            // ], $errorCode);
             return 0;
         }
     }
@@ -146,13 +178,13 @@ class CartController extends Controller
         $courier_price = 0;
         if($transaction_type_id == 2) {
             $data = [
-                "shipper_contact_name" => $address->contact_name,
-                "shipper_contact_phone" => $address->contact_phone,
-                "origin_contact_name" => $address->contact_name,
-                "origin_contact_phone" => $address->contact_phone,
+                "shipper_contact_name" => "Dapur Digital",
+                "shipper_contact_phone" => "088704145010",
+                "origin_contact_name" => "dapur digital",
+                "origin_contact_phone" => "088704145010",
                 "origin_address" => "Cibinong, Kabupaten Bogor, Jawa Barat",
-                "origin_note" => $address->note,
-                "origin_postal_code" => $address->postal_code,
+                "origin_note" => "",
+                "origin_postal_code" => "16911",
                 "destination_contact_name" => $address->contact_name,
                 "destination_contact_phone" => $address->contact_phone,
                 "destination_address" => $address->address,
@@ -167,7 +199,7 @@ class CartController extends Controller
             ];
             
             
-            $courier_price = $this->checkOngkir($data);
+            $courier_price = $this->apiCekOngkir($data);
             if($courier_price == 0) {
                 return redirect()
                     ->to(route('cart.list'))

@@ -243,7 +243,8 @@ class AddressController extends Controller
 
     public function index()
     {
-        $addresses = Address::latest()->get();
+        $id = Auth::guard('customer')->id();
+        $addresses = Address::where('customer_id', $id)->get();
         return view('address.index', compact('addresses'));
     }
 
@@ -254,8 +255,19 @@ class AddressController extends Controller
 
     public function edit($id)
     {
-        $addresses = Address::latest()->get();
+        $addresses = Address::find($id);
         return view('address.index', compact('addresses'));
+    }
+
+    public function getAddress($id)
+    {   
+        $addresses = Address::where('customer_id', $id)->get();
+        $data = [
+            'message' => 'success',
+            'error_code' => 200,
+            'addresses' => $addresses
+        ];
+        return response()->json($data, 200);
     }
 
     public function store(Request $request)

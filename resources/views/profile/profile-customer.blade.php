@@ -97,22 +97,6 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="address">Alamat</label>
-                                <textarea
-                                    name="address" id="address"
-                                    class="form-control @error('address') is-invalid @enderror"
-                                    rows="5"
-                                    required>{{ old('address', $profile->address) }}</textarea>
-
-                                <!-- error message untuk address -->
-                                @error('address')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
                                 <label for="birthday">Tanggal Lahir</label>
                                 <input type="date" class="form-control @error('birthday') is-invalid @enderror"
                                     name="birthday" value="{{ old('birthday', $profile->birthday) }}" >
@@ -125,8 +109,8 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="store_id">Toko</label>
-                                <select name="store_id" class="form-control" >
+                                <label for="toko">Toko</label>
+                                <select name="toko" class="form-control" >
                                     <option value="" >-- Toko --</option>
                                     @foreach ($stores as $store)
                                         <option value="{{$store->store_id}}" {{$profile->store_id == $store->store_id ? 'selected' : ''}} >{{$store->store_name}}</option>
@@ -134,7 +118,7 @@
                                 </select>
 
                                 <!-- error message untuk role -->
-                                @error('store_id')
+                                @error('toko')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>

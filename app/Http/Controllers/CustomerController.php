@@ -26,16 +26,15 @@ class CustomerController extends Controller
             'password'      => 'required',
             'phone_number'  => 'required',
             'gender'        => 'required',
-            'birthday'      => 'required',
-            'address'       => 'required',
             'status'        => 'required',
-            'photo'         => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'photo'         => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-
-
-        $photo = 'PHOTO-PROFILE-'.time().'.'.$request->photo->extension();
-
-        $request->photo->move(public_path('uploads'), $photo);
+        $photo = "logo.png";
+        if(!empty($request->photo)) {
+            $photo = 'PHOTO-PROFILE-'.time().'.'.$request->photo->extension();
+    
+            $request->photo->move(public_path('uploads'), $photo);
+        }
 
         $customer = Customer::create([
             'name'          => $request->name,
@@ -44,7 +43,6 @@ class CustomerController extends Controller
             'phone_number'  => $request->phone_number,
             'gender'        => $request->gender,
             'birthday'      => $request->birthday,
-            'address'       => $request->address,
             'status'        => $request->status,
             'photo'         => $photo,
         ]);
@@ -78,7 +76,6 @@ class CustomerController extends Controller
             'email'         => 'required',
             'phone_number'  => 'required',
             'gender'        => 'required',
-            'address'       => 'required',
             'status'       => 'required'
         ]);
 
@@ -88,7 +85,6 @@ class CustomerController extends Controller
             'phone_number'  => $request->phone_number,
             'gender'        => $request->gender,
             'birthday'      => $request->birthday,
-            'address'       => $request->address,
             'status'       => $request->status,
         ];
         $customer = Customer::findOrFail($id);

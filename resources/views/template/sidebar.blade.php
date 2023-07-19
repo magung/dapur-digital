@@ -1,24 +1,9 @@
 <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-light">
     <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
         <div class="dropdown pb-4">
-            {{-- <a href="#" class="d-flex align-items-center text-black text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="/uploads/{{$user->photo }}" alt="hugenerd" width="30" height="30" class="rounded-circle">
-                <span class="d-none d-sm-inline mx-1">{{ $user->name }}</span>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-light text-small shadow">
-                <li><a class="dropdown-item" href="/profile">Profile</a></li>
-                <li>
-                    <hr class="dropdown-divider">
-                </li>
-                <li>
-                    <form action="/logout" method="POST">
-                        @csrf
-                        <button class="dropdown-item">Logout</button>
-                    </form>
-                    {{-- <a class="dropdown-item" href="#">Logout</a> --}}
-                </li>
-            </ul> --}}
+            
         </div>
+        <br>
         <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
             <li class="nav-item">
                 <a href="/" class="nav-link text-black  align-middle px-0">
@@ -112,6 +97,5 @@
             @endif
         </ul>
         <hr>
-       
     </div>
 </div>

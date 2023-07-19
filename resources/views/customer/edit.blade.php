@@ -99,19 +99,6 @@
                                     </div>
                                 @enderror
                             </div>
-
-                            <div class="form-group">
-                                <label for="address">Alamat</label>
-                                <textarea name="address" id="address" class="form-control @error('address') is-invalid @enderror" rows="5"
-                                    required>{{ old('address', $customer->address) }}</textarea>
-
-                                <!-- error message untuk address -->
-                                @error('address')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
                             
                             <div class="form-group">
                                 <label for="birthday">Tanggal Lahir</label>

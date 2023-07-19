@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AddressController;
+use App\Http\Controllers\CartController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,3 +22,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('payment-notif', $ctrl.'\TransactionController@paymentNotifHandler');
+Route::post('cek-ongkir', [CartController::class, 'cekOngkir']);
+Route::get('get-address/{id}', [AddressController::class, 'getAddress']);

@@ -95,22 +95,6 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="address">Alamat</label>
-                                <textarea
-                                    name="address" id="address"
-                                    class="form-control @error('address') is-invalid @enderror"
-                                    rows="5"
-                                    required>{{ old('address') }}</textarea>
-
-                                <!-- error message untuk address -->
-                                @error('address')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
                                 <label for="birthday">Tanggal Lahir</label>
                                 <input type="date" class="form-control @error('birthday') is-invalid @enderror"
                                     name="birthday" value="{{ old('birthday') }}" >
@@ -138,7 +122,7 @@
                             <div class="form-group">
                                 <label for="photo">Foto customer</label>
                                 <input type="file" class="form-control @error('photo') is-invalid @enderror"
-                                    name="photo" value="{{ old('photo') }}" required>
+                                    name="photo" value="{{ old('photo') }}" >
 
                                 <!-- error message untuk photo -->
                                 @error('photo')
