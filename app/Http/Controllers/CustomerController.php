@@ -10,7 +10,7 @@ class CustomerController extends Controller
 {
     public function index()
     {
-        $customers = Customer::latest()->get();
+        $customers = Customer::where('customer_id', '<>', 0)->get();
         return view('customer.index', compact('customers'));
     }
     public function create()

@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Struk Pembelian</title>
     <style>
         /* Gaya CSS khusus untuk tampilan struk */
+        body {
+            width: 7cm;
+        }
+
         .container {
-            width: 300px;
+            width: 6cm;
             margin: 0 auto;
             text-align: center;
         }
@@ -24,7 +29,8 @@
             border-collapse: collapse;
         }
 
-        .table th, .table td {
+        .table th,
+        .table td {
             padding: 5px;
             border-bottom: 1px solid #000;
         }
@@ -41,57 +47,137 @@
         .total strong {
             font-weight: bold;
         }
+
+        .details {
+            text-align: left;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="logo">
-            <img src="{{ public_path('logo.png') }}" alt="Logo" width="100">
+            <img src="{{ public_path('logo_grey.png') }}" alt="Logo" width="100">
         </div>
         <div class="title">
-            <h2>Dapur Digital</h2>
+            <h3>Dapur Digital</h3>
         </div>
+        <div>Dapur Digital Cibinong</div>
+        <div>Ruko Galaxy, Jl Raya Bogor</div>
+        <div>admin-dapur-digital-cibinong@admin.com</div>
+        <div>------------------------------------------</div>
         <div class="details">
-            <p>Nama Pelanggan: {{ $detail_transaction->customer->name }}</p>
-            <p>Pembayaran: {{ $detail_transaction->payment->payment_method }}</p>
-            <p>Status Pembayaran: {{ $detail_transaction->payment_status->payment_status }}</p>
-            <p>Status Transaksi: {{ $detail_transaction->transaction_status->transaction_status }}</p>
-            <p>Tipe Transaksi: {{ $detail_transaction->transaction_type->transaction_type }}</p>
-            @if ($detail_transaction->transaction_type_id == 2)
-            <p>Alamat Pelanggan: {{ $detail_transaction->address->address }}</p>
-            <p>Kurir: {{ $detail_transaction->courier->courier_name }} -  {{ $detail_transaction->courier->courier_service_name }}</p>
-            <p>Ongkir: {{ $detail_transaction->courier_price }}</p>
-            @endif
-        </div>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Produk</th>
-                    <th>Qty</th>
-                    <th>Harga</th>
-                    <th>Total Harga</th>
-                </tr>
-            </thead>
-            <tbody>
-                @php
-                    $no = 1;
-                @endphp
-                @foreach ($detail_transaction->transaction_product_lists as $product)
+            <div>{{ $detail_transaction->created_at }}</div>
+            <div>
+                <table>
                     <tr>
-                        <td>{{ $no}}</td>
-                        <td>{{ $product->product_name }}</td>
-                        <td>{{ $product->qty }}</td>
-                        <td>{{ $product->price }}</td>
-                        <td>{{ $product->total_price }}</td>
+                        <td>Admin</td>
+                        <td> : </td>
+                        <td>{{ Auth::user()->name }}</td>
                     </tr>
-                    {{$no++}}
-                @endforeach
-            </tbody>
-        </table>
-        <div class="total">
-            <strong>Total Harga: {{ $detail_transaction->final_price }}</strong>
+                    <tr>
+                        <td>Pelanggan</td>
+                        <td> : </td>
+                        <td>{{ $detail_transaction->customer->name }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div>------------------------------------------</div>
+            <div>
+                <table>
+                    <tr>
+                        <td>ID</td>
+                        <td> : </td>
+                        <td>{{ $detail_transaction->transaction_list_id }}</td>
+                    </tr>
+                    <tr>
+                        <td>Pembayaran</td>
+                        <td> : </td>
+                        <td>{{ $detail_transaction->payment->payment_method }}</td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td> : </td>
+                        <td><b>{{ $detail_transaction->payment_status->payment_status }}</b></td>
+                    </tr>
+                    <tr>
+                        <td>Tipe</td>
+                        <td> : </td>
+                        <td>{{ $detail_transaction->transaction_type->transaction_type }}</td>
+                    </tr>
+                    @if ($detail_transaction->transaction_type_id == 2)
+                    <tr>
+                        <td>Pengiriman</td>
+                        <td> : </td>
+                        <td>{{ $detail_transaction->courier->courier_name }}</td>
+                    </tr>
+                    <tr>
+                        <td>Alamat</td>
+                        <td> : </td>
+                        <td>{{ $detail_transaction->address->address }}</td>
+                    </tr>
+                    @endif
+                </table>
+            </div>
+            <div>------------------------------------------</div>
+            <div>
+                <span>Produk </span>
+                <span style="position: absolute; left: 5cm;">Total</span>
+            </div>
+            <div>=========================</div>
+            <div>
+                <table>
+                    @php
+                        $no = 1;
+                        $subtotal = 0;
+                    @endphp
+                    @foreach ($detail_transaction->transaction_product_lists as $product)
+                        <tr>
+                            <td>{{ $no }} {{ $product->product->product_name }} {{ $product->qty }}
+                                x{{ number_format($product->price) }}</td>
+                            <td>{{ number_format($product->total_price) }}</td>
+                        </tr>
+                        {{ $no++ }}
+                        {{ $subtotal += $product->total_price }}
+                    @endforeach
+                </table>
+            </div>
+            <div>=========================</div>
+            <div>
+                <table>
+                    <tr>
+                        <td>Subtotal</td>
+                        <td> : </td>
+                        <td>Rp. {{ number_format($subtotal) }}</td>
+                    </tr>
+                    @if ($detail_transaction->transaction_type_id == 2)
+                        <tr>
+                            <td>Ongkir</td>
+                            <td> : </td>
+                            <td>Rp. {{ number_format($detail_transaction->courier_price) }}</td>
+                        </tr>
+                    @endif
+
+                    <tr>
+                        <td>Total Harga </td>
+                        <td> : </td>
+                        <td>Rp. {{ number_format($detail_transaction->final_price) }}</td>
+                    </tr>
+                    {{-- <tr>
+                        <td>TUNAI</td>
+                        <td> : </td>
+                        <td>Rp. 3,200,0000</td>
+                    </tr> --}}
+                </table>
+            </div>
+            {{-- <br>
+            <div>Uang Kembali Rp. 90,000</div> --}}
+            <div>=========================</div>
         </div>
+        <div>TERIMA KASIH</div>
+
+
     </div>
 </body>
+
 </html>

@@ -29,7 +29,7 @@
                 @endif
 
                 @if (session('error'))
-                <div class="alert alert-error">
+                <div class="alert alert-danger">
                     {{ session('error') }}
                 </div>
                 @endif
@@ -83,7 +83,7 @@
                                     <div class="form-group">
                                         <label for="weight">Berat (Gram) </label>
                                         <input type="number" class="form-control @error('weight') is-invalid @enderror"
-                                            name="weight" min="0" required>
+                                            name="weight" min="0" value="{{$product->weight}}" required>
                                         <!-- error message untuk weight -->
                                         @error('weight')
                                             <div class="invalid-feedback">

@@ -180,6 +180,7 @@ class TransactionController extends Controller
                         ->join('payments', 'payments.payment_id', '=', 'transaction_lists.payment_method_id')
                         ->join('payment_statuses', 'payment_statuses.payment_status_id', '=', 'transaction_lists.payment_status_id')
                         ->where('transaction_lists.customer_id', $customer->customer_id)
+                        ->orderBy('transaction_lists.transaction_list_id', 'desc')
                         ->get();
         foreach($transactions as $transaction) {
             $transaction->products = TransactionProductList::where(['transaction_list_id' => $transaction->transaction_list_id])
@@ -192,7 +193,7 @@ class TransactionController extends Controller
     {
         $user = Auth::user();
         $store_id = $user->store_id;
-        $customers = Customer::latest()->get(); // where role is pelanggan
+        $customers = Customer::orderBy('customer_id', 'asc')->get(); // where role is pelanggan
         $payments = Payment::where('payment_id', '<>', 2)->get();
         $transaction_statuses = TransactionStatus::latest()->get();
         $types = TransactionType::latest()->get();
@@ -257,9 +258,24 @@ class TransactionController extends Controller
             $datasend['courier_price'] = $request->courier_price;
         }
         
+        $carts = Cart::latest()->where('customer_id', Auth::id())->get();
+        foreach($carts as $cart) {
+            $product = Product::findOrFail($cart->product_id);
+            if($cart->satuan == 'M') {
+                $product->stock -= $cart->qty * $cart->luas;
+            } else {
+                $product->stock -= $cart->qty;
+            }
+            if($product->stock < 0) {
+                return redirect()
+                ->route('cart.list')
+                ->with([
+                    'error' => 'Stok Produk '.$product->product_name.' Tidak Cukup'
+                ]);
+            }
+        }
         $transaction = TransactionList::create($datasend);
 
-        $carts = Cart::latest()->where('customer_id', Auth::id())->get();
 
         foreach($carts as $cart) {
             TransactionProductList::create([
@@ -279,7 +295,11 @@ class TransactionController extends Controller
                 'luas' => $cart->luas,
             ]);
             $product = Product::findOrFail($cart->product_id);
-            $product->stock -= $cart->qty;
+            if($cart->satuan == 'M') {
+                $product->stock -= $cart->qty * $cart->luas;
+            } else {
+                $product->stock -= $cart->qty;
+            }
             $product->save();
             $cart = Cart::findOrFail($cart->cart_id);
             $cart->delete();
@@ -310,8 +330,7 @@ class TransactionController extends Controller
                 ]);
         } else {
             return redirect()
-                ->back()
-                ->withInput()
+                ->route('cart.list')
                 ->with([
                     'error' => 'Gagal'
                 ]);
@@ -372,11 +391,32 @@ class TransactionController extends Controller
         } else {
             $datasend['store_id'] = $request->store;
         }
-        
-        $transaction = TransactionList::create($datasend);
         $carts = Cart::latest()->where('user_id', Auth::id())->get();
+        foreach($carts as $cart) {
+            $product = Product::findOrFail($cart->product_id);
+            if($cart->satuan == 'M') {
+                $product->stock -= $cart->qty * $cart->luas;
+            } else {
+                $product->stock -= $cart->qty;
+            }
+            if($product->stock < 0) {
+                return redirect()
+                ->back()
+                ->withInput()
+                ->with([
+                    'error' => 'Stok Produk '.$product->product_name.' Tidak Cukup'
+                ]);
+            }
+        }
+        $transaction = TransactionList::create($datasend);
 
         foreach($carts as $cart) {
+            $product = Product::findOrFail($cart->product_id);
+            if($cart->satuan == 'M') {
+                $product->stock -= $cart->qty * $cart->luas;
+            } else {
+                $product->stock -= $cart->qty;
+            }
             TransactionProductList::create([
                 'transaction_list_id' => $transaction->transaction_list_id,
                 'product_id' => $cart->product_id,
@@ -392,6 +432,8 @@ class TransactionController extends Controller
                 'cutting_price' => $cart->cutting_price,
                 'file' => $cart->file,
             ]);
+            
+            $product->save();
             $cart = Cart::findOrFail($cart->cart_id);
             $cart->delete();
         }

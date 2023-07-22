@@ -356,6 +356,8 @@ class CartController extends Controller
                 ->where('product_id', $request->product_id)
                 ->where('panjang', $request->panjang)
                 ->where('lebar', $request->lebar)
+                ->where('finishing_id', $request->finishing_id)
+                ->where('cutting_id', $request->cutting_id)
                 ->first();
 
             if($cart) {
@@ -440,6 +442,8 @@ class CartController extends Controller
                 ->where('product_id', $request->product_id)
                 ->where('panjang', $request->panjang)
                 ->where('lebar', $request->lebar)
+                ->where('finishing_id', $request->finishing_id)
+                ->where('cutting_id', $request->cutting_id)
                 ->first();
 
             if($cart) {

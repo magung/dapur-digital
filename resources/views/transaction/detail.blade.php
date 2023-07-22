@@ -20,7 +20,7 @@
         </h1>
         @if ($role_id != 4)
             {{-- <a href="{{ route('print.struk') }}" class="btn btn-sm btn-success">PRINT STRUK</a> --}}
-            <a href="{{route('print.pdf', $transaction->transaction_list_id)}}" class="btn btn-sm btn-primary">PRINT</a>
+            <a href="{{route('print.pdf', $transaction->transaction_list_id)}}" class="btn btn-sm btn-primary">PRINT STRUK PDF</a>
             <br>
             <br>
         @endif
@@ -35,7 +35,7 @@
                 @endif
 
                 @if (session('error'))
-                <div class="alert alert-error">
+                <div class="alert alert-danger">
                     {{ session('error') }}
                 </div>
                 @endif
@@ -46,6 +46,7 @@
                             @csrf
                             @method('PUT')
                             <div class="">
+                                <h3>ID {{$transaction->transaction_list_id}}</h3>
                                 <label for="">List Produk</label><br>
                                 <table class="table table-bordered mt-1">
                                     <thead>

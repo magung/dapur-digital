@@ -30,7 +30,7 @@
                 @endif
 
                 @if (session('error'))
-                    <div class="alert alert-error">
+                    <div class="alert alert-danger">
                         {{ session('error') }}
                     </div>
                 @endif
@@ -41,6 +41,7 @@
                             @csrf
                             @method('PUT')
                             <div class="">
+                                <h3>ID {{$transaction->transaction_list_id}}</h3>
                                 <label for="">List Produk</label><br>
                                 <table class="table table-bordered mt-1">
                                     <thead>

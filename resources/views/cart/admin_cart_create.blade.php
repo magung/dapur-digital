@@ -63,15 +63,17 @@
     }
 
     function setQty() {
-        let qty = $('#qty').val()
+        let panjang = $('#panjang').val()
+        let lebar = $('#lebar').val()
+        let price_product = $('#price_product').val()
+        let qty = $('#qty').val();
         let luas = 1;
-        let harga = $('#price').val()
+        let harga = price_product;
         if ($('#satuan').val() == 'M') {
-            let panjang = $('#panjang').val()
-            let lebar = $('#lebar').val()
             luas = panjang * lebar;
-            harga = harga * luas;
+            harga = luas * price_product;
         }
+
         let finishing_price = $('#finishings').find(':selected').data('price')
         let cutting_price = $('#cuttings').find(':selected').data('price')
         if (cutting_price == undefined) {
@@ -80,7 +82,14 @@
         if (finishing_price == undefined) {
             finishing_price = 0
         }
-        let total_harga = (luas * qty * harga) + finishing_price + cutting_price;
+
+        let total_harga = (qty * harga) + finishing_price + cutting_price;
+
+        $('#price').val(harga)
+        $('#price_show').val(numberWithCommas(harga));
+        $('#luas').val(luas)
+        $('#cutting_price').val(cutting_price)
+        $('#finishing_price').val(finishing_price)
         $('#total_price').val(total_harga)
         $('#total_price_show').val(numberWithCommas(total_harga))
     }
@@ -110,7 +119,7 @@
                 @endif
 
                 @if (session('error'))
-                    <div class="alert alert-error">
+                    <div class="alert alert-danger">
                         {{ session('error') }}
                     </div>
                 @endif

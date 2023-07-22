@@ -22,13 +22,20 @@
     <div class="carousel-inner" role="listbox">
         @for ($i = 0; $i < count($banners); $i++)
             @if ($i == 0)
-                <div class="carousel-item active">
+                <a class="carousel-item active" href="{{$banners[$i]->link}}">
+                    
                     <img src="{{ asset('uploads/' . $banners[$i]->photo) }}" class="d-block w-100" alt="...">
-                </div>
+                    <div class="carousel-caption d-none d-md-block">
+                        <p>{{$banners[$i]->description}}</p>
+                    </div>
+                </a>
             @else
-                <div class="carousel-item">
+                <a class="carousel-item" href="{{$banners[$i]->link}}">
                     <img src="{{ asset('uploads/' . $banners[$i]->photo) }}" class="d-block w-100" alt="...">
-                </div>
+                    <div class="carousel-caption d-none d-md-block">
+                        <p>{{$banners[$i]->description}}</p>
+                    </div>
+                </a>
             @endif
         @endfor
     </div>
@@ -55,7 +62,7 @@
         @endif
 
         @if (session('error'))
-            <div class="alert alert-error">
+            <div class="alert alert-danger">
                 {{ session('error') }}
             </div>
         @endif

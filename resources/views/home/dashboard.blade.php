@@ -26,13 +26,13 @@
             </div>
         </div>
     </div>
-    {{-- <div class="col-md-6 py-1">
+    <div class="col-md-12 py-1">
         <div class="card">
             <div class="card-body">
                 <canvas id="chBar"></canvas>
             </div>
         </div>
-    </div> --}}
+    </div>
 </div>
 <div class="row py-2">
     {{-- <div class="col-md-4 py-1">
@@ -153,14 +153,10 @@
         new Chart(chBar, {
             type: 'bar',
             data: {
-                labels: ["S", "M", "T", "W", "T", "F", "S"],
+                labels: ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"],
                 datasets: [{
-                        data: [589, 445, 483, 503, 689, 692, 634],
+                        data: [{{$januari}}, {{$februari}}, {{$maret}}, {{$april}}, {{$mei}}, {{$juni}}, {{$juli}}, {{$agustus}}, {{$sebtember}}, {{$oktober}}, {{$november}}, {{$desember}}],
                         backgroundColor: colors[0]
-                    },
-                    {
-                        data: [639, 465, 493, 478, 589, 632, 674],
-                        backgroundColor: colors[1]
                     }
                 ]
             },

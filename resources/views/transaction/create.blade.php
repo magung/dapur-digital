@@ -21,7 +21,7 @@
             @endif
 
             @if (session('error'))
-                <div class="alert alert-error">
+                <div class="alert alert-danger">
                     {{ session('error') }}
                 </div>
             @endif
@@ -94,7 +94,6 @@
                         <div class="form-group">
                             <label for="customer">Pelanggan</label>
                             <select name="customer" class="form-control" required id="customer">
-                                <option value="0">Umum</option>
                                 @foreach ($customers as $customer)
                                     <option value="{{ $customer->customer_id }}">{{ $customer->name }}</option>
                                 @endforeach

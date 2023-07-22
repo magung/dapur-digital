@@ -19,8 +19,8 @@ class PrintController extends Controller
             "user" => $user
         ];
         $pdf = PDF::loadView('struk.transaksi-detail', $data);
-
-        return $pdf->download('contoh.pdf');
+        $namaFile = "transaksi-".$detail_transaction->transaction_list_id . ".pdf";
+        return $pdf->download($namaFile);
     }
     //
     public function printStruk()
