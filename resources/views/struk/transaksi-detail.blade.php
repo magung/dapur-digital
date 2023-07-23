@@ -6,11 +6,13 @@
     <style>
         /* Gaya CSS khusus untuk tampilan struk */
         body {
-            width: 7cm;
+            width: 6cm;
         }
 
+        *{margin:0;padding:0}
+
         .container {
-            width: 6cm;
+            width: 5cm;
             margin: 0 auto;
             text-align: center;
         }
@@ -62,10 +64,10 @@
         <div class="title">
             <h3>Dapur Digital</h3>
         </div>
-        <div>Dapur Digital Cibinong</div>
-        <div>Ruko Galaxy, Jl Raya Bogor</div>
-        <div>admin-dapur-digital-cibinong@admin.com</div>
-        <div>------------------------------------------</div>
+        <div>{{Auth::user()->store->store_name}}</div>
+        <div>{{Auth::user()->store->store_address}}</div>
+        <div>{{Auth::user()->store->email}}</div>
+        <div>-----------------------------------</div>
         <div class="details">
             <div>{{ $detail_transaction->created_at }}</div>
             <div>
@@ -82,7 +84,7 @@
                     </tr>
                 </table>
             </div>
-            <div>------------------------------------------</div>
+            <div>-----------------------------------</div>
             <div>
                 <table>
                     <tr>
@@ -119,12 +121,12 @@
                     @endif
                 </table>
             </div>
-            <div>------------------------------------------</div>
+            <div>-----------------------------------</div>
             <div>
                 <span>Produk </span>
-                <span style="position: absolute; left: 5cm;">Total</span>
+                <span style="position: absolute; left: 4cm;">Total</span>
             </div>
-            <div>=========================</div>
+            <div>-----------------------------------</div>
             <div>
                 <table>
                     @php
@@ -142,7 +144,7 @@
                     @endforeach
                 </table>
             </div>
-            <div>=========================</div>
+            <div>-----------------------------------</div>
             <div>
                 <table>
                     <tr>
@@ -172,10 +174,12 @@
             </div>
             {{-- <br>
             <div>Uang Kembali Rp. 90,000</div> --}}
-            <div>=========================</div>
+            <div>-----------------------------------</div>
         </div>
+        <br>
         <div>TERIMA KASIH</div>
-
+        <br>
+        <div>-----------------------------------</div>
 
     </div>
 </body>

@@ -18,7 +18,7 @@ class PrintController extends Controller
             "detail_transaction" => $detail_transaction,
             "user" => $user
         ];
-        $pdf = PDF::loadView('struk.transaksi-detail', $data);
+        $pdf = PDF::loadView('struk.transaksi-detail', $data)->setOption(['dpi' => 200, 'defaultFont' => 'sans-serif']);
         $namaFile = "transaksi-".$detail_transaction->transaction_list_id . ".pdf";
         return $pdf->download($namaFile);
     }

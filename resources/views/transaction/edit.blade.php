@@ -42,7 +42,7 @@
 
                             <div class="">
                                 <label for="">List Produk</label><br>
-                                <a href="{{ route('transaction.product.create', $transaction->transaction_list_id) }}" class="btn btn-md btn-success mb-3 ">+ Produk</a>
+                                {{-- <a href="{{ route('transaction.product.create', $transaction->transaction_list_id) }}" class="btn btn-md btn-success mb-3 ">+ Produk</a> --}}
                                 <table class="table table-bordered mt-1">
                                     <thead>
                                         <tr>
@@ -51,7 +51,7 @@
                                             <th scope="col">Qty</th>
                                             <th scope="col">Harga</th>
                                             <th scope="col">Total</th>
-                                            <th scope="col">Aksi</th>
+                                            {{-- <th scope="col">Aksi</th> --}}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -77,10 +77,10 @@
                                                 <td>{{$product->qty}}</td>
                                                 <td>Rp. {{number_format($product->price)}}</td>
                                                 <td>Rp. {{number_format($product->total_price)}}</td>
-                                                <td class="text-center">
+                                                {{-- <td class="text-center">
                                                     <a href="{{ route('transaction.product.edit', $product->product_id) }}" class="btn btn-sm btn-primary">EDIT</a>
                                                     <a href="{{route('transaction.product.destroy', $product->product_id) }}" class="btn btn-sm btn-danger">HAPUS</a>
-                                                </td>
+                                                </td> --}}
                                             </tr>
                                             @php
                                                 $no++;
