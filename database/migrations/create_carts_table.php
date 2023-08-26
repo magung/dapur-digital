@@ -14,7 +14,7 @@ class CreateCartsTable extends Migration
     public function up()
     {
         Schema::create('carts', function (Blueprint $table) {
-            $table->id();
+            $table->id('cart_id');
             $table->bigInteger('product_id');
             $table->bigInteger('qty');
             $table->bigInteger('price');
@@ -23,6 +23,13 @@ class CreateCartsTable extends Migration
             $table->bigInteger('total_price');
             $table->bigInteger('user_id');
             $table->string('satuan');
+            $table->bigInteger('finishing_id');
+            $table->bigInteger('cutting_id');
+            $table->bigInteger('customer_id');
+            $table->bigInteger('finishing_price');
+            $table->bigInteger('cutting_price');
+            $table->text('file');
+            $table->bigInteger('luas');
             $table->timestamps();
         });
     }

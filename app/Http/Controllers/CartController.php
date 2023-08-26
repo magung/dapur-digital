@@ -7,10 +7,8 @@ use App\Models\Cutting;
 use App\Models\Finishing;
 use App\Models\Address;
 use App\Models\Courier;
-use App\Models\PaymentStatus;
 use App\Models\Product;
 use App\Models\Store;
-use App\Models\TransactionStatus;
 use App\Models\TransactionType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,9 +35,9 @@ class CartController extends Controller
         }
         $addresses = Address::where('customer_id', '=', $customer->customer_id)->get();
         $couriers = Courier::where('status', '=', 1 )->get();
-        return view('cart.index', 
+        return view('cart.index',
                     compact(
-                            'payments', 
+                            'payments',
                             'types',
                             'stores',
                             'carts',
@@ -197,8 +195,8 @@ class CartController extends Controller
                 "metadata" => [],
                 "items" => $items
             ];
-            
-            
+
+
             $courier_price = $this->apiCekOngkir($data);
             if($courier_price == 0) {
                 return redirect()
@@ -210,9 +208,9 @@ class CartController extends Controller
             $total_harga += $courier_price;
         }
 
-        return view('cart.payment', 
+        return view('cart.payment',
                     compact(
-                            'payment', 
+                            'payment',
                             'transaction_type',
                             'store',
                             'carts',
@@ -369,7 +367,7 @@ class CartController extends Controller
             $cart = Cart::latest()
                 ->where('customer_id', $user_id)
                 ->where('product_id', $request->product_id)->first();
-    
+
             if($cart) {
                 $cart->update($datasend);
             } else {
@@ -455,7 +453,7 @@ class CartController extends Controller
             $cart = Cart::latest()
                 ->where('user_id', $user_id)
                 ->where('product_id', $request->product_id)->first();
-    
+
             if($cart) {
                 $cart->update($datasend);
             } else {

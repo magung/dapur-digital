@@ -13,12 +13,6 @@ class StoreController extends Controller
         return view('store.index', compact('stores'));
     }
 
-
-    // public function show()
-    // {
-    //     $stores = Store::latest()->get();
-    //     return view('store.index', compact('stores'));
-    // }
     public function create()
     {
         return view('store.create');
@@ -56,12 +50,6 @@ class StoreController extends Controller
         }
     }
 
-    public function show($id)
-    {
-        $store = Store::findOrFail($id);
-        return view('store.edit', compact('store'));
-    }
-
     public function edit($id)
     {
         $store = Store::findOrFail($id);
@@ -76,7 +64,7 @@ class StoreController extends Controller
             'email' => 'required',
             'sosial_media' => 'required'
         ]);
-         
+
 
         $store = Store::findOrFail($id);
         // var_dump($store);
